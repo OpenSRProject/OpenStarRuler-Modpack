@@ -1,0 +1,2 @@
+	Name: SR2 Community Patch
+	Compatibility: 200
