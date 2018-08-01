@@ -172,7 +172,7 @@ tidy class Attributes : Component_Attributes, Savable {
 		stored += time;
 		if(stored > 1.0) {
 			for(uint i = 0, cnt = attributes.length; i < cnt; ++i)
-				attributes[i].tick(emp, time);
+				attributes[i].tick(emp, stored);
 			stored = 0.0;
 		}
 	}
