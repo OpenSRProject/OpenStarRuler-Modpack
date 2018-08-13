@@ -1,6 +1,10 @@
 import util.settings_page;
+import util.game_options;
 
 GamePage page;
+AdvancedGamePage advPage;
+CrazyGamePage crazyPage;
+
 class GamePage : GameSettingsPage {
 	void makeSettings() {
 		color = colors::Green;
@@ -22,7 +26,7 @@ class GamePage : GameSettingsPage {
 
 		emptyline();
 		Title(locale::NG_GAME_OPTIONS);
-		//Occurance(locale::NG_RANDOM_EVENTS, "RANDOM_EVENT_OCCURRENCE", max=3.0);
+//		Occurance(locale::NG_RANDOM_EVENTS, "RANDOM_EVENT_OCCURRENCE", max=3.0);
 		Toggle(locale::NG_ENABLE_DREAD_PIRATE, "ENABLE_DREAD_PIRATE", halfWidth=true, tooltip=locale::NGTT_ENABLE_DREAD_PIRATE);
 		/*Toggle(locale::NG_ENABLE_CIVILIAN_TRADE, "ENABLE_CIVILIAN_TRADE", halfWidth=true);*/
 		Toggle(locale::NG_ENABLE_INFLUENCE_EVENTS, "ENABLE_INFLUENCE_EVENTS", halfWidth=true, tooltip=locale::NGTT_ENABLE_INFLUENCE_EVENTS);
@@ -43,5 +47,73 @@ class GamePage : GameSettingsPage {
 		Toggle(locale::NG_ENABLE_REVENANT_PARTS, "ENABLE_REVENANT_PARTS", tooltip=locale::NGTT_ENABLE_REVENANT_PARTS);
 		if(hasDLC("Heralds"))
 			Toggle(locale::NG_ENABLE_INFLUENCE_VICTORY, "ENABLE_INFLUENCE_VICTORY", tooltip=locale::NGTT_ENABLE_INFLUENCE_VICTORY);
+	}
+};
+
+class AdvancedGamePage : GameSettingsPage {
+	// Need GuiGameFrequency's functionality with a tooltip, so I'm improvising from util.settings_page::SettingsPage and hoping it'll work.
+	// ... I have no idea what I'm doing, but it should work...
+	GuiGameFrequency@ Frequency(const string& text, const string& configName, double min = 0.0, double max = 2.0, Alignment@ align = null, const string& tooltip = "") {
+		if(align is null)
+			@align = nextAlignment();
+		GuiGameFrequency ele(cur, align, text, config(configName));
+		ele.defaultValue = config::get(configName);
+		ele.set(config::get(configName));
+		ele.setMin(min);
+		ele.setMax(max);
+		if(tooltip.length != 0)
+			setMarkupTooltip(ele, tooltip, width=300);
+		options.insertLast(ele);
+		return ele;
+	}	
+
+	void makeSettings() {
+		color = colors::Orange;
+		header = locale::NG_ADVANCED_OPTIONS;
+		icon = Sprite(spritesheet::CardCategoryIcons, 5);
+
+		Description(locale::NG_ADVANCED_OPTIONS_DESC, 4);
+	
+		Title(locale::NG_UNIVERSE_GENERATION);
+		Occurance(locale::NG_PLANET_MOON_CHANCE, "PLANET_MOON_CHANCE", max = 0.5, tooltip=locale::NGTT_PLANET_MOON_CHANCE);
+		Occurance(locale::NG_PLANET_CONDITION_CHANCE, "PLANET_CONDITION_CHANCE", max = 1.0, tooltip=locale::NGTT_PLANET_CONDITION_CHANCE);
+		
+		emptyline();
+		Title(locale::NG_GAME_OPTIONS);
+		Toggle(locale::NG_HIDE_EMPIRE_RELATIONS, "HIDE_EMPIRE_RELATIONS", halfWidth=true, tooltip=locale::NGTT_HIDE_EMPIRE_RELATIONS);
+		Toggle(locale::NG_TEAMS_START_CLOSE, "TEAMS_START_CLOSE", halfWidth=true, tooltip=locale::NGTT_TEAMS_START_CLOSE);
+		Number(locale::NG_CARD_STACK_INTERVAL, "CARD_STACK_DRAW_INTERVAL", step=15, min=15, max=360, tooltip=locale::NGTT_CARD_STACK_INTERVAL);
+		Number(locale::NG_ENERGY_EFFICIENCY_STEP, "ENERGY_EFFICIENCY_STEP", step=25, min=100, max=5000, tooltip=locale::NGTT_ENERGY_EFFICIENCY_STEP);
+		Number(locale::NG_ENERGY_PER_SEEDSHIP, "ENERGY_PER_SEEDSHIP", step=100, min=500, tooltip=locale::NGTT_ENERGY_PER_SEEDSHIP);
+		Number(locale::NG_SIEGE_LOYALTY_TIME, "SIEGE_LOYALTY_TIME", step=15, min=30, tooltip=locale::NGTT_SIEGE_LOYALTY_TIME);
+		Number(locale::NG_SIEGE_LOYALTY_COST, "SIEGE_LOYALTY_SUPPLY_COST", step=500, tooltip=locale::NGTT_SIEGE_LOYALTY_COST);
+//		Number(locale::NG_RANDOM_EVENT_INTERVAL, "RANDOM_EVENT_MIN_INTERVAL", min=30, step=30, tooltip=locale::NGTT_RANDOM_EVENT_INTERVAL);
+		Number(locale::NG_FIRST_CONTACT_PRIZE, "INFLUENCE_CONTACT_BONUS", step=1, tooltip=locale::NGTT_FIRST_CONTACT_PRIZE);
+		Number(locale::NG_LABOR_DUMP_TIME, "LABOR_STORAGE_DUMP_TIME", step=15, tooltip=locale::NGTT_LABOR_DUMP_TIME);
+		Number(locale::NG_LEVEL_DECAY_TIME, "LEVEL_DECAY_TIMER", step=30, tooltip=locale::NGTT_LEVEL_DECAY_TIME);
+		Frequency(locale::NG_DRYDOCK_BUILDCOST_FACTOR, "DRYDOCK_BUILDCOST_FACTOR", min=0.5, max=10.0, tooltip=locale::NGTT_DRYDOCK_BUILDCOST_FACTOR);
+	}
+};
+
+class CrazyGamePage : GameSettingsPage {
+	void makeSettings() {
+		color = colors::Red;
+		header = locale::NG_CRAZY_OPTIONS;
+		icon = Sprite(material::SystemUnderAttack);
+
+		Description(locale::NG_CRAZY_OPTIONS_DESC, 5);
+
+		Title(locale::NG_UNIVERSE_GENERATION);
+		Occurance(locale::NG_ASTEROID_PERMANENT_FREQ, "ASTEROID_PERMANENT_FREQ", max=5.0, tooltip=locale::NGTT_ASTEROID_PERMANENT_FREQ);
+		Number(locale::NG_ASTEROID_MASS, "ASTEROID_MASS", step=500, tooltip=locale::NGTT_ASTEROID_MASS);
+		Number(locale::NG_SYSTEMS_PER_WORMHOLE, "SYSTEMS_PER_WORMHOLE", min=5, step=5, tooltip=locale::NGTT_SYSTEMS_PER_WORMHOLE);
+		Number(locale::NG_GALAXY_MIN_WORMHOLES, "GALAXY_MIN_WORMHOLES", max=15, step=1, tooltip=locale::NGTT_GALAXY_MIN_WORMHOLES);
+
+		emptyline();
+		Title(locale::NG_GAME_OPTIONS);
+		Number(locale::NG_ARTIFACTS_SEEDSHIP_DEATH, "ARTIFACTS_SEEDSHIP_DEATH", max=30, step=1, tooltip=locale::NGTT_ARTIFACTS_SEEDSHIP_DEATH); 
+		Occurance(locale::NG_ASTEROID_COST_STEP, "ASTEROID_COST_STEP", max=3.0, tooltip=locale::NGTT_ASTEROID_COST_STEP);
+		Occurance(locale::NG_TERRAFORM_COST_STEP, "TERRAFORM_COST_STEP", max=3.0, tooltip=locale::NGTT_TERRAFORM_COST_STEP);
+		Occurance(locale::NG_ORBITAL_LABOR_COST_STEP, "ORBITAL_LABOR_COST_STEP", max=3.0, tooltip=locale::NGTT_ORBITAL_LABOR_COST_STEP);
 	}
 };
