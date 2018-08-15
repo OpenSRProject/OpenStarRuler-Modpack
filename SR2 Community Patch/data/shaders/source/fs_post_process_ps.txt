@@ -1,5 +1,10 @@
 #version 120
 
+#define FXAA_SPAN_MAX	8.0
+#define FXAA_REDUCE_MUL 1.0/8.0
+#define FXAA_REDUCE_MIN 1.0/128.0
+
+bool runFXAA = #{{bFXAA}};
 // expose these as tick boxes, suggested defaults are set to true
 // godrays from stars, scales with shader level setting
 bool lightShaftsOn = #{{bGodRays}};
@@ -159,10 +164,64 @@ void main(){
 	frame = clamp(mix(pow(abs(centeredUV.y)* 2.0, frameSize), frame, frame) * 2.0 - 0.5, 0.0,1.0);
 	float radialFade = 1.0 - min(1.0, dot(centeredUV, centeredUV) * 2.0);
 	
-	vec4 color = texture2D(screen, uv);	
+	vec4 color = vec4(0.0);//texture2D(screen, uv);	
 	vec3 sum = vec3(0.0);
-	vec3 rawColor = color.rgb;
-	vec3 linearColor = toLinear(rawColor);
+	
+	if(runFXAA == true){
+		vec2 add = 1.0 / texSize.xy;
+		
+		vec3 rgbNW = texture(uv+vec2(-add.x, -add.y));
+		vec3 rgbNE = texture(uv+vec2( add.x, -add.y));
+		vec3 rgbSW = texture(uv+vec2(-add.x,  add.y));
+		vec3 rgbSE = texture(uv+vec2( add.x,  add.y));
+		vec3 rgbM  = texture(uv);
+			
+		vec3 luma	 = vec3(0.299, 0.587, 0.114);
+		float lumaNW = dot(rgbNW, luma);
+		float lumaNE = dot(rgbNE, luma);
+		float lumaSW = dot(rgbSW, luma);
+		float lumaSE = dot(rgbSE, luma);
+		float lumaM  = dot(rgbM,  luma);
+		
+		float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+		float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
+		
+		vec2 dir;
+		dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+		dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+	
+			float dirReduce = max(
+			(lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+		
+		float rcpDirMin = 1.0/(min(abs(dir.x), abs(dir.y)) + dirReduce);
+	
+		dir = min(vec2( FXAA_SPAN_MAX,  FXAA_SPAN_MAX),
+			max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
+			dir * rcpDirMin)) * add;
+	
+			
+		vec3 rgbA = 0.5 * (texture(uv + dir * (1.0/3.0 - 0.5)) +
+								texture(uv + dir * 0.5));
+		
+		vec3 rgbB = rgbA * 0.5 + 0.25 *
+			(texture(uv.xy + dir * (-0.5)) +
+			texture(uv.xy + dir * (0.5)));
+		
+		float lumaB = dot(rgbB, luma);
+		if((lumaB < lumaMin) || (lumaB > lumaMax))
+		{
+			color.rgb = rgbA;
+		}else
+		{
+			color.rgb = rgbB;
+		}
+	}
+	else
+	{
+		color = texture2D(screen, uv);		
+	}
+	
+	vec3 linearColor = toLinear(color.rgb);
 	float depth = texture2D(depthTex, uv).r;
 
 	// calculate falloff as it's needed in multiple places
@@ -289,6 +348,6 @@ void main(){
 		float t = fract(cycle);
 		color.rgb += (rand(uv + 0.07 * t) + rand(uv + 0.11 * t) - 1.0) * 0.0078125 * filmGrainIntensity;
 	}
-	
-	gl_FragColor = vec4(color.rgb, 1.0);
+
+	gl_FragColor = vec4(abs(color.rgb), 1.0);
 }

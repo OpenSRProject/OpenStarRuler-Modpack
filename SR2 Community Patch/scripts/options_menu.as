@@ -210,7 +210,14 @@ class GameOptions : OptionsBox {
 			panel, recti_area(8, y,  550, 28),
 			locale::OPT_ROTATE_OBJS, "bRotateUIObjects"
 		));
-
+		y += 34;
+		GuiEngineToggle IRCtoggle(
+			panel, recti_area(8, y,  278, 28),
+			locale::OPT_AUTO_IRC, "bAutoEnableIRC"
+		);
+		setMarkupTooltip(IRCtoggle, locale::OPTTT_AUTO_IRC);
+		options.insertLast(IRCtoggle);
+		
 		y += 38;
 		options.insertLast(GuiEngineToggle(
 			panel, recti_area(8, y,  550, 28),
@@ -383,9 +390,7 @@ class GuiAAOption : GuiDropdownOption, EngineOption {
 		super(parent, pos, locale::ANTIALIASING);
 
 		box.addItem(locale::AA_None);
-		box.addItem(locale::AA_2x);
-		box.addItem(locale::AA_4x);
-		box.addItem(locale::AA_8x);
+		box.addItem(locale::AA_FX);
 		box.addItem(locale::AA_Super);
 		
 		reset();
@@ -393,34 +398,36 @@ class GuiAAOption : GuiDropdownOption, EngineOption {
 
 	void reset() {
 		uint samples = settings::iSamples;
+		bool fxaa = settings::bFXAA;
 		bool supersample = settings::bSupersample;
 		
-		if(!supersample) {
+		if(!supersample && !fxaa) {
 			switch(samples) {
 				case 0: box.selected = 0; break;
-				case 2: box.selected = 1; break;
-				case 4: box.selected = 2; break;
-				case 8: box.selected = 3; break;
+				default: box.selected = 1; break;
 			}
 		}
-		else if(samples == 1) {
-			box.selected = 4;
+		else if(fxaa || samples > 1) {
+			box.selected = 1;
+		}
+		else if(supersample || samples == 1) {
+			box.selected = 2;
 		}
 	}
 
 	void apply() {
 		if(box.selected >= 0) {
 			uint setting = box.selected;
-			uint samples = 1;
+			uint samples = 0;
+			bool fxaa = false;
 			bool supersample = false;
 			switch(setting) {
-				case 1: samples = 2; break;
-				case 2: samples = 4; break;
-				case 3: samples = 8; break;
-				case 4: supersample = true; break;
+				case 1: fxaa = true; samples = 2; break;
+				case 2: supersample = true; samples = 1; break;
 			}
 			
 			settings::iSamples = samples;
+			settings::bFXAA = fxaa;
 			settings::bSupersample = supersample;
 			
 			scale_3d = supersample ? 2.0 : 1.0;
@@ -592,9 +599,17 @@ class GraphicsOptions : OptionsBox {
 
 		y += 32;
 		@tog = GuiEngineToggle(
-			panel, recti_area(20, y,  530, 26),
+			panel, recti_area(20, y,  268, 26),
 			locale::OPT_FILM_GRAIN, "bFilmGrain"
 		);
+		options.insertLast(tog);
+		shaderWatch.insertLast(tog);
+
+		@tog = GuiEngineToggle(
+			panel, recti_area(286, y,  268, 26),
+			locale::OPT_RINGWORLD_FIX, "bRingworldFix"
+		);
+		setMarkupTooltip(tog, locale::OPTTT_RINGWORLD_FIX);
 		options.insertLast(tog);
 		shaderWatch.insertLast(tog);
 
@@ -746,6 +761,22 @@ class AudioOptions : OptionsBox {
 		y += 32;
 		options.insertLast(GuiAudioOption(
 			panel, recti_area(8, y, 550, 32)));
+
+		y += 34;
+		GuiEngineToggle MTEtoggle(
+			panel, recti_area(8, y,  278, 28),
+			locale::OPT_MTE, "bEnableMTE"
+		);
+		setMarkupTooltip(MTEtoggle, locale::OPTTT_MTE);
+		options.insertLast(MTEtoggle);
+
+		y += 34;
+		GuiEngineToggle themeLooptoggle(
+			panel, recti_area(8, y,  278, 28),
+			locale::OPT_THEME_LOOP, "bLoopTheme"
+		);
+		setMarkupTooltip(themeLooptoggle, locale::OPTTT_THEME_LOOP);
+		options.insertLast(themeLooptoggle);
 	}
 };
 

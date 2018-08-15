@@ -88,7 +88,6 @@ class AdvancedGamePage : GameSettingsPage {
 		Number(locale::NG_SIEGE_LOYALTY_TIME, "SIEGE_LOYALTY_TIME", step=15, min=30, tooltip=locale::NGTT_SIEGE_LOYALTY_TIME);
 		Number(locale::NG_SIEGE_LOYALTY_COST, "SIEGE_LOYALTY_SUPPLY_COST", step=500, tooltip=locale::NGTT_SIEGE_LOYALTY_COST);
 //		Number(locale::NG_RANDOM_EVENT_INTERVAL, "RANDOM_EVENT_MIN_INTERVAL", min=30, step=30, tooltip=locale::NGTT_RANDOM_EVENT_INTERVAL);
-		Number(locale::NG_FIRST_CONTACT_PRIZE, "INFLUENCE_CONTACT_BONUS", step=1, tooltip=locale::NGTT_FIRST_CONTACT_PRIZE);
 		Number(locale::NG_LABOR_DUMP_TIME, "LABOR_STORAGE_DUMP_TIME", step=15, tooltip=locale::NGTT_LABOR_DUMP_TIME);
 		Number(locale::NG_LEVEL_DECAY_TIME, "LEVEL_DECAY_TIMER", step=30, tooltip=locale::NGTT_LEVEL_DECAY_TIME);
 		Frequency(locale::NG_DRYDOCK_BUILDCOST_FACTOR, "DRYDOCK_BUILDCOST_FACTOR", min=0.5, max=10.0, tooltip=locale::NGTT_DRYDOCK_BUILDCOST_FACTOR);
