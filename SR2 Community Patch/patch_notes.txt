@@ -8,5 +8,5 @@ v1.0
 - Fixed a bug where strategic icons of Ore asteroids spawned when a planet is destroyed were incorrectly set to resource asteroid icons.
 - Fixed a bug where ore asteroids in the mirrored part of a dumbbell galaxy generated with the 'Perfect Mirror' option had a resource asteroid strategic icon.
 - Fixed a bug where incremental Ore cost spent to build certain things would be refund the next increment's worth of Ore when refunded.
-- Fixed a bug where elapsed time was not tracked correctly for empire-related attributes.
+- Fixed a bug where elapsed time was not tracked correctly for empire-related attributes and planet statuses.
 - Fixed a bug where status stacks spent to build certain things (like troop pods filled with troops) would only ever refund one instance instead of the correct amount when refunded.
