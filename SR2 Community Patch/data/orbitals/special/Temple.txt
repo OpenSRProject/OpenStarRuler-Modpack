@@ -28,3 +28,5 @@ Module: Temple
 	SpawnFreighters(1, Status = Evangelized, Duration = 600, Name = #MISSIONARY, Set Origin Empire = True, Visit Hostile = True, Skin = Missionary)
 
 	IfBorderSystem(ModEmpireAttribute(BorderOutposts, Add, 1)) #version>=162
+	
+	AI: RegisterForUse(TradeOutpost)

@@ -1,6 +1,8 @@
 import resources;
 import buildings;
 
+from orbitals import OrbitalModule;
+
 export Considerer;
 export ConsiderHook;
 export ArtifactConsider;
@@ -35,6 +37,9 @@ interface Considerer {
 
 	const BuildingType@ get_building();
 	void set_building(const BuildingType@ type);
+	
+	const OrbitalModule@ get_module();
+	void set_module(const OrbitalModule@ type);
 
 	ConsiderComponent@ get_component();
 	void set_component(ConsiderComponent@ comp);
@@ -49,14 +54,23 @@ interface Considerer {
 	//Consider all systems we know other empires have planets in
 	Object@ OtherSystems(const ConsiderHook& hook);
 
+	//Consider all systems in one of our territories
+	Object@ SystemsInTerritory(const ConsiderHook& hook, const Territory& territory, uint limit = uint(-1));
+
 	//Consider all our fleets
 	Object@ Fleets(const ConsiderHook& hook);
 
 	//Consider planets we own that are important in some way
 	Object@ ImportantPlanets(const ConsiderHook& hook);
+	
+	//Consider planets we own that are important in some way in one of our territories
+	Object@ ImportantPlanetsInTerritory(const ConsiderHook& hook, const Territory& territory);
 
 	//Consider all our planets
 	Object@ AllPlanets(const ConsiderHook& hook);
+	
+	//Consider all our planets in one of our territories
+	Object@ PlanetsInTerritory(const ConsiderHook& hook, const Territory& territory);
 
 	//Consider a random selection of our planets
 	Object@ SomePlanets(const ConsiderHook& hook, uint count = 5, bool alwaysImportant = true);
@@ -66,7 +80,8 @@ interface Considerer {
 
 	//Consider import requests that could be satisfied by the specified resource type
 	Object@ MatchingImportRequests(const ConsiderHook& hook, const ResourceType@ type, bool considerExisting);
-	//Time since the last colonization of theh import request we're currently considering
+	
+	//Time since the last colonization of the import request we're currently considering
 	double timeSinceMatchingColonize();
 };
 

@@ -21,3 +21,5 @@ Building: ResearchComplex
 	ModEmpireAttribute(ResearchLabsBuilt, Add, 1)
 
 	AddPressureEmpireAttribute(Research, ResearchComplexExtraPressure) #version>=147
+	
+	AI: AsResearchGeneration()

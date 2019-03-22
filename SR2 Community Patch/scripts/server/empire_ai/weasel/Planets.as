@@ -1,17 +1,27 @@
 import empire_ai.weasel.WeaselAI;
+
+import empire_ai.weasel.Events;
 import empire_ai.weasel.Resources;
 import empire_ai.weasel.Budget;
 import empire_ai.weasel.Systems;
+
+import ai.construction;
+import ai.events;
 
 import planets.PlanetSurface;
 
 import void relationRecordLost(AI& ai, Empire& emp, Object@ obj) from "empire_ai.weasel.Relations";
 
+from constructions import ConstructionType, getConstructionTypeCount, getConstructionType;
+from ai.constructions import AIConstructions, ConstructionAIHook, ConstructionUse;
+
+import ai.consider;
+
 import buildings;
 import saving;
 
-final class BuildingRequest {
-	int id = -1;
+final class BuildingRequest : IBuildingConstruction {
+	protected int _id = -1;
 	PlanetAI@ plAI;
 	AllocateBudget@ alloc;
 	const BuildingType@ type;
@@ -28,6 +38,20 @@ final class BuildingRequest {
 
 	BuildingRequest() {
 	}
+	
+	int id {
+		get const { return _id; }
+		set { _id = value; }
+	}
+	
+	bool get_started() const { return built; }
+	
+	bool completed {
+		get const { return getProgress() >= 1.0; }
+		set { }
+	}
+	
+	const BuildingType@ get_building() const { return type; }
 
 	void save(Planets& planets, SaveFile& file) {
 		planets.saveAI(file, plAI);
@@ -93,16 +117,115 @@ final class BuildingRequest {
 	}
 };
 
+final class ConstructionRequest : IGenericConstruction {
+	protected int _id = -1;
+	PlanetAI@ plAI;
+	AllocateBudget@ alloc;
+	const ConstructionType@ type;
+	double expires = INFINITY;
+	bool built = false;
+	bool canceled = false;
+	vec2i builtAt;
+
+	ConstructionRequest(Budget& budget, Object@ buildAt, const ConstructionType@ type, double priority, uint moneyType) {
+		@this.type = type;
+		@alloc = budget.allocate(moneyType, type.getBuildCost(buildAt), type.getMaintainCost(buildAt), priority=priority);
+	}
+
+	ConstructionRequest() {
+	}
+	
+	int id {
+		get const { return _id; }
+		set { _id = value; }
+	}
+	
+	bool get_started() const { return built; }
+	
+	bool completed {
+		get const {
+			double progress = getProgress();
+			return progress == -1.0 || progress >= 1.0;
+		}
+		set { }
+	}
+	
+	const ConstructionType@ get_construction() const { return type; }
+
+	void save(Planets& planets, SaveFile& file) {
+		planets.saveAI(file, plAI);
+		planets.budget.saveAlloc(file, alloc);
+		file.writeIdentifier(SI_ConstructionType, type.id);
+		file << expires;
+		file << built;
+		file << canceled;
+		file << builtAt;
+	}
+
+	void load(Planets& planets, SaveFile& file) {
+		@plAI = planets.loadAI(file);
+		@alloc = planets.budget.loadAlloc(file);
+		@type = getConstructionType(file.readIdentifier(SI_ConstructionType));
+		file >> expires;
+		file >> built;
+		file >> canceled;
+		file >> builtAt;
+	}
+
+	double cachedProgress = 0.0;
+	double nextProgressCache = 0.0;
+	double getProgress() {
+		if(!built)
+			return 0.0;
+		if(gameTime < nextProgressCache)
+			return cachedProgress;
+
+		cachedProgress = plAI.obj.get_constructionProgress();
+		if(cachedProgress > 0.95)
+			nextProgressCache = gameTime + 1.0;
+		else if(cachedProgress < 0.5)
+			nextProgressCache = gameTime + 30.0;
+		else
+			nextProgressCache = gameTime + 10.0;
+
+		return cachedProgress;
+	}
+
+	bool tick(AI& ai, Planets& planets, double time) {
+		if(expires < gameTime) {
+			if(planets.log)
+				ai.print(type.name+" construction request expired", plAI.obj);
+			canceled = true;
+			return false;
+		}
+
+		if(alloc is null || alloc.allocated) {
+			if(!plAI.buildConstruction(ai, planets, type)) {
+				planets.budget.remove(alloc);
+				canceled = true;
+
+			}
+			else
+				built = true;
+			return false;
+		}
+		return true;
+	}
+};
+
 final class PlanetAI {
 	Planet@ obj;
+
 	int targetLevel = 0;
 	int requestedLevel = 0;
 	double prevTick = 0;
+
 	array<ExportData@>@ resources;
 	ImportData@ claimedChain;
 
 	void init(AI& ai, Planets& planets) {
 		@resources = planets.resources.availableResource(obj);
+		planets.events.notifyPlanetAdded(this, EventArgs());
 	}
 
 	void save(Planets& planets, SaveFile& file) {
@@ -142,6 +265,7 @@ final class PlanetAI {
 			@claimedChain = null;
 		}
 		@resources = null;
+		planets.events.notifyPlanetRemoved(this, EventArgs());
 	}
 
 	void tick(AI& ai, Planets& planets, double time) {
@@ -314,6 +438,17 @@ final class PlanetAI {
 			ai.print("Could not find place to construct "+type.name, obj);
 		return vec2i(-1,-1);
 	}
+
+	bool buildConstruction(AI& ai, Planets& planets, const ConstructionType@ type) {
+		if(type is null || !type.canBuild(obj))
+			return false;
+
+			if(planets.log)
+				ai.print("Construct "+type.name);
+			obj.buildConstruction(type.id);
+
+			return true;
+	}
 }
 
 final class PotentialSource {
@@ -368,7 +503,8 @@ final class AsteroidData {
 	}
 };
 
-class Planets : AIComponent {
+class Planets : AIComponent, AIConstructions {
+	Events@ events;
 	Resources@ resources;
 	Budget@ budget;
 	Systems@ systems;
@@ -380,17 +516,48 @@ class Planets : AIComponent {
 	array<PlanetAI@> bumped;
 	uint planetIdx = 0;
 
+
 	array<BuildingRequest@> building;
 	int nextBuildingRequestId = 0;
+	array<ConstructionRequest@> constructionRequests;
+	int nextConstructionRequestId = 0;
 
 	void create() {
+		@events = cast<Events>(ai.events);
 		@resources = cast<Resources>(ai.resources);
 		@budget = cast<Budget>(ai.budget);
 		@systems = cast<Systems>(ai.systems);
+
+		//Register specialized construction types
+		for(uint i = 0, cnt = getConstructionTypeCount(); i < cnt; ++i) {
+			auto@ type = getConstructionType(i);
+			for(uint n = 0, ncnt = type.ai.length; n < ncnt; ++n) {
+				auto@ hook = cast<ConstructionAIHook>(type.ai[n]);
+				if(hook !is null)
+					hook.register(this, type);
+			}
+		}
+	}
+
+	Empire@ get_empire() {
+		return ai.empire;
+	}
+
+	Considerer@ get_consider() {
+		return cast<Considerer>(ai.consider);
+	}
+
+	void registerUse(ConstructionUse use, const ConstructionType& type) {
+		switch(use) {
+			case CU_MoonBase:
+				@ai.defs.MoonBase = type;
+				break;
+		}
 	}
 
 	void save(SaveFile& file) {
 		file << nextBuildingRequestId;
+		file << nextConstructionRequestId;
 
 		uint cnt = planets.length;
 		file << cnt;
@@ -407,6 +574,13 @@ class Planets : AIComponent {
 			building[i].save(this, file);
 		}
 
+		cnt = constructionRequests.length;
+		file << cnt;
+		for(uint i = 0; i < cnt; ++i) {
+			saveConstructionRequest(file, constructionRequests[i]);
+			constructionRequests[i].save(this, file);
+		}
+
 		cnt = ownedAsteroids.length;
 		file << cnt;
 		for(uint i = 0; i < cnt; ++i)
@@ -415,6 +589,7 @@ class Planets : AIComponent {
 
 	void load(SaveFile& file) {
 		file >> nextBuildingRequestId;
+		file >> nextConstructionRequestId;
 
 		uint cnt = 0;
 		file >> cnt;
@@ -432,6 +607,15 @@ class Planets : AIComponent {
 			if(req !is null) {
 				req.load(this, file);
 				building.insertLast(req);
+			}
+		}
+
+		file >> cnt;
+		for(uint i = 0; i < cnt; ++i) {
+			auto@ req = loadConstructionRequest(file);
+			if (req !is null) {
+				req.load(this, file);
+				constructionRequests.insertLast(req);
 			}
 		}
 
@@ -468,17 +652,17 @@ class Planets : AIComponent {
 		file << pl;
 	}
 
-	array<BuildingRequest@> loadIds;
+	array<BuildingRequest@> buildingLoadIds;
 	BuildingRequest@ loadBuildingRequest(int id) {
 		if(id == -1)
 			return null;
-		for(uint i = 0, cnt = loadIds.length; i < cnt; ++i) {
-			if(loadIds[i].id == id)
-				return loadIds[i];
+		for(uint i = 0, cnt = buildingLoadIds.length; i < cnt; ++i) {
+			if(buildingLoadIds[i].id == id)
+				return buildingLoadIds[i];
 		}
 		BuildingRequest data;
 		data.id = id;
-		loadIds.insertLast(data);
+		buildingLoadIds.insertLast(data);
 		return data;
 	}
 	BuildingRequest@ loadBuildingRequest(SaveFile& file) {
@@ -495,8 +679,36 @@ class Planets : AIComponent {
 			id = data.id;
 		file << id;
 	}
+	array<ConstructionRequest@> constructionLoadIds;
+	ConstructionRequest@ loadConstructionRequest(int id) {
+		if(id == -1)
+			return null;
+		for(uint i = 0, cnt = constructionLoadIds.length; i < cnt; ++i) {
+			if(constructionLoadIds[i].id == id)
+				return constructionLoadIds[i];
+		}
+		ConstructionRequest data;
+		data.id = id;
+		constructionLoadIds.insertLast(data);
+		return data;
+	}
+	ConstructionRequest@ loadConstructionRequest(SaveFile& file) {
+		int id = -1;
+		file >> id;
+		if(id == -1)
+			return null;
+		else
+			return loadConstructionRequest(id);
+	}
+	void saveConstructionRequest(SaveFile& file, ConstructionRequest@ data) {
+		int id = -1;
+		if(data !is null)
+			id = data.id;
+		file << id;
+	}
 	void postLoad(AI& ai) {
-		loadIds.length = 0;
+		buildingLoadIds.length = 0;
+		constructionLoadIds.length= 0;
 	}
 
 	void start() {
@@ -545,6 +757,15 @@ class Planets : AIComponent {
 		for(uint i = 0, cnt = building.length; i < cnt; ++i) {
 			if(!building[i].tick(ai, this, time)) {
 				building.removeAt(i);
+				--i; --cnt;
+				break;
+			}
+		}
+
+		//Construct any constructions we are waiting on
+		for(uint i = 0, cnt = constructionRequests.length; i < cnt; ++i) {
+			if(!constructionRequests[i].tick(ai, this, time)) {
+				constructionRequests.removeAt(i);
 				--i; --cnt;
 				break;
 			}
@@ -666,9 +887,33 @@ class Planets : AIComponent {
 		return req;
 	}
 
+	ConstructionRequest@ requestConstruction(PlanetAI@ plAI, Object@ buildAt, const ConstructionType@ type, double priority = 1.0, double expire = INFINITY, uint moneyType = BT_Development) {
+		if(plAI is null)
+			return null;
+
+		if(log)
+			ai.print("Requested construction of type "+type.name, plAI.obj);
+
+		ConstructionRequest req(budget, buildAt, type, priority, moneyType);
+		req.id = nextConstructionRequestId++;
+		req.expires = gameTime + expire;
+		@req.plAI = plAI;
+
+		constructionRequests.insertLast(req);
+		return req;
+	}
+
 	bool isBuilding(Planet@ planet, const BuildingType@ type) {
 		for(uint i = 0, cnt = building.length; i < cnt; ++i) {
 			if(building[i].type is type && building[i].plAI.obj is planet)
+				return true;
+		}
+		return false;
+	}
+
+	bool isBuilding(Planet@ planet, const ConstructionType@ type) {
+		for(uint i = 0, cnt = constructionRequests.length; i < cnt; ++i) {
+			if(constructionRequests[i].type is type && constructionRequests[i].plAI.obj is planet)
 				return true;
 		}
 		return false;

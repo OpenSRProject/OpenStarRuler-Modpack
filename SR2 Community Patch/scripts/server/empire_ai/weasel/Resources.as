@@ -1,16 +1,25 @@
 import empire_ai.weasel.WeaselAI;
+
+import empire_ai.weasel.Events;
+
 import empire_ai.weasel.ImportData;
+
+import ai.events;
 
 import resources;
 import planet_levels;
 import system_pathing;
 import systems;
 
+from orbitals import OrbitalModule;
+
 interface RaceResources {
 	void levelRequirements(Object& obj, int targetLevel, array<ResourceSpec@>& specs);
 };
 
 final class Resources : AIComponent {
+	Events@ events;
+	
 	RaceResources@ race;
 
 	array<ImportData@> requested;
@@ -22,6 +31,7 @@ final class Resources : AIComponent {
 	int nextExportId = 0;
 
 	void create() {
+		@events = cast<Events>(ai.events);
 		@race = cast<RaceResources>(ai.race);
 	}
 
@@ -222,8 +232,17 @@ final class Resources : AIComponent {
 					continue;
 				if(!av.usable || av.obj is null || !av.obj.valid || av.obj.owner !is ai.empire)
 					continue;
-				if(!canTradeBetween(av.obj, req.obj))
+				//Check if a trade route exists between the two locations
+				if(!canTradeBetween(av.obj, req.obj) && av.obj.region !is null && req.obj.region !is null) {
+					auto@ territoryA = av.obj.region.getTerritory(ai.empire);
+					auto@ territoryB = req.obj.region.getTerritory(ai.empire);
+					if (territoryA !is territoryB) {
+						if (log)
+							ai.print("trade route requested between " + addrstr(territoryA) + " and " + addrstr(territoryB));
+						events.notifyTradeRouteNeeded(this, TradeRouteNeededEventArgs(territoryA, territoryB));
+					}
 					continue;
+				}
 				if(av.localOnly && av.obj !is req.obj)
 					continue;
 

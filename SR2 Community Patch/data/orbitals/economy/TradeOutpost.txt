@@ -39,3 +39,4 @@ Module: TradeOutpost
 
 	GiveTrade()
 	
+	AI: RegisterForUse(TradeOutpost)

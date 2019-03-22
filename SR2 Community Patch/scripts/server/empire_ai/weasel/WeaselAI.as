@@ -1,6 +1,7 @@
 import settings.game_settings;
 from empire_ai.EmpireAI import AIController;
 
+import AIComponent@ createEvents() from "empire_ai.weasel.Events";
 import AIComponent@ createColonization() from "empire_ai.weasel.Colonization";
 import AIComponent@ createResources() from "empire_ai.weasel.Resources";
 import AIComponent@ createPlanets() from "empire_ai.weasel.Planets";
@@ -22,6 +23,7 @@ import AIComponent@ createEnergy() from "empire_ai.weasel.Energy";
 import IAIComponent@ createDiplomacy() from "empire_ai.weasel.Diplomacy";
 import AIComponent@ createConsider() from "empire_ai.weasel.Consider";
 import AIComponent@ createOrbitals() from "empire_ai.weasel.Orbitals";
+import AIComponent@ createInfrastructure() from "empire_ai.weasel.Infrastructure";
 
 import AIComponent@ createHyperdrive() from "empire_ai.weasel.ftl.Hyperdrive";
 import AIComponent@ createGate() from "empire_ai.weasel.ftl.Gate";
@@ -42,6 +44,7 @@ import bool hasInvasionMap() from "Invasion.InvasionMap";
 
 from buildings import BuildingType;
 from orbitals import OrbitalModule;
+from constructions import ConstructionType;
 import util.formatting;
 
 from empire import ai_full_speed;
@@ -335,7 +338,10 @@ final class AIBehavior {
 final class AIDefs {
 	const BuildingType@ Factory;
 	const BuildingType@ LaborStorage;
+	const ConstructionType@ MoonBase;
 	const OrbitalModule@ Shipyard;
+	const OrbitalModule@ TradeOutpost;
+	const OrbitalModule@ TradeStation;
 };
 
 final class AI : AIController, Savable {
@@ -354,6 +360,7 @@ final class AI : AIController, Savable {
 
 	array<IAIComponent@> components;
 	array<ProfileData> profileData;
+	IAIComponent@ events;
 	IAIComponent@ fleets;
 	IAIComponent@ budget;
 	IAIComponent@ colonization;
@@ -375,6 +382,7 @@ final class AI : AIController, Savable {
 	IAIComponent@ diplomacy;
 	IAIComponent@ consider;
 	IAIComponent@ orbitals;
+	IAIComponent@ infrastructure;
 
 	IAIComponent@ ftl;
 	IAIComponent@ race;
@@ -384,11 +392,12 @@ final class AI : AIController, Savable {
 	void createComponents() {
 		//NOTE: This is also save/load order, so
 		//make sure to add loading logic when changing this list
+		@events = add(createEvents());
 		@budget = add(createBudget());
 		@planets = add(createPlanets());
 		@resources = add(createResources());
-		@colonization = add(createColonization());
 		@systems = add(createSystems());
+		@colonization = add(createColonization());
 		@fleets = add(createFleets());
 		@scouting = add(createScouting());
 		@development = add(createDevelopment());
@@ -405,6 +414,7 @@ final class AI : AIController, Savable {
 		@diplomacy = add(createDiplomacy());
 		@consider = add(createConsider());
 		@orbitals = add(createOrbitals());
+		@infrastructure = add(createInfrastructure());
 
 		//Make FTL component
 		if(empire.hasTrait(getTraitID("Hyperdrive")))
@@ -417,6 +427,10 @@ final class AI : AIController, Savable {
 			@ftl = add(createSlipstream());
 		else if(empire.hasTrait(getTraitID("Jumpdrive")))
 			@ftl = add(createJumpdrive());
+		/* Not implemented yet.
+		else if(empire.hasTrait(getTraitID("Flux")))
+			@ftl = add(createFlux());
+		*/
 
 		//Make racial component
 		if(empire.hasTrait(getTraitID("Verdant")))
@@ -433,6 +447,16 @@ final class AI : AIController, Savable {
 			@race = add(createDevout());
 		else if(empire.hasTrait(getTraitID("Ancient")))
 			@race = add(createAncient());
+		/* Not implemented yet.
+		else if(empire.hasTrait(getTraitID("Technicists")))
+			@race = add(createResearchers());
+		else if(empire.hasTrait(getTraitID("Progenitors")))
+			@race = add(createProgenitors());
+		else if(empire.hasTrait(getTraitID("Berserkers")))
+			@race = add(createBerserkers());
+		else if(empire.hasTrait(getTraitID("Pacifists")))
+			@race = add(createPacifists());
+		*/
 
 		//Misc components
 		if(hasInvasionMap() || addedComponents & AC_Invasion != 0) {

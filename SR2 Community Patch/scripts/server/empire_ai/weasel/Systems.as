@@ -1,5 +1,10 @@
 import empire_ai.weasel.WeaselAI;
+
+import empire_ai.weasel.Events;
+
 import empire_ai.weasel.searches;
+
+import ai.events;
 
 import systems;
 import system_pathing;
@@ -7,6 +12,7 @@ import system_pathing;
 final class SystemAI {
 	const SystemDesc@ desc;
 	Region@ obj;
+
 	double prevTick = 0.0;
 
 	array<Planet@> planets;
@@ -85,7 +91,7 @@ final class SystemAI {
 		file << enemyStrength;
 		file << lastStrengthCheck;
 	}
-	
+
 	void load(SaveFile& file) {
 		file >> obj;
 		file >> prevTick;
@@ -158,17 +164,19 @@ final class SystemAI {
 		}
 
 		//Check if we should be owned
-		bool shouldOwned = obj.PlanetsMask & ai.mask != 0;
+		bool shouldOwned = obj.TradeMask & ai.mask != 0;
 		if(owned != shouldOwned) {
 			if(shouldOwned) {
 				systems.owned.insertLast(this);
 				systems.hopsChanged = true;
 				hopDistance = 0;
+				systems.events.notifyOwnedSystemAdded(this, EventArgs());
 			}
 			else {
 				hopDistance = 1;
 				systems.owned.remove(this);
 				systems.hopsChanged = true;
+				systems.events.notifyOwnedSystemRemoved(this, EventArgs());
 			}
 			owned = shouldOwned;
 		}
@@ -200,9 +208,11 @@ final class SystemAI {
 		if(border != shouldBorder) {
 			if(shouldBorder) {
 				systems.border.insertLast(this);
+				systems.events.notifyBorderSystemAdded(this, EventArgs());
 			}
 			else {
 				systems.border.remove(this);
+				systems.events.notifyBorderSystemRemoved(this, EventArgs());
 			}
 			border = shouldBorder;
 		}
@@ -212,9 +222,11 @@ final class SystemAI {
 		if(outsideBorder != shouldOutsideBorder) {
 			if(shouldOutsideBorder) {
 				systems.outsideBorder.insertLast(this);
+				systems.events.notifyOutsideBorderSystemAdded(this, EventArgs());
 			}
 			else {
 				systems.outsideBorder.remove(this);
+				systems.events.notifyOutsideBorderSystemRemoved(this, EventArgs());
 			}
 			outsideBorder = shouldOutsideBorder;
 		}
@@ -289,6 +301,8 @@ final class SystemAI {
 };
 
 class Systems : AIComponent {
+	Events@ events;
+	
 	//All owned systems
 	array<SystemAI@> owned;
 
@@ -307,6 +321,10 @@ class Systems : AIComponent {
 
 	uint sysIdx = 0;
 	bool hopsChanged = false;
+	
+	void create() {
+		@events = cast<Events>(ai.events);
+	}
 
 	void save(SaveFile& file) {
 		uint cnt = all.length;
@@ -541,7 +559,7 @@ class Systems : AIComponent {
 	}
 
 	SystemPath pather;
-	int hopDistance(Region& fromRegion, Region& toRegion){ 
+	int hopDistance(Region& fromRegion, Region& toRegion){
 		pather.generate(getSystem(fromRegion), getSystem(toRegion), keepCache=true);
 		if(!pather.valid)
 			return INT_MAX;

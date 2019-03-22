@@ -20,4 +20,4 @@ Building: Factory
 	ShowAttributeValue(#RESOURCE_LABOR, FactoryLaborMod, Base Amount = 3, Icon = ResourceIcon::6, Suffix = #PER_MINUTE)
 	ShowAttributeValue(#CONS_HP_BONUS, FactoryHPMod, Icon = AttributeIcons::6, Multiplier = 100, Suffix = %, Hide Zero = True)
 
-	AI: RegisterForUse(Factory)
+	AI: RegisterForLaborUse(Factory)

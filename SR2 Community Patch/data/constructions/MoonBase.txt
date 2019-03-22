@@ -15,3 +15,5 @@ Construction: MoonBase
 
 	AddSurfaceArea(Moon, (5, 5))
 	TriggerGeneric(AddMaxPopulation(2))
+	
+	AI: RegisterForUse(MoonBase)

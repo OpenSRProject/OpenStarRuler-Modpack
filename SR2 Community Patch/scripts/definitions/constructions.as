@@ -28,6 +28,7 @@ tidy class ConstructionType {
 	bool inContext = false;
 
 	array<IConstructionHook@> hooks;
+	array<Hook@> ai;
 
 	string formatTooltip(Object& obj) const {
 		string tt = format("[font=Medium]$1[/font]\n$2\n", name, description);
@@ -428,6 +429,13 @@ void loadConstructions(const string& filename) {
 		}
 		else if(key.equals_nocase("In Context")) {
 			type.inContext = toBool(value);
+		}
+		else if(key.equals_nocase("AI")) {
+			auto@ hook = parseHook(value, "ai.constructions::", instantiate=false, file=file);
+			if(hook !is null)
+				type.ai.insertLast(hook);
+			else
+				file.error("Could not find AI hook "+value);
 		}
 		else {
 			string line = file.line;

@@ -15,8 +15,9 @@ import empire_ai.weasel.Intelligence;
 
 import buildings;
 import ai.consider;
-from ai.artifacts import ArtifactConsider;
 
+from ai.artifacts import ArtifactConsider;
+from orbitals import OrbitalModule;
 
 class Consider : AIComponent, Considerer {
 	Systems@ systems;
@@ -48,6 +49,7 @@ class Consider : AIComponent, Considerer {
 	double bestWeight;
 	ImportData@ request;
 	const BuildingType@ bldType;
+	const OrbitalModule@ _module;
 	ConsiderComponent@ comp;
 	ConsiderFilter@ cfilter;
 
@@ -85,6 +87,14 @@ class Consider : AIComponent, Considerer {
 
 	void set_building(const BuildingType@ type) {
 		@bldType = type;
+	}
+	
+	const OrbitalModule@ get_module() {
+		return _module;
+	}
+	
+	void set_module(const OrbitalModule@ type) {
+		@_module = type;
 	}
 
 	ConsiderComponent@ get_component() {
@@ -215,6 +225,31 @@ class Consider : AIComponent, Considerer {
 		clear();
 		return best;
 	}
+	
+	Object@ SystemsInTerritory(const ConsiderHook& hook, const Territory& territory, uint limit = uint(-1)) {
+		Object@ best;
+		bestWeight = 0.0;
+
+		uint regionCount = territory.getRegionCount();
+		uint offset = randomi(0, regionCount -1);
+		uint cnt = min(regionCount, limit);
+		for(uint i = 0; i < cnt; ++i) {
+			uint index = (i+offset) % regionCount;
+			Region@ obj = territory.getRegion(index);
+			if(obj !is null) {
+				if(cfilter !is null && !cfilter.filter(obj))
+					continue;
+				double w = hook.consider(this, obj);
+				if(w > bestWeight) {
+					bestWeight = w;
+					@best = obj;
+				}
+			}
+		}
+
+		clear();
+		return best;
+	}
 
 	Object@ ImportantPlanets(const ConsiderHook& hook) {
 		Object@ best;
@@ -235,6 +270,30 @@ class Consider : AIComponent, Considerer {
 		clear();
 		return best;
 	}
+	
+	Object@ ImportantPlanetsInTerritory(const ConsiderHook& hook, const Territory& territory) {
+		Object@ best;;
+		bestWeight = 0.0;
+		for(uint i = 0, cnt = development.focuses.length; i < cnt; ++i) {
+			Object@ obj = development.focuses[i].obj;
+			if(obj !is null) {
+				if(cfilter !is null && !cfilter.filter(obj))
+					continue;
+				if (obj.region !is null) {
+					if (obj.region.getTerritory(ai.empire) !is territory)
+						continue;
+					double w = hook.consider(this, obj);
+					if(w > bestWeight) {
+						bestWeight = w;
+						@best = obj;
+					}
+				}
+			}
+		}
+
+		clear();
+		return best;
+	}
 
 	Object@ AllPlanets(const ConsiderHook& hook) {
 		Object@ best;
@@ -248,6 +307,30 @@ class Consider : AIComponent, Considerer {
 				if(w > bestWeight) {
 					bestWeight = w;
 					@best = obj;
+				}
+			}
+		}
+
+		clear();
+		return best;
+	}
+	
+	Object@ PlanetsInTerritory(const ConsiderHook& hook, const Territory& territory) {
+		Object@ best;
+		bestWeight = 0.0;
+		for(uint i = 0, cnt = planets.planets.length; i < cnt; ++i) {
+			Object@ obj = planets.planets[i].obj;
+			if(obj !is null) {
+				if(cfilter !is null && !cfilter.filter(obj))
+					continue;
+				if (obj.region !is null) {
+					if (obj.region.getTerritory(ai.empire) !is territory)
+						continue;
+					double w = hook.consider(this, obj);
+					if(w > bestWeight) {
+						bestWeight = w;
+						@best = obj;
+					}
 				}
 			}
 		}
