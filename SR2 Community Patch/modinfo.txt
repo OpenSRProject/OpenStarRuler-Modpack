@@ -2,7 +2,7 @@
 
 	Description: <<
 		A collection of bug fixes and non-gameplay changing improvements.
-		Can be overridden and included as a resource by other mods for them to inherit the changes from the Community Patch. See readme for details.
+		Can be used as a standalone mod or overridden and included as a resource by other mods for them to inherit the changes from the Community Patch. See readme for details.
 
 		[h1]Current version: 1.0.0[/h1]
 
