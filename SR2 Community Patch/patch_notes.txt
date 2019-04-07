@@ -20,13 +20,13 @@ v1.0
 - Fixed a bug where map generation would sometimes fail due to a script error related to Remnants.
 - Fixed a bug where Remnant fleets would attack their own defense stations in Invasion maps.
 - Fixed a bug where Flagship Health research nodes would also increase support ship health (Wake of the Heralds DLC only).
-- Fixed a bug where the Buy Influence anility on Commerce Stations would display an incorrect cost.
+- Fixed a bug where the Buy Influence ability on Commerce Stations would display an incorrect cost.
 - Fixed a bug where the dry dock construction menu would list different versions of a design under certain circumstances.
 - Fixed a bug with asteroid fields orbiting Local Asteroid Field Planets not being rendered in certain circumstances.
 - Fixed a bug where persistent beam effects were not restored upon loading a save file.
 - Fixed a bug where strategic icons of Ore asteroids spawned when a planet is destroyed were incorrectly set to resource asteroid icons.
-- Fixed a bug where ore asteroids in the mirrored part of a dumbbell galaxy generated with the 'Perfect Mirror' option had a resource asteroid strategic icon.
-- Fixed a bug where incremental Ore cost spent to build certain things would be refund the next increment's worth of Ore when refunded.
+- Fixed a bug where Ore asteroids in the mirrored part of a dumbbell galaxy generated with the 'Perfect Mirror' option had a resource asteroid strategic icon.
+- Fixed a bug where incremental Ore cost spent to build certain things would refund the next increment's worth of Ore when refunded.
 - Fixed a bug where elapsed time was not tracked correctly for empire-related attributes and planet statuses.
 - Fixed a bug where status stacks spent to build certain things (like troop pods filled with troops) would only ever refund one instance instead of the correct amount when refunded.
 - Fixed a bug where orbital types present in systems tracked by AIs were not loaded from a previously saved game.
@@ -39,6 +39,7 @@ v1.0
 - The shipset selection box is now dynamically resized depending of the number of available shipsets.
 - Added Advanced and Crazy options tabs for universe generation.
 - Added FXAA graphics option.
+- Added 'Safe ringworlds' graphics option. Activate only if experiencing issues when displaying ringworlds.
 - Added an option to automatically connect to the SR2 IRC.
 - The IRC now pings you if a message is addressed to you or contains the string '%everyone%'.
 - Added an option to enable playback of in-game music in the title screen.
