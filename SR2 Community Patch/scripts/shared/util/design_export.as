@@ -366,8 +366,37 @@ class DesignSet {
 				for(uint i = 0, cnt = dsg.errorCount; i < cnt; ++i)
 					print("   "+dsg.errors[i].text);
 			}
-			if(dsg is null || dsg.hasFatalErrors())
-				continue;
+			if(dsg is null || dsg.hasFatalErrors())  { //DOF - Try additional hull types
+				//Try support
+				hullName = format("$1Tiny", emp.shipset.ident);
+				@desc.hull = getHullDefinition(hullName);
+				if(desc.hull !is null)  @dsg = makeDesign(desc);
+				if(dsg is null || dsg.hasFatalErrors())  {
+					//Try station
+					hullName = format("$1Station", emp.shipset.ident);
+					@desc.hull = getHullDefinition(hullName);
+					if(desc.hull !is null)  @dsg = makeDesign(desc);
+					if(dsg is null || dsg.hasFatalErrors())  {
+						//Try satellite
+						hullName = format("$1Satellite", emp.shipset.ident);
+						@desc.hull = getHullDefinition(hullName);
+						if(desc.hull !is null)  @dsg = makeDesign(desc);
+						if(dsg is null || dsg.hasFatalErrors())
+							continue;
+					}
+				}
+				if(limitShipset && !overrideLimit) {
+					if(emp.shipset is null || !emp.shipset.hasHull(desc.hull))
+						continue;
+				}
+				else {
+					if(emp.shipset !is null && !emp.shipset.hasHull(desc.hull))
+						@desc.hull = getBestHull(desc, getHullTypeTag(desc.hull), emp);
+				}
+				@dsg = makeDesign(desc);
+				if(dsg is null || dsg.hasFatalErrors())
+					continue;
+			}
 			if(emp.getDesign(dsg.name) !is null)
 				continue;
 			if(desc.settings !is null)
