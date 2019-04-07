@@ -65,6 +65,9 @@ RemnantComposition@ composeRemnantFleet(double targetStrength, double margin = 0
 		const Design@ flag = getRemnantDesign(DT_Flagship, flagSize, emp);
 		@compose.flagship = flag;
 
+		if(flag is null)
+			continue;
+
 		double hp = flag.totalHP;
 		hp += flag.total(SV_ShieldCapacity);
 
@@ -168,7 +171,7 @@ const Design@ getRemnantDesign(uint type, int size, Empire@ emp = Creeps) {
 	if(designs.length == 0 || randomd() < 1.0/double(designs.length)) {
 		//Create a new design of this type
 		Designer@ designer;
-		
+
 		if(type == DT_Flagship && randomd() < 0.05) {
 			@designer = Designer(type, size * 3, emp, "Defense");
 			designer.randomHull = true;
@@ -180,7 +183,7 @@ const Design@ getRemnantDesign(uint type, int size, Empire@ emp = Creeps) {
 			if(type == DT_Flagship)
 				designer.composeFlagship(tryFTL=false);
 		}
-		
+
 		auto@ dsg = designer.design(128);
 		if(dsg !is null) {
 			string name;
