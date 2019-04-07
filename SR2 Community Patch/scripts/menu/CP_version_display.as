@@ -7,6 +7,6 @@ namespace CommunityPatch {
 	//
 	//This can be changed without touching this file by copying it to the client mod
 	//at the same location and changing the values there
-	bool showVersionCheckLabel = false;
-	bool showVersionCheckConsole = true;
+	const bool showVersionCheckLabel = false;
+	const bool showVersionCheckConsole = true;
 }
