@@ -62,20 +62,32 @@ string latestSave;
 
 void init() {
 	//Show the version
-	@version = GuiText(null, Alignment(Right-200, Bottom-46, Right-4, Bottom-10));
+	if (CommunityPatch::showVersionCheckLabel)
+		@version = GuiText(null, Alignment(Right-200, Bottom-46, Right-4, Bottom-10));
+	else
+		@version = GuiText(null, Alignment(Right-200, Bottom-20, Right-4, Bottom));
 	version.horizAlign = 1.0;
 	version.text = format("Version: $1 ($2)", GAME_VERSION, SCRIPT_VERSION);
 	version.color = Color(0xaaaaaaaa);
 
-	//Show the Community Patch version
-	@version = GuiText(null, Alignment(Right-300, Bottom-20, Right-4, Bottom));
-	version.horizAlign = 1.0;
-	version.text = "Applied: " + CommunityPatch::MOD_NAME;
-	version.color = Color(0xaaaaaaaa);
-	// Check if mod is compatible with current game version, spew out alarming colors and errors if not
-	if(!CommunityPatch::checkSupported()) {
-		version.color = Color(0xff0000ff);
-		version.text = version.text + " (UNSUPPORTED VERSION)";
+	string CPVersionCheck = "Applied: " + CommunityPatch::MOD_NAME;
+	if (CommunityPatch::showVersionCheckLabel) {
+		//Show the Community Patch version
+		@version = GuiText(null, Alignment(Right-300, Bottom-20, Right-4, Bottom));
+		version.horizAlign = 1.0;
+		version.text = CPVersionCheck;
+		version.color = Color(0xaaaaaaaa);
+		// Check if mod is compatible with current game version, spew out alarming colors and errors if not
+		if(!CommunityPatch::checkSupported()) {
+			version.color = Color(0xff0000ff);
+			version.text += " (UNSUPPORTED VERSION)";
+		}
+	}
+	if (CommunityPatch::showVersionCheckConsole) {
+		// Check if mod is compatible with current game version
+		if(!CommunityPatch::checkSupported())
+			CPVersionCheck += " (UNSUPPORTED VERSION)";
+		print(CPVersionCheck);
 	}
 
 	//Create container
