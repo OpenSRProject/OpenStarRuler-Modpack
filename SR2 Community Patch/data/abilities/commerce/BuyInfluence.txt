@@ -13,5 +13,5 @@ Ability: BuyInfluence
 	ConsumeMoney(300)
 	AddInfluencePoints(4)
 
-	ShowMoneyValue(500, #COST)
+	ShowMoneyValue(300, #COST)
 	ShowInfluenceValue(4)
