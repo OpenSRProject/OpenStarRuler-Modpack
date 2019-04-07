@@ -12,7 +12,7 @@ v1.0.0
 - AIs can now choose to focus on one particular area with their budget spending under certain circumstances.
 - AIs can now borrow money from their next budget for construction projects critical to their development.
 - AIs now build commerce stations to establish trade routes between their territories.
-- AIS now build a factory in territories where no labor is available to establish a trade route.
+- AIs now build a factory in territories where no labor is available to establish a trade route.
 - AIs now build research complexes if their research generation rate is too low.
 
 [*] Bug Fixes
