@@ -353,7 +353,7 @@ final class Colonization : AIComponent {
 	}
 
 	bool shouldForceExpansion() {
-    uint otherColonizedSystems = 0;
+		uint otherColonizedSystems = 0;
 		for (uint i = 0, cnt = systems.outsideBorder.length; i < cnt; ++i) {
 			auto@ sys = systems.outsideBorder[i];
 			//Check if any system in our tradable area is unexplored
@@ -363,8 +363,8 @@ final class Colonization : AIComponent {
 				uint otherColonizedPlanets = 0;
 				for (uint j = 0, cnt = sys.planets.length; j < cnt; ++j) {
 					auto@ pl = sys.planets[j];
-          int resId = pl.primaryResourceType;
-          if (resId != -1) {
+					int resId = pl.primaryResourceType;
+					if (resId != -1) {
 						//Check if any planet can still be colonized in our tradable area
 						if (!pl.owner.valid && !pl.quarantined)
 							return false;
@@ -374,15 +374,15 @@ final class Colonization : AIComponent {
 				}
 				//Check if all planets in the system are colonized
 				if (otherColonizedPlanets == sys.planets.length)
-          ++otherColonizedSystems;
+					++otherColonizedSystems;
 			}
 		}
 		//Check if all systems in our tradable area belong to other empires
-    if (otherColonizedSystems == systems.outsideBorder.length)
+		if (otherColonizedSystems == systems.outsideBorder.length)
 			//If 0, we colonized everything!
-      return false;
+			return false;
 
-    return true;
+		return true;
 	}
 
 	double getSourceWeight(PotentialSource& source, ColonizeData& data) {
