@@ -12,6 +12,8 @@
 		- Quality of life improvements.
 		- Improved AI.
 
+		Detailed changes can be found in the patch notes.
+
 		[h1][b]Credits[/b][/h1]
 		soloriens
 		Dalo Lorn
