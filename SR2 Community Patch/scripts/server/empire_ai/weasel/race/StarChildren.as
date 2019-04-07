@@ -197,7 +197,7 @@ class StarChildren : Race {
 		@ai.defs.LaborStorage = null;
 
 		habitatAbl = getAbilityID("MothershipColonize");
-		popStatus = getAbilityID("MothershipPopulation");
+		popStatus = getStatusID("MothershipPopulation");
 	}
 
 	void start() override {
