@@ -2,7 +2,7 @@
 // ------
 // Manages data about fleets and missions, as well as making sure fleets
 // return to their station after a mission.
-// 
+//
 
 import empire_ai.weasel.WeaselAI;
 
@@ -15,6 +15,7 @@ enum FleetClass {
 	FC_Combat,
 	FC_Slipstream,
 	FC_Mothership,
+	FC_Defense,
 
 	FC_ALL
 };
@@ -175,6 +176,12 @@ final class FleetAI {
 			return false;
 		if(obj.isMoving) {
 			if(obj.velocity.length / obj.maxAcceleration > 16.0)
+				return false;
+		}
+		//DOF - Do not send badly damaged flagships
+		Ship@ flagship = cast<Ship>(obj);
+		auto@ bp = flagship.blueprint;
+		if(bp.currentHP / bp.design.totalHP < 0.75)  {
 				return false;
 		}
 		return true;
@@ -409,6 +416,11 @@ class Fleets : AIComponent {
 			if(obj !is null)
 				register(obj);
 		}
+		@data = ai.empire.getStations();
+		while(receive(data, obj)) {
+			if(obj !is null)
+				register(obj);
+		}
 	}
 
 	bool haveCombatReadyFleets() {
@@ -521,6 +533,8 @@ class Fleets : AIComponent {
 				flAI.fleetClass = FC_Slipstream;
 			else if(designClass == DP_Mothership)
 				flAI.fleetClass = FC_Mothership;
+			else if(designClass == DP_Defense)
+				flAI.fleetClass = FC_Defense;
 			else
 				flAI.fleetClass = FC_Combat;
 
