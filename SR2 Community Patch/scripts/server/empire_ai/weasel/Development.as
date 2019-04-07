@@ -248,7 +248,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 			return false;
 		return true;
 	}
-	
+
 	bool requestsResearchGeneration() {
 		double rate = ai.empire.ResearchRate;
 		if (aimResearchRate <= rate)
@@ -363,7 +363,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 			return;
 
 		double totalChance =
-			  ai.behavior.focusDevelopWeight
+				ai.behavior.focusDevelopWeight
 			+ ai.behavior.focusColonizeNewWeight * sqr(1.0 / double(focuses.length))
 			+ ai.behavior.focusColonizeHighTierWeight;
 		double roll = randomd(0.0, totalChance);
@@ -773,7 +773,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 		}
 		return true;
 	}
-	
+
 	Planet@ getLaborAt(Territory@ territory, double&out expires) {
 		if (territory is null) {
 			if (log)
@@ -781,26 +781,26 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 			return null;
 		}
 		expires = 600.0;
-    const BuildingType@ type = ai.defs.Factory;
+		const BuildingType@ type = ai.defs.Factory;
 		BuildingRequest@ request = null;
 		Planet@ pl = null;
-    for (uint i = 0, cnt = type.ai.length; i < cnt; ++i) {
-      auto@ hook = cast<RegisterForLaborUse>(type.ai[i]);
-      if (hook !is null) {
-        Object@ obj = hook.considerBuild(this, type, territory);
-        if (obj !is null) {
-          @pl = cast<Planet>(obj);
+		for (uint i = 0, cnt = type.ai.length; i < cnt; ++i) {
+			auto@ hook = cast<RegisterForLaborUse>(type.ai[i]);
+			if (hook !is null) {
+				Object@ obj = hook.considerBuild(this, type, territory);
+				if (obj !is null) {
+					@pl = cast<Planet>(obj);
 					if (pl !is null) {
 						planets.requestBuilding(planets.getAI(pl), type, 2.0, expires);
 						if (log)
 							ai.print("requesting building " + type.name + " at " + pl.name + " to get labor at " + addrstr(territory));
-	          break;
+						break;
 					}
-        }
-      }
-    }
-    return pl;
-  }
+				}
+			}
+		}
+		return pl;
+	}
 };
 
 AIComponent@ createDevelopment() {
