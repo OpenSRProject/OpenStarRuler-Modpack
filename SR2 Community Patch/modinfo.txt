@@ -1,2 +1,9 @@
 	Name: SR2 Community Patch
+
+	Description: <<
+		A collection of bug fixes and non-gameplay changing improvements.
+		Can be overridden and included as a resource by other mods for them to inherit
+		the changes from the Community Patch. See readme for details.
+	>>
+
 	Compatibility: 200
