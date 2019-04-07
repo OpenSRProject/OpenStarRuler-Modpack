@@ -2,7 +2,7 @@ v1.0
 
 [*] Artificial Intelligence
 
-- AIs no will no longer send damaged flagships to battle.
+- AIs will no longer send damaged flagships to battle.
 - AIs are now able to build and prioritize outposts to protect their territory or expand beyond systems without planets or resources (including nebulae). Evangelical lifestyles will build star temples instead.
 - AIs now expand outside their trade area when they are out of other options.
 - AIs now build moon bases on planets when needed (excepted, of course, Star Children).
