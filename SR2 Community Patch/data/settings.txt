@@ -20,7 +20,7 @@ Category: Game
 	Bool: bHoldForPopup
 		Default: False
 	Bool: bAutoEnableIRC
-		Default: True
+		Default: False
 	Bool: bRotateUIObjects
 		Default: True
 	Bool: bMenuBGScreenshot
