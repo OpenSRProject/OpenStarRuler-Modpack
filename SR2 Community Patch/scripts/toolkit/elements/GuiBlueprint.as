@@ -1,4 +1,5 @@
 #section game
+import skins;
 import elements.BaseGuiElement;
 import design_stats;
 import util.design_export;
@@ -329,11 +330,11 @@ class GuiBlueprint : BaseGuiElement {
 		while(cur < elev) {
 			if(elev != -3) {
 				if(sw_elev <= cur && (second ? sw_elev >= 0 : sw_elev < 0))
-					spritesheet::HexRiser.draw(0, wallPos);
+					getSkinSpriteSheet("HexRiser").draw(0, wallPos);
 				if(s_elev <= cur && (second ? s_elev >= 0 : s_elev < 0))
-					spritesheet::HexRiser.draw(1, wallPos);
+					getSkinSpriteSheet("HexRiser").draw(1, wallPos);
 				if(se_elev <= cur && (second ? se_elev >= 0 : se_elev < 0))
-					spritesheet::HexRiser.draw(2, wallPos);
+					getSkinSpriteSheet("HexRiser").draw(2, wallPos);
 			}
 
 			cur += 1;
@@ -450,9 +451,9 @@ class GuiBlueprint : BaseGuiElement {
 		}
 
 		/*if(sys is null)*/
-		/*	material::HexEmpty.draw(drawPos, color);*/
+		/*	getSkinMaterial("HexEmpty").draw(drawPos, color);*/
 		/*else*/
-		/*	material::HexFloor.draw(drawPos, color);*/
+		/*	getSkinMaterial("HexFloor").draw(drawPos, color);*/
 	}
 
 	void drawHexWalls(const vec2u& hex, const vec2i& atPos, const vec2i& size, bool second = false) {
@@ -576,7 +577,7 @@ class GuiBlueprint : BaseGuiElement {
 					continue;
 			}
 			if(sys !is otherSys)
-				spritesheet::HexWall.draw(edge, wallPos, color);
+				getSkinSpriteSheet("HexWall").draw(edge, wallPos, color);
 		}
 	}
 
@@ -684,7 +685,7 @@ class GuiBlueprint : BaseGuiElement {
 						continue;
 				}
 				if(sys !is otherSys)
-					spritesheet::HexWall.draw(edge, wallPos, color);
+					getSkinSpriteSheet("HexWall").draw(edge, wallPos, color);
 			}
 		}
 
@@ -773,7 +774,7 @@ class GuiBlueprint : BaseGuiElement {
 						continue;
 				}
 				if(sys !is otherSys)
-					spritesheet::HexWall.draw(edge, wallPos, color);
+					getSkinSpriteSheet("HexWall").draw(edge, wallPos, color);
 			}
 		}
 
@@ -788,12 +789,12 @@ class GuiBlueprint : BaseGuiElement {
 			double w = hull.getMatchDistance(pctPos);
 			skin.getFont(FT_Small).draw(
 				pos=wallPos, horizAlign=0.5, vertAlign=0.5,
-				stroke=colors::Black, text=toString(w, 0));
+				stroke=activeSkin.Black, text=toString(w, 0));
 		}
 
 		//Draw hex errors
 		if(design !is null && design.isErrorHex(hex))
-			material::HexError.draw(drawPos);
+			getSkinMaterial("HexError").draw(drawPos);
 	}
 
 	void updateAbsolutePosition() {
@@ -878,7 +879,7 @@ class GuiBlueprint : BaseGuiElement {
 				shader::MAX_RAD = rad + arc;
 
 				clearClip();
-				material::FireArc2D.draw(pos, color);
+				getSkinMaterial("FireArc2D").draw(pos, color);
 			}
 		}
 	}
@@ -919,9 +920,9 @@ class GuiBlueprint : BaseGuiElement {
 				drawHexFloor(vec2u(x, y), getHexPos(vec2u(x, y)) + start, hexSize);
 		}
 		for(uint i = 0, cnt = emptyFloors.length; i < cnt; ++i)
-			material::HexEmpty.draw(emptyFloors[i], emptyColors[i]);
+			getSkinMaterial("HexEmpty").draw(emptyFloors[i], emptyColors[i]);
 		for(uint i = 0, cnt = hexFloors.length; i < cnt; ++i)
-			material::HexFloor.draw(hexFloors[i], floorColors[i]);
+			getSkinMaterial("HexFloor").draw(hexFloors[i], floorColors[i]);
 
 		/*for(uint y = 0; y < height; ++y) {*/
 		/*	for(uint x = 0; x < width; x += 2)*/
@@ -954,7 +955,7 @@ class GuiBlueprint : BaseGuiElement {
 
 			//Draw selection
 			else if(displayHovered) {
-				material::SubsystemCursor.draw(recti_centered(
+				getSkinMaterial("SubsystemCursor").draw(recti_centered(
 					getHexPos(vec2u(hexHovered), true) + start + (hexSize / 2),
 					vec2i(hexSize.x * WALL_RATIO.x, hexSize.y * WALL_RATIO.y)));
 			}
@@ -1441,7 +1442,7 @@ class StatBox : BaseGuiElement {
 		@value = GuiText(this, Alignment(Left+46, Top+5, Right-8, Bottom-5));
 		value.vertAlign = 1.0;
 		value.horizAlign = 1.0;
-		value.stroke = colors::Black;
+		value.stroke = activeSkin.Black;
 
 		addLazyMarkupTooltip(this, width = 400);
 
@@ -1499,12 +1500,12 @@ class StatBox : BaseGuiElement {
 		color = stat.color;
 		name.color = color;
 
-		value.color = colors::White;
+		value.color = activeSkin.White;
 		string txt;
 		if(used >= 0.f) {
 			txt = shipStat(used) + " / " + shipStat(val);
 			if(used > val) {
-				value.color = colors::Red;
+				value.color = activeSkin.Red;
 				value.font = FT_Bold;
 			}
 			else {

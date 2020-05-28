@@ -1,3 +1,4 @@
+import skins;
 import hooks;
 import cargo;
 import buildings;
@@ -137,7 +138,7 @@ class ConsumeFTL : ConsumeEffect {
 
 	bool getCost(Object& obj, string& value, Sprite& icon) const {
 		value = standardize(cost.decimal, true);
-		icon = icons::FTL;
+		icon = iconWrapper.FTL;
 		return true;
 	}
 
@@ -172,15 +173,15 @@ class ConsumeInfluence : ConsumeEffect {
 
 	bool getCost(Object& obj, string& value, Sprite& icon) const {
 		value = standardize(cost.integer, true);
-		icon = icons::Influence;
+		icon = iconWrapper.Influence;
 		return true;
 	}
 
 	bool getVariable(Object& obj, Sprite& sprt, string& name, string& value, Color& color) const {
 		value = standardize(cost.integer, true);
-		sprt = icons::Influence;
+		sprt = iconWrapper.Influence;
 		name = locale::RESOURCE_INFLUENCE + " "+locale::COST;
-		color = colors::Influence;
+		color = activeSkin.Influence;
 		return true;
 	}
 
@@ -215,15 +216,15 @@ class ConsumeResearch : ConsumeEffect {
 
 	bool getCost(Object& obj, string& value, Sprite& icon) const {
 		value = standardize(cost.integer, true);
-		icon = icons::Research;
+		icon = iconWrapper.Research;
 		return true;
 	}
 
 	bool getVariable(Object& obj, Sprite& sprt, string& name, string& value, Color& color) const {
 		value = standardize(cost.integer, true);
-		sprt = icons::Research;
+		sprt = iconWrapper.Research;
 		name = locale::RESOURCE_RESEARCH + " "+locale::COST;
-		color = colors::Research;
+		color = activeSkin.Research;
 		return true;
 	}
 
@@ -257,15 +258,15 @@ class ConsumeEnergy : ConsumeEffect {
 
 	bool getCost(Object& obj, string& value, Sprite& icon) const {
 		value = standardize(cost.decimal, true);
-		icon = icons::Energy;
+		icon = iconWrapper.Energy;
 		return true;
 	}
 
 	bool getVariable(Object& obj, Sprite& sprt, string& name, string& value, Color& color) const {
 		value = standardize(cost.decimal, true);
-		sprt = icons::Energy;
+		sprt = iconWrapper.Energy;
 		name = locale::RESOURCE_ENERGY + " "+locale::COST;
-		color = colors::Energy;
+		color = activeSkin.Energy;
 		return true;
 	}
 
@@ -305,15 +306,15 @@ class ConsumePopulation : ConsumeEffect {
 
 	bool getCost(Object& obj, string& value, Sprite& icon) const {
 		value = standardize(cost.decimal, true);
-		icon = icons::Population;
+		icon = iconWrapper.Population;
 		return true;
 	}
 
 	bool getVariable(Object& obj, Sprite& sprt, string& name, string& value, Color& color) const {
 		value = standardize(cost.decimal, true);
-		sprt = icons::Population;
+		sprt = iconWrapper.Population;
 		name = locale::POPULATION + " "+locale::COST;
-		color = colors::White;
+		color = activeSkin.White;
 		return true;
 	}
 

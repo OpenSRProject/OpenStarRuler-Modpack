@@ -98,3 +98,5 @@ OPTTT_RINGWORLD_FIX: <<
 
 	Due to the resulting loss of quality, it may be advisable not to enable this option if you are not experiencing issues with Ringworld-related crashes.
 >>
+GUI_SKIN: Interface Skin*
+GUI_SKIN_DEFAULT: Default

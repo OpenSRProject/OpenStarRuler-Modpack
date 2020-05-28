@@ -1,3 +1,4 @@
+import skins;
 import constructible;
 
 void drawConstructible(Constructible@ cons, const recti& pos, bool isBox = false) {
@@ -74,14 +75,14 @@ void drawConstructible(Constructible@ cons, const recti& pos, const Font@ ft) {
 	int sz = ft.getLineHeight() * 2 + 6;
 	ft.draw(pos=pos.resized(0, sz, 0.0, 1.0),
 		text=cons.name, color=nameCol, horizAlign=0.5, vertAlign=0.0,
-		stroke=colors::Black);
+		stroke=activeSkin.Black);
 
 	string prog = toString(cons.progress * 100.f, 0)+"%";
 	if(cons.type == CT_DryDock)
 		prog += " / "+toString(cons.pct * 100.f, 0)+"%";
 	ft.draw(pos=pos.resized(0, sz - ft.getLineHeight(), 0.0, 1.0),
 			text=prog, color=Color(0xffffffff), horizAlign=0.5, vertAlign=0.0,
-			stroke=colors::Black);
+			stroke=activeSkin.Black);
 
 	drawConstructible(cons, pos.resized(0, pos.size.height - sz + 6));
 }

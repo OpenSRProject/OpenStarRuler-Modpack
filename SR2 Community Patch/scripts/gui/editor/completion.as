@@ -1,3 +1,5 @@
+import skins;
+
 class Completion {
 	string ident;
 	string name;
@@ -63,14 +65,14 @@ void loadCompletions(array<Completion@>@ arr, const string& folder, const string
 			}
 			else if(file.key.equals_nocase("Icon")) {
 				if(!compl.icon.valid)
-					compl.icon = getSprite(file.value);
+					compl.icon = getSkinSprite(file.value);
 			}
 			else if(file.key.equals_nocase("Sprite")) {
 				if(!compl.icon.valid)
-					compl.icon = getSprite(file.value);
+					compl.icon = getSkinSprite(file.value);
 			}
 			else if(file.key.equals_nocase("Small Icon")) {
-				compl.icon = getSprite(file.value);
+				compl.icon = getSkinSprite(file.value);
 			}
 			else if(file.key.equals_nocase("Color")) {
 				compl.color = toColor(file.value);

@@ -1,3 +1,4 @@
+#priority init 9990
 import menus;
 import elements.BaseGuiElement;
 import elements.GuiButton;
@@ -24,6 +25,7 @@ import empire_data;
 import traits;
 import icons;
 from util.draw_model import drawLitModel;
+import skins;
 
 import void showMultiplayer() from "multiplayer_menu";
 
@@ -43,7 +45,7 @@ const int REC_MAX_OHGOD = 1000;
 const array<Color> QDIFF_COLORS = {Color(0x00ff00ff), Color(0x1197e0ff), Color(0xff0000ff)};
 const array<string> QDIFF_NAMES = {locale::AI_DIFF_EASY, locale::AI_DIFF_NORMAL, locale::AI_DIFF_HARD};
 const array<string> QDIFF_DESC = {locale::AI_DIFF_EASY_DESC, locale::AI_DIFF_NORMAL_DESC, locale::AI_DIFF_HARD_DESC};
-const array<Sprite> QDIFF_ICONS = {Sprite(spritesheet::AIDifficulty, 0), Sprite(spritesheet::AIDifficulty, 1), Sprite(spritesheet::AIDifficulty, 2)};
+array<Sprite> QDIFF_ICONS;
 
 NameGenerator empireNames;
 bool empireNamesInitialized = false;
@@ -106,7 +108,7 @@ class NewGame : BaseGuiElement {
 		@empireBG = GuiBackgroundPanel(this, Alignment(
 			Left+0.05f, Top+0.1f, Left+0.5f-6, Bottom-0.1f));
 		empireBG.title = locale::MENU_EMPIRES;
-		empireBG.titleColor = Color(0x00ffe9ff);
+		empireBG.titleColor = activeSkin.LobbyEmpiresTitle;
 
 		@gameBG = GuiBackgroundPanel(this, Alignment(
 			Left+0.5f+6, Top+0.1f, Left+0.95f, Bottom-0.1f));
@@ -115,7 +117,7 @@ class NewGame : BaseGuiElement {
 
 		@mapsButton = GuiButton(gameHeader, Alignment(Left, Top+1, Width=200, Height=38));
 		mapsButton.text = locale::MENU_GALAXIES;
-		mapsButton.buttonIcon = Sprite(material::SystemUnderAttack);
+		mapsButton.buttonIcon = activeSkin.LobbyMaps;
 		mapsButton.toggleButton = true;
 		mapsButton.font = FT_Medium;
 		mapsButton.pressed = true;
@@ -134,7 +136,7 @@ class NewGame : BaseGuiElement {
 		@addAIButton = GuiButton(empirePanel,
 			recti_area(vec2i(), vec2i(200, 36)),
 			locale::ADD_AI);
-		addAIButton.buttonIcon = icons::Add;
+		addAIButton.buttonIcon = iconWrapper.Add;
 
 		//Game settings
 		for(uint i = 0, cnt = GAME_SETTINGS_PAGES.length; i < cnt; ++i) {
@@ -157,8 +159,8 @@ class NewGame : BaseGuiElement {
 		}
 
 		@resetButton = GuiButton(gameBG, Alignment(Left+0.5f-120, Bottom-40, Width=240, Height=35), locale::NG_RESET);
-		resetButton.color = Color(0xff8080ff);
-		resetButton.buttonIcon = icons::Reset;
+		resetButton.color = activeSkin.LobbyReset;
+		resetButton.buttonIcon = iconWrapper.Reset;
 		resetButton.visible = false;
 
 		//Galaxy list
@@ -169,7 +171,7 @@ class NewGame : BaseGuiElement {
 		@addGalaxyButton = GuiButton(galaxyPanel,
 			recti_area(vec2i(), vec2i(260, 36)),
 			locale::ADD_GALAXY);
-		addGalaxyButton.buttonIcon = Sprite(spritesheet::CardCategoryIcons, 3);
+		addGalaxyButton.buttonIcon = Sprite(getSkinSpriteSheet("CardCategoryIcons"), 3);
 
 		//Maps choice list
 		@mapPanel = GuiPanel(gameBG,
@@ -180,7 +182,7 @@ class NewGame : BaseGuiElement {
 		@mapHeader = GuiText(mapPanel, Alignment(Left, Top, Right, Top+30));
 		mapHeader.font = FT_Medium;
 		mapHeader.horizAlign = 0.5;
-		mapHeader.stroke = colors::Black;
+		mapHeader.stroke = activeSkin.Black;
 		mapHeader.text = locale::CHOOSE_MAP;
 
 		@mapList = GuiListbox(mapPanel,
@@ -199,17 +201,17 @@ class NewGame : BaseGuiElement {
 		@playButton = GuiButton(this, Alignment(
 			Right-0.05f-200, Bottom-0.1f+6, Width=200, Height=46),
 			locale::START_GAME);
-		playButton.buttonIcon = Sprite(spritesheet::MenuIcons, 9);
+		playButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 9);
 
 		@backButton = GuiButton(this, Alignment(
 			Left+0.05f, Bottom-0.1f+6, Width=200, Height=46),
 			locale::BACK);
-		backButton.buttonIcon = Sprite(spritesheet::MenuIcons, 11);
+		backButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 11);
 
 		@inviteButton = GuiButton(this, Alignment(
 			Left+0.05f+208, Bottom-0.1f+6, Width=200, Height=46),
 			locale::INVITE_FRIEND);
-		inviteButton.buttonIcon = Sprite(spritesheet::MenuIcons, 13);
+		inviteButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 13);
 		inviteButton.visible = cloud::inLobby;
 
 		updateAbsolutePosition();
@@ -272,11 +274,11 @@ class NewGame : BaseGuiElement {
 
 		if(fromMP) {
 			playButton.text = locale::MP_NOT_READY;
-			playButton.color = colors::Orange;
+			playButton.color = activeSkin.LobbyNotReady;
 		}
 		else {
 			playButton.text = locale::START_GAME;
-			playButton.color = colors::White;
+			playButton.color = activeSkin.White;
 		}
 	}
 
@@ -433,9 +435,9 @@ class NewGame : BaseGuiElement {
 
 			//Update play button
 			if(allReady)
-				playButton.color = colors::Green;
+				playButton.color = activeSkin.LobbyAllReady;
 			else
-				playButton.color = colors::Orange;
+				playButton.color = activeSkin.LobbyNotReady;
 		}
 		else if(fromMP) {
 			if(game_running) {
@@ -453,11 +455,11 @@ class NewGame : BaseGuiElement {
 			auto@ pl = findPlayer(CURRENT_PLAYER.id);
 			if(pl !is null && pl.settings.ready) {
 				playButton.text = locale::MP_READY;
-				playButton.color = colors::Green;
+				playButton.color = activeSkin.LobbyReady;
 			}
 			else {
 				playButton.text = locale::MP_NOT_READY;
-				playButton.color = colors::Orange;
+				playButton.color = activeSkin.LobbyNotReady;
 			}
 
 			if(!mpIsConnected()) {
@@ -973,10 +975,10 @@ class CustomizeOption : GuiListElement {
 		const Font@ bold = ele.skin.getFont(FT_Bold);
 
 		recti namePos = recti_area(absPos.topLeft + vec2i(8, 0), vec2i(absPos.width * 0.95, absPos.height));
-		icons::Customize.draw(recti_area(absPos.topLeft + vec2i(8, 0), vec2i(absPos.height, absPos.height)));
+		iconWrapper.Customize.draw(recti_area(absPos.topLeft + vec2i(8, 0), vec2i(absPos.height, absPos.height)));
 		namePos.topLeft.x += absPos.height+8;
 
-		bold.draw(pos=namePos, text=locale::CUSTOMIZE_RACE, color=Color(0xff8000ff));
+		bold.draw(pos=namePos, text=locale::CUSTOMIZE_RACE, color=activeSkin.LobbyCustomizeTitle);
 	}
 };
 
@@ -1015,7 +1017,7 @@ class ChangeWelfare : GuiContextOption {
 	ChangeWelfare(const string& text, uint index) {
 		value = int(index);
 		this.text = text;
-		icon = Sprite(spritesheet::ConvertIcon, index);
+		icon = Sprite(getSkinSpriteSheet("ConvertIcon"), index);
 	}
 
 	void call(GuiContextMenu@ menu) override {
@@ -1023,27 +1025,9 @@ class ChangeWelfare : GuiContextOption {
 	}
 };
 
-const Sprite[] DIFF_SPRITES = {
-	Sprite(material::HappyFace),
-	Sprite(material::StatusPeace),
-	Sprite(material::StatusWar),
-	Sprite(material::StatusCeaseFire),
-	Sprite(spritesheet::AttributeIcons, 3),
-	Sprite(spritesheet::AttributeIcons, 0),
-	Sprite(spritesheet::VoteIcons, 3),
-	Sprite(spritesheet::VoteIcons, 3, colors::Red)
-};
+Sprite[] DIFF_SPRITES;
 
-const Color[] DIFF_COLORS = {
-	colors::Green,
-	colors::White,
-	colors::White,
-	colors::White,
-	colors::Orange,
-	colors::Red,
-	colors::Red,
-	colors::Red
-};
+Color[] DIFF_COLORS;
 
 const string[] DIFF_TOOLTIPS = {
 	locale::DIFF_PASSIVE,
@@ -1174,11 +1158,11 @@ class RaceChooser : GuiOverlay {
 
 		@customizeButton = GuiButton(panel, Alignment(Right-232, Bottom-78, Width=220, Height=33));
 		customizeButton.text = locale::CUSTOMIZE_RACE;
-		customizeButton.setIcon(icons::Edit);
+		customizeButton.setIcon(iconWrapper.Edit);
 
 		@loadButton = GuiButton(panel, Alignment(Right-232, Bottom-78+33, Width=220, Height=33));
 		loadButton.text = locale::LOAD_CUSTOM_RACE;
-		loadButton.setIcon(icons::Load);
+		loadButton.setIcon(iconWrapper.Load);
 
 		int w = 250, h = 140;
 		int off = max((size.width - (getRacePresetCount() * w)) / 2 - 20, 0);
@@ -1205,11 +1189,11 @@ class RaceChooser : GuiOverlay {
 			GuiSprite icon(btn, recti_area(2, 2, w*0.75, h-4));
 			icon.horizAlign = 0.0;
 			icon.vertAlign = 1.0;
-			icon.desc = getSprite(preset.portrait);
+			icon.desc = getSkinSprite(preset.portrait);
 
 			GuiText name(btn, recti_area(0, 0, w-4, h));
 			name.font = FT_Big;
-			name.stroke = colors::Black;
+			name.stroke = activeSkin.Black;
 			name.text = preset.name;
 			name.vertAlign = 0.4;
 			name.horizAlign = 0.9;
@@ -1219,7 +1203,7 @@ class RaceChooser : GuiOverlay {
 
 			GuiText tagline(btn, recti_area(0, h-30, w-4, 24));
 			tagline.font = FT_Italic;
-			tagline.stroke = colors::Black;
+			tagline.stroke = activeSkin.Black;
 			tagline.color = Color(0xaaaaaaff);
 			tagline.text = preset.tagline;
 			tagline.horizAlign = 1.0;
@@ -1240,7 +1224,7 @@ class RaceChooser : GuiOverlay {
 				traits.visible = false;
 				btn.disabled = true;
 				btn.color = Color(0xffffffaa);
-				name.color = Color(0xaa3030ff);
+				name.color = activeSkin.LobbyRaceNoAI;
 
 				setMarkupTooltip(btn, locale::AI_CANNOT_PLAY);
 			}
@@ -1268,7 +1252,7 @@ class RaceChooser : GuiOverlay {
 		flag.vertAlign = 0.0;
 		flag.color = setup.settings.color;
 		flag.color.a = 0xc0;
-		flag.desc = getSprite(setup.settings.flag);
+		flag.desc = getSkinSprite(setup.settings.flag);
 
 		y += 220 + 12;
 		GuiSkinElement colBG(leftBG, Alignment(Left, Top+y, Right, Height=34), SS_PlainBox);
@@ -1287,17 +1271,14 @@ class RaceChooser : GuiOverlay {
 		flags.spriteColor = setup.settings.color;
 		for(uint i = 0, cnt = getEmpireFlagCount(); i < cnt; ++i) {
 			string flag = getSpriteDesc(Sprite(getEmpireFlag(i).flag));
-			flags.add(getSprite(flag));
+			flags.add(getSkinSprite(flag));
 			if(flag == setup.settings.flag)
 				flags.selected = i;
 		}
 		
 		y += 110 + 12;
-		// DOF - Adjust shipset selection box size.
-		// Trying dynamic size based on number of shipsets.  Target 6 per row, max 4 rows (don't want to get too tall for lower resolutions).
-		uint SSBoxHeight = min(int(ceil(getShipsetCount()/8.0)),4) * 75;
-		GuiSkinElement shipsetBG(leftBG, Alignment(Left, Top+y, Right, Height=SSBoxHeight), SS_PlainBox);
-		@shipsets = ShipsetChooser(shipsetBG, Alignment().padded(8, 0), vec2i(160, 70));
+		GuiSkinElement shipsetBG(leftBG, Alignment(Left, Top+y, Right, Height=150), SS_PlainBox);
+		@shipsets = ShipsetChooser(shipsetBG, Alignment().padded(8, 0), activeSkin.LobbyShipsetChooserSize);
 		shipsets.selectedColor = setup.settings.color;
 		shipsets.selected = 0;
 		shipsets.horizAlign = 0.0;
@@ -1321,11 +1302,11 @@ class RaceChooser : GuiOverlay {
 
 		@playButton = GuiButton(panel, Alignment(Left+0.5f-150, Bottom-78, Left+0.5f+150, Bottom-12));
 		playButton.font = FT_Medium;
-		playButton.color = Color(0x00c0ffff);
+		playButton.color = activeSkin.LobbyRaceConfirm;
 
 		@backButton = GuiButton(panel, Alignment(Left+12, Bottom-78, Left+220, Bottom-12), locale::BACK);
 		backButton.font = FT_Medium;
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 
 		selectRace(curSelection);
 		updateAbsolutePosition();
@@ -1371,9 +1352,9 @@ class RaceChooser : GuiOverlay {
 			playButton.text = format(locale::PLAY_AS_RACE, preset.name);
 		else
 			playButton.text = format(locale::CHOOSE_A_RACE, preset.name);
-		playButton.buttonIcon = getSprite(preset.portrait);
+		playButton.buttonIcon = getSkinSprite(preset.portrait);
 
-		portrait.desc = getSprite(preset.portrait);
+		portrait.desc = getSkinSprite(preset.portrait);
 
 		loreScroll.updateAbsolutePosition();
 		descScroll.updateAbsolutePosition();
@@ -1397,7 +1378,7 @@ class RaceChooser : GuiOverlay {
 				if(sel != uint(-1)) {
 					string sprt = getSpriteDesc(Sprite(getEmpireFlag(sel).flag));
 					setup.settings.flag = sprt;
-					flag.desc = getSprite(sprt);
+					flag.desc = getSkinSprite(sprt);
 					flags.selected = sel;
 				}
 				return true;
@@ -1544,7 +1525,7 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 		aiText.horizAlign = 0.5;
 		aiText.vertAlign = 0.2;
 		aiText.font = FT_Small;
-		aiText.stroke = colors::Black;
+		aiText.stroke = activeSkin.Black;
 
 		@raceBox = GuiButton(this, Alignment(Left+EMPIRE_SETUP_HEIGHT+8, Top+0.5f+4, Right-8, Bottom-14));
 		raceBox.style = SS_HoverButton;
@@ -1563,8 +1544,8 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 		player = Player;
 		@removeButton = GuiButton(this,
 			Alignment(Right-50, Top, Right, Top+30));
-		removeButton.color = colors::Red;
-		removeButton.setIcon(icons::Remove);
+		removeButton.color = activeSkin.LobbyRemovePlayer;
+		removeButton.setIcon(iconWrapper.Remove);
 		if(!player) {
 			removeButton.visible = true;
 			aiSettings.visible = true;
@@ -1716,7 +1697,7 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 		if(difficulty.visible) {
 			difficulty.color = DIFF_COLORS[settings.difficulty];
 			setMarkupTooltip(difficulty, locale::TT_DIFF+"\n"+DIFF_TOOLTIPS[settings.difficulty], width=300);
-			if(difficulty.color.color != colors::White.color)
+			if(difficulty.color.color != activeSkin.White.color)
 				difficulty.style = SS_Button;
 			else
 				difficulty.style = SS_HoverButton;
@@ -1748,11 +1729,11 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 		}
 		if(settings.ready) {
 			readyness.tooltip = locale::MP_PLAYER_READY;
-			readyness.desc = icons::Ready;
+			readyness.desc = iconWrapper.Ready;
 		}
 		else {
 			readyness.tooltip = locale::MP_PLAYER_NOT_READY;
-			readyness.desc = icons::NotReady;
+			readyness.desc = iconWrapper.NotReady;
 		}
 	}
 
@@ -1890,24 +1871,24 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 		if(teamButton.visible) {
 			setClip(teamButton.absoluteClipRect);
 			if(settings.team >= 0) {
-				material::TabDiplomacy.draw(recti_centered(teamButton.absolutePosition,
+				getSkinMaterial("TabDiplomacy").draw(recti_centered(teamButton.absolutePosition,
 							vec2i(teamButton.size.height, teamButton.size.height)));
 				skin.getFont(FT_Small).draw(
 					pos=teamButton.absolutePosition,
 					text=locale::TEAM,
 					horizAlign=0.5, vertAlign=0.0,
-					stroke=colors::Black,
-					color=colors::White);
+					stroke=activeSkin.Black,
+					color=activeSkin.White);
 				skin.getFont(FT_Medium).draw(
 					pos=teamButton.absolutePosition,
 					text=toString(settings.team),
 					horizAlign=0.5, vertAlign=1.0,
-					stroke=colors::Black,
+					stroke=activeSkin.Black,
 					color=colorFromNumber(settings.team));
 			}
 			else {
 				shader::SATURATION_LEVEL = 0.f;
-				material::TabDiplomacy.draw(recti_centered(teamButton.absolutePosition,
+				getSkinMaterial("TabDiplomacy").draw(recti_centered(teamButton.absolutePosition,
 							vec2i(teamButton.size.height, teamButton.size.height)),
 						Color(0xffffff80), shader::Desaturate);
 			}
@@ -2005,7 +1986,7 @@ class AIPopup : BaseGuiElement {
 
 		@behaveHeading = GuiText(this, Alignment(Left+260, Top+6, Left+260+170, Top+36));
 		behaveHeading.font = FT_Medium;
-		behaveHeading.stroke = colors::Black;
+		behaveHeading.stroke = activeSkin.Black;
 		behaveHeading.text = locale::AI_BEHAVIOR;
 
 		pos = recti_area(vec2i(260, 36), vec2i(170, 30));
@@ -2030,7 +2011,7 @@ class AIPopup : BaseGuiElement {
 
 		@cheatHeading = GuiText(this, Alignment(Left+260+165, Top+6, Right-12, Top+36));
 		cheatHeading.font = FT_Medium;
-		cheatHeading.stroke = colors::Black;
+		cheatHeading.stroke = activeSkin.Black;
 		cheatHeading.text = locale::AI_CHEATS;
 
 		pos = recti_area(vec2i(260+165, 36), vec2i(170, 30));
@@ -2239,11 +2220,11 @@ class ColorPicker : BaseGuiElement {
 		shader::HSV_VALUE = 1.f;
 		shader::HSV_SAT_START = 0.5f;
 		shader::HSV_SAT_END = 1.f;
-		drawRectangle(AbsolutePosition, material::HSVPalette, Color());
+		drawRectangle(AbsolutePosition, getSkinMaterial("HSVPalette"), Color());
 		if(AbsolutePosition.isWithin(mousePos)) {
 			clearClip();
 			recti area = recti_area(mousePos-vec2i(10), vec2i(20));
-			drawRectangle(area.padded(-1), colors::Black);
+			drawRectangle(area.padded(-1), activeSkin.Black);
 			drawRectangle(area, getColor(mousePos-AbsolutePosition.topLeft));
 		}
 		BaseGuiElement::draw();
@@ -2347,7 +2328,7 @@ class ShipsetChooser : GuiIconGrid {
 				rot *= quaterniond_fromAxisAngle(vec3d_up(), 0.6);
 				rot *= quaterniond_fromAxisAngle(vec3d_right(), -0.5);
 				setClip(pos);
-				Color lightColor = colors::White;
+				Color lightColor = activeSkin.White;
 				if(selected == index) {
 					NODE_COLOR = Colorf(selectedColor);
 					lightColor = selectedColor;
@@ -2361,8 +2342,8 @@ class ShipsetChooser : GuiIconGrid {
 			const Font@ ft = skin.getFont(FT_Bold);
 			if(selected == index || uint(hovered) == index)
 				ft.draw(text=shipset.name, pos=pos.padded(0,4),
-						horizAlign=0.5, vertAlign=0.0, stroke=colors::Black,
-						color=(selected == index ? selectedColor : colors::White));
+						horizAlign=0.5, vertAlign=0.0, stroke=activeSkin.Black,
+						color=(selected == index ? selectedColor : activeSkin.White));
 		}
 	}
 };
@@ -2419,9 +2400,9 @@ class TraitDisplay : BaseGuiElement {
 
 		@name = GuiMarkupText(this, Alignment(Left+65, Top+8, Right-168, Top+38));
 		name.defaultFont = FT_Medium;
-		name.defaultStroke = colors::Black;
+		name.defaultStroke = activeSkin.Black;
 
-		@description = GuiMarkupText(this, Alignment(Left+124, Top+34, Right-168, Bottom-8));
+		@description = GuiMarkupText(this, activeSkin.LobbyTraitDescriptionAlignment);
 
 		@conflicts = GuiText(this, Alignment(Right-360, Top+8, Right-56, Bottom-8));
 		conflicts.vertAlign = 0.1;
@@ -2478,12 +2459,12 @@ class TraitDisplay : BaseGuiElement {
 
 		if(trait.gives > 0) {
 			points.text = format(locale::RACE_POINTS_POS, toString(trait.gives));
-			points.color = colors::Green;
+			points.color = activeSkin.LobbyTraitGives;
 			points.visible = true;
 		}
 		else if(trait.cost > 0) {
 			points.text = format(locale::RACE_POINTS_NEG, toString(trait.cost));
-			points.color = colors::Red;
+			points.color = activeSkin.LobbyTraitCosts;
 			points.visible = true;
 		}
 		else {
@@ -2495,7 +2476,7 @@ class TraitDisplay : BaseGuiElement {
 		bool displayConflicts = false;
 		if(trait.conflicts.length > 0) {
 			if(conflict) {
-				conflicts.color = colors::Red;
+				conflicts.color = activeSkin.LobbyTraitConflicts;
 				conflicts.font = FT_Bold;
 				conflicts.vertAlign = 0.2;
 			}
@@ -2651,7 +2632,7 @@ class TraitsWindow : BaseGuiElement {
 		updateAbsolutePosition();
 
 		@bg = GuiBackgroundPanel(this, Alignment().fill());
-		bg.titleColor = Color(0xff8000ff);
+		bg.titleColor = activeSkin.LobbyTraitsTitle;
 		bg.title = locale::CUSTOMIZE_RACE;
 
 		@categories = GuiListbox(bg, Alignment(Left+4, Top+32, Left+250, Bottom-4));
@@ -2830,12 +2811,12 @@ class TraitsWindow : BaseGuiElement {
 		}
 
 		if(points > 0) {
-			pointsLabel.color = colors::Green;
+			pointsLabel.color = activeSkin.LobbyTraitsPositive;
 			pointsLabel.text = format(locale::RACE_POINTS_AVAIL_POS, toString(points));
 			pointsLabel.visible = true;
 		}
 		else if(points < 0) {
-			pointsLabel.color = colors::Red;
+			pointsLabel.color = activeSkin.LobbyTraitsNegative;
 			pointsLabel.text = format(locale::RACE_POINTS_AVAIL_NEG, toString(-points));
 			pointsLabel.visible = true;
 		}
@@ -2846,9 +2827,9 @@ class TraitsWindow : BaseGuiElement {
 		}
 
 		if(points >= 0 && !setup.settings.hasTraitConflicts())
-			acceptButton.color = colors::Green;
+			acceptButton.color = activeSkin.LobbyTraitsAcceptable;
 		else
-			acceptButton.color = colors::Red;
+			acceptButton.color = activeSkin.LobbyTraitsUnacceptable;
 	}
 
 	bool onGuiEvent(const GuiEvent& evt) override {
@@ -2953,7 +2934,7 @@ class GalaxySetup : BaseGuiElement {
 		name.text = mp.name;
 		name.font = FT_Medium;
 		name.color = mp.color;
-		name.stroke = colors::Black;
+		name.stroke = activeSkin.Black;
 
 		@timesBox = GuiSpinbox(this, Alignment(Right-190, Top+7, Width=52, Height=22), 1.0);
 		timesBox.min = 1.0;
@@ -2967,17 +2948,17 @@ class GalaxySetup : BaseGuiElement {
 		timesLabel.visible = !mp.isUnique;
 
 		@removeButton = GuiButton(this, Alignment(Right-84, Top+4, Right-25, Top+34));
-		removeButton.setIcon(icons::Remove);
-		removeButton.color = colors::Red;
+		removeButton.setIcon(iconWrapper.Remove);
+		removeButton.color = activeSkin.LobbyRemoveGalaxy;
 
 		@hwButton = GuiButton(this, Alignment(Right-230, Top+5, Width=26, Height=26));
-		hwButton.setIcon(Sprite(spritesheet::PlanetType, 2, Color(0xffffffaa)), padding=0);
+		hwButton.setIcon(Sprite(getSkinSpriteSheet("PlanetType"), 2, Color(0xffffffaa)), padding=0);
 		hwButton.toggleButton = true;
 		hwButton.pressed = false;
 		hwButton.style = SS_IconButton;
 		hwButton.color = Color(0xff0000ff);
 		setMarkupTooltip(hwButton, locale::NGTT_MAP_HW);
-		@hwX = GuiSprite(hwButton, Alignment(), Sprite(spritesheet::QuickbarIcons, 3, Color(0xffffff80)));
+		@hwX = GuiSprite(hwButton, Alignment(), Sprite(getSkinSpriteSheet("QuickbarIcons"), 3, Color(0xffffff80)));
 		hwX.visible = false;
 
 		@settings = GuiPanel(this,
@@ -3067,9 +3048,9 @@ class MapElement : GuiListElement {
 		}
 
 		title.draw(pos=absPos.resized(0, 32).padded(12,4),
-				text=mp.name, color=mp.color, stroke=colors::Black);
+				text=mp.name, color=mp.color, stroke=activeSkin.Black);
 		normal.draw(pos=absPos.padded(12,36,12+absPos.height,0), offset=vec2i(),
-				lineHeight=-1, text=mp.description, color=colors::White);
+				lineHeight=-1, text=mp.description, color=activeSkin.White);
 	}
 };
 
@@ -3083,6 +3064,33 @@ NewGame@ new_game;
 array<DynamicTexture> mapIcons;
 
 void init() {
+	array<Sprite> icons = {Sprite(getSkinSpriteSheet("AIDifficulty"), 0), Sprite(getSkinSpriteSheet("AIDifficulty"), 1), Sprite(getSkinSpriteSheet("AIDifficulty"), 2)};
+	QDIFF_ICONS = icons;
+
+	array<Sprite> sprites = {
+		Sprite(getSkinMaterial("HappyFace")),
+		Sprite(getSkinMaterial("StatusPeace")),
+		Sprite(getSkinMaterial("StatusWar")),
+		Sprite(getSkinMaterial("StatusCeaseFire")),
+		Sprite(getSkinSpriteSheet("AttributeIcons"), 3),
+		Sprite(getSkinSpriteSheet("AttributeIcons"), 0),
+		Sprite(getSkinSpriteSheet("VoteIcons"), 3),
+		Sprite(getSkinSpriteSheet("VoteIcons"), 3, activeSkin.Red)
+	};
+	DIFF_SPRITES = sprites;
+
+	array<Color> colors = {
+		colors::Green,
+		activeSkin.White,
+		activeSkin.White,
+		activeSkin.White,
+		activeSkin.Orange,
+		activeSkin.Red,
+		activeSkin.Red,
+		activeSkin.Red
+	};
+	DIFF_COLORS = colors;
+
 	@new_game = NewGame();
 	new_game.visible = false;
 

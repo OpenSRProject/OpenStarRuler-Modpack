@@ -1,4 +1,5 @@
 #priority init -200
+import skins;
 import tabs.Tab;
 import tabs.tabbar;
 import editor.loader;
@@ -58,16 +59,16 @@ class BlockEditor : BaseGuiElement, QuestionDialogCallback {
 		label.font = FT_Medium;
 		label.horizAlign = 0.0;
 		label.style = SS_IconButton;
-		label.buttonIcon = icons::Minus;
+		label.buttonIcon = iconWrapper.Minus;
 		@text = GuiTextbox(this, Alignment(Left+400, Top, Right-40, Top+44));
 		text.font = FT_Medium;
 		text.style = SS_HoverTextbox;
 		text.emptyText = "Enter identifier name for element...";
 		text.tabIndex = -1;
 		@removeButton = GuiButton(this, Alignment(Right-40, Top+4, Right-4, Top+40));
-		removeButton.color = colors::Red;
+		removeButton.color = activeSkin.Red;
 		setMarkupTooltip(removeButton, "Remove this block and its associated element from the file.");
-		removeButton.setIcon(icons::Remove);
+		removeButton.setIcon(iconWrapper.Remove);
 		StrictBounds = true;
 	}
 
@@ -171,13 +172,13 @@ class BlockEditor : BaseGuiElement, QuestionDialogCallback {
 		}
 
 		if(dup) {
-			text.bgColor = colors::Red;
-			text.textColor = colors::Red;
+			text.bgColor = activeSkin.Red;
+			text.textColor = activeSkin.Red;
 			setMarkupTooltip(text, "Duplicate identifier, '"+text.text+"' is already in use.");
 		}
 		else {
-			text.bgColor = colors::White;
-			text.textColor = colors::White;
+			text.bgColor = activeSkin.White;
+			text.textColor = activeSkin.White;
 			setMarkupTooltip(text, "");
 		}
 	}
@@ -193,7 +194,7 @@ class BlockEditor : BaseGuiElement, QuestionDialogCallback {
 		for(uint i = 0, cnt = hooks.length; i < cnt; ++i)
 			hooks[i].elem.visible = expanded;
 		updateAbsolutePosition();
-		label.buttonIcon = (expanded ? icons::Minus : icons::Plus);
+		label.buttonIcon = (expanded ? iconWrapper.Minus : iconWrapper.Plus);
 		if(addHookButton !is null)
 			addHookButton.visible = expanded;
 		if(editButton !is null)
@@ -788,17 +789,17 @@ class EditorTab : Tab, IInputDialogCallback, QuestionDialogCallback {
 		files.load(folder, extension=".txt");
 
 		@newFile = GuiButton(this, Alignment(Left, Bottom-36, Left+100, Bottom), "New");
-		newFile.setIcon(icons::Create);
+		newFile.setIcon(iconWrapper.Create);
 		newFile.color = colors::Green;
 
 		@duplicateFile = GuiButton(this, Alignment(Left+100, Bottom-36, Left+200, Bottom), "Duplicate");
-		duplicateFile.setIcon(icons::Export);
+		duplicateFile.setIcon(iconWrapper.Export);
 		duplicateFile.disabled = true;
 		duplicateFile.color = Color(0x0080ffff);
 
 		@deleteFile = GuiButton(this, Alignment(Left+200, Bottom-36, Left+300, Bottom), "Delete");
-		deleteFile.setIcon(icons::Delete);
-		deleteFile.color = colors::Red;
+		deleteFile.setIcon(iconWrapper.Delete);
+		deleteFile.color = activeSkin.Red;
 		deleteFile.disabled = true;
 
 		updateAbsolutePosition();
@@ -817,7 +818,7 @@ class EditorTab : Tab, IInputDialogCallback, QuestionDialogCallback {
 	}	
 
 	Sprite get_icon() {
-		return icons::Paint;
+		return iconWrapper.Paint;
 	}
 
 	void ensureFile(const string& path) {

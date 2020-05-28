@@ -1,3 +1,4 @@
+import skins;
 
 //Draws an expanding, darkening nova
 final class NovaNodeScript {
@@ -36,7 +37,7 @@ final class NovaNodeScript {
 		
 		shader::NOVA_AGE = life / duration;
 		
-		material::Nova.switchTo();
+		getSkinMaterial("Nova").switchTo();
 		model::Sphere_max.draw(node.sortDistance / (node.abs_scale * pixelSizeRatio));
 		
 		undoTransform();

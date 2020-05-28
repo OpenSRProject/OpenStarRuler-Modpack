@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.WordWrap;
 
@@ -16,7 +17,7 @@ class GuiTextbox : BaseGuiElement {
 	bool MultiLine = false;
 	bool EnterPressed = false;
 	bool disabled = false;
-	Color bgColor = colors::White;
+	Color bgColor = activeSkin.White;
 	Color textColor = skin.getColor(SC_Text);
 	Color selectionColor = skin.getColor(SC_Selected);
 

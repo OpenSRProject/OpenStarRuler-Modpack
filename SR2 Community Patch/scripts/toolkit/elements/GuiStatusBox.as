@@ -1,3 +1,4 @@
+import skins;
 #section game
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
@@ -30,7 +31,7 @@ class GuiStatusBox : BaseGuiElement {
 	}
 
 	void draw() {
-		(spritesheet::ResourceIconsSmallMods+0).draw(AbsolutePosition, status.type.color);
+		Sprite(getSkinSpriteSheet("ResourceIconsSmallMods"), 0).draw(AbsolutePosition, status.type.color);
 		status.type.icon.draw(AbsolutePosition.padded(2));
 
 		if(!status.type.unique && status.stacks > 1) {
@@ -39,7 +40,7 @@ class GuiStatusBox : BaseGuiElement {
 				horizAlign=1.0,
 				vertAlign=1.0,
 				text=format("x$1", toString(status.stacks)),
-				stroke=colors::Black,
+				stroke=activeSkin.Black,
 				color=status.type.color);
 		}
 

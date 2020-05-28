@@ -24,6 +24,7 @@ import influence;
 import util.formatting;
 import hooks;
 import void zoomTo(Object@) from "tabs.GalaxyTab";
+import skins;
 
 from tabs.tabbar import popTab, ActiveTab, browseTab;
 import Tab@ createDiplomacyTab() from "tabs.DiplomacyTab";
@@ -118,7 +119,7 @@ class EffectButton : GuiButton {
 		auto@ ft = skin.getFont(FT_Normal);
 		if(ft.getDimension(card.type.name).x > AbsolutePosition.width)
 			@ft = skin.getFont(FT_Small);
-		ft.draw(pos=AbsolutePosition, horizAlign=0.5, vertAlign=0.5, text=card.type.name, color=color, stroke=colors::Black);
+		ft.draw(pos=AbsolutePosition, horizAlign=0.5, vertAlign=0.5, text=card.type.name, color=color, stroke=activeSkin.Black);
 	}
 };
 
@@ -159,15 +160,15 @@ class OfferDialog : Dialog {
 		supportBox.font = FT_Subtitle;
 
 		if(support) {
-			addTitle(locale::OFFER_FOR_TITLE, color=colors::Green);
+			addTitle(locale::OFFER_FOR_TITLE, color=activeSkin.InfluenceVoteOfferForTitle);
 			description.text = locale::OFFER_FOR_TEXT;
-			accept.color = Color(0xaaffaaff);
+			accept.color = activeSkin.InfluenceVoteOfferFor;
 			supportLabel.text = locale::OFFER_REQ_SUPPORT;
 		}
 		else {
-			addTitle(locale::OFFER_AGAINST_TITLE, color=colors::Red);
+			addTitle(locale::OFFER_AGAINST_TITLE, color=activeSkin.InfluenceVoteOfferAgainstTitle);
 			description.text = locale::OFFER_AGAINST_TEXT;
-			accept.color = Color(0xffaaaaff);
+			accept.color = activeSkin.InfluenceVoteOfferAgainst;
 			supportLabel.text = locale::OFFER_REQ_OPPOSE;
 		}
 
@@ -265,13 +266,13 @@ class OfferDisplay : BaseGuiElement {
 		if(claim >= offer.support && playerEmpire !is offer.fromEmpire) {
 			button.disabled = false;
 			if(offer.side)
-				button.color = colors::Green;
+				button.color = activeSkin.InfluenceVoteClaimFor;
 			else
-				button.color = colors::Red;
+				button.color = activeSkin.InfluenceVoteClaimAgainst;
 		}
 		else {
 			button.disabled = true;
-			button.color = colors::White;
+			button.color = activeSkin.White;
 		}
 
 		updateAbsolutePosition();
@@ -368,18 +369,18 @@ class InfluenceVoteTab : Tab {
 
 		@againstBar = GuiProgressbar(votingBox, Alignment(Left+47, Top+6, Left+0.5f-50, Bottom-6));
 		againstBar.invert = true;
-		againstBar.backColor = Color(0xffffff40);
-		againstBar.frontColor = Color(0xff0000ff);
+		againstBar.backColor = activeSkin.InfluenceVoteAgainstBG;
+		againstBar.frontColor = activeSkin.InfluenceVoteAgainstFG;
 		setMarkupTooltip(againstBar, locale::INFLUENCE_TT_FAIL);
 
 		@forBar = GuiProgressbar(votingBox, Alignment(Left+0.5f+50, Top+6, Right-47, Bottom-6));
-		forBar.backColor = Color(0xffffff40);
-		forBar.frontColor = Color(0x00ff00ff);
+		forBar.backColor = activeSkin.InfluenceVoteForBG;
+		forBar.frontColor = activeSkin.InfluenceVoteForFG;
 		setMarkupTooltip(forBar, locale::INFLUENCE_TT_PASS);
 
-		GuiSprite failIcon(votingBox, Alignment(Left+2, Top+2, Left+43, Bottom-2), Sprite(spritesheet::VoteIcons, 6));
+		GuiSprite failIcon(votingBox, Alignment(Left+2, Top+2, Left+43, Bottom-2), Sprite(getSkinSpriteSheet("VoteIcons"), 6));
 		setMarkupTooltip(failIcon, locale::INFLUENCE_TT_FAIL);
-		GuiSprite passIcon(votingBox, Alignment(Right-43, Top+2, Right-2, Bottom-2), Sprite(spritesheet::CardCategoryIcons, 4));
+		GuiSprite passIcon(votingBox, Alignment(Right-43, Top+2, Right-2, Bottom-2), Sprite(getSkinSpriteSheet("CardCategoryIcons"), 4));
 		setMarkupTooltip(passIcon, locale::INFLUENCE_TT_PASS);
 
 		//Vote totals
@@ -393,18 +394,18 @@ class InfluenceVoteTab : Tab {
 		@yeaBox = GuiText(yeaBG, Alignment_Fill());
 		yeaBox.font = FT_Medium;
 		yeaBox.horizAlign = 0.5;
-		yeaBox.color = Color(0x00ff00ff);
+		yeaBox.color = activeSkin.InfluenceVoteYeaBox;
 
 		@nayBG = GuiSkinElement(this, Alignment(Left+0.5f-184, Top+99, Left+0.5f-59, Height=36), SS_VoteTotal);
 		@nayBox = GuiText(nayBG, Alignment_Fill());
 		nayBox.font = FT_Medium;
 		nayBox.horizAlign = 0.5;
-		nayBox.color = Color(0xff0000ff);
+		nayBox.color = activeSkin.InfluenceVoteNayBox;
 
 		//Senate floor
 		@senateImage = GuiSprite(senateBG, Alignment(Left+4, Top+72, Right-4, Bottom-4));
-		senateImage.color = Color(0xffffff80);
-		senateImage.desc = Sprite(material::SenateBG);
+		senateImage.color = activeSkin.InfluenceVoteSenate;
+		senateImage.desc = Sprite(getSkinMaterial("SenateBG"));
 		@parliamentPanel = GuiPanel(senateBG, Alignment(Left+216, Top+95, Right-216, Bottom-4));
 
 		@startCard = GuiInfluenceCard(parliamentPanel);
@@ -420,7 +421,7 @@ class InfluenceVoteTab : Tab {
 		@zoomButton = GuiButton(parliamentPanel, Alignment(Left+0.5f-(GUI_CARD_WIDTH/2), Top+0.5f+(GUI_CARD_HEIGHT/2)+6, Width=GUI_CARD_WIDTH, Height=40));
 		zoomButton.visible = false;
 		zoomButton.text = locale::ZOOM;
-		zoomButton.buttonIcon = icons::Zoom;
+		zoomButton.buttonIcon = activeSkin.Zoom;
 
 		for(uint i = 0, cnt = getEmpireCount(); i < cnt; ++i) {
 			Empire@ other = getEmpire(i);
@@ -445,44 +446,44 @@ class InfluenceVoteTab : Tab {
 		}
 
 		GuiSkinElement leftBar(senateBG, Alignment(Left, Top+49, Left+210, Bottom-2), SS_PlainBox);
-		leftBar.color = Color(0xffffff80);
+		leftBar.color = activeSkin.InfluenceVoteLeft;
 
 		GuiSkinElement rightBar(senateBG, Alignment(Right-210, Top+49, Right, Bottom-2), SS_PlainBox);
-		rightBar.color = Color(0xffffff80);
+		rightBar.color = activeSkin.InfluenceVoteRight;
 
 		//Buttons
 		@backButton = GuiButton(senateBG, Alignment(Left+6, Top+52, Left+204, Height=36), locale::DIPLOMACY_BACK);
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 		@leaveButton = GuiButton(senateBG, Alignment(Right-206, Bottom-42, Right-6, Height=36), locale::VOTE_LEAVE);
-		leaveButton.buttonIcon = icons::Exclaim;
+		leaveButton.buttonIcon = iconWrapper.Exclaim;
 		leaveButton.visible = false;
 		@withdrawButton = GuiButton(senateBG, Alignment(Right-206, Top+52, Right-6, Height=36), locale::VOTE_WITHDRAW);
-		withdrawButton.buttonIcon = icons::Close;
+		withdrawButton.buttonIcon = iconWrapper.Close;
 
 		//Offers
 		@offerFor = GuiButton(senateBG, recti(0,0, 160,50));
-		offerFor.color = Color(0x80ff80ff);
-		GuiSprite(offerFor, recti_area(5,5, 40,40), Sprite(spritesheet::CardCategoryIcons, 4, Color(0xffffff80)));
+		offerFor.color = activeSkin.InfluenceVoteOfferForButton;
+		GuiSprite(offerFor, recti_area(5,5, 40,40), Sprite(getSkinSpriteSheet("CardCategoryIcons"), 4, Color(0xffffff80)));
 		GuiText(offerFor, Alignment().padded(45,0,0,0), locale::OFFER_FOR);
 		@offerAgainst = GuiButton(senateBG, recti(0,0, 160,50));
-		GuiSprite(offerAgainst, recti_area(5,5, 40,40), Sprite(spritesheet::VoteIcons, 6, Color(0xffffff80)));
+		GuiSprite(offerAgainst, recti_area(5,5, 40,40), Sprite(getSkinSpriteSheet("VoteIcons"), 6, Color(0xffffff80)));
 		GuiText(offerAgainst, Alignment().padded(45,0,0,0), locale::OFFER_AGAINST);
-		offerAgainst.color = Color(0xff8080ff);
+		offerAgainst.color = activeSkin.InfluenceVoteOfferAgainstButton;
 
 		@againstOfferPanel = GuiPanel(senateBG, Alignment(Left+4, Top+94, Left+206, Bottom-60));
 		@forOfferPanel = GuiPanel(senateBG, Alignment(Right-206, Top+94, Right-4, Bottom-60));
 
 		//Cardlist
 		@cardBG = GuiBackgroundPanel(this, Alignment(Left+0.4f+4, Top+PARLIAMENT_HEIGHT+8, Right-8, Bottom-8));
-		cardBG.picture = Sprite(material::DiplomacyActions);
-		cardBG.titleColor = Color(0x8ebc00ff);
+		cardBG.picture = Sprite(getSkinMaterial("DiplomacyActions"));
+		cardBG.titleColor = activeSkin.InfluenceVoteCardsTitle;
 		cardBG.title = locale::AVAILABLE_CARDS;
 
 		@cardPanel = GuiPanel(this, Alignment(Left+0.4f+8, Top+PARLIAMENT_HEIGHT+42, Right-12, Bottom-12));
 
 		//Create log box
 		@logBG = GuiBackgroundPanel(this, Alignment(Left+8, Top+PARLIAMENT_HEIGHT+8, Right-0.6f-4, Bottom-8));
-		logBG.titleColor = Color(0x00c7feff);
+		logBG.titleColor = activeSkin.InfluenceVoteLogTitle;
 		logBG.title = locale::VOTE_LOG;
 
 		@logPanel = GuiPanel(logBG, Alignment(Left+8, Top+34, Right-8, Bottom-46));
@@ -495,7 +496,7 @@ class InfluenceVoteTab : Tab {
 		@messageBox = GuiTextbox(this, Alignment(Left+84, Bottom-50, Right-0.6f-168, Bottom-14));
 
 		@sendButton = GuiButton(this, Alignment(Right-0.6f-164, Bottom-50, Right-0.6f-14, Bottom-14), locale::SEND);
-		sendButton.buttonIcon = icons::Chat;
+		sendButton.buttonIcon = iconWrapper.Chat;
 
 	}
 
@@ -598,19 +599,19 @@ class InfluenceVoteTab : Tab {
 		Color timerColor;
 		string timeText;
 		if(vote.totalFor > vote.totalAgainst) {
-			totalPic.desc = Sprite(material::ThumbsUp);
-			totalBox.color = Color(0x00ff00ff);
-			totalBG.color = Color(0x00ff00ff);
-			titleBG.color = Color(0x7cff00ff);
+			totalPic.desc = Sprite(getSkinMaterial("ThumbsUp"));
+			totalBox.color = activeSkin.InfluenceVoteTotalFor;
+			totalBG.color = activeSkin.InfluenceVoteTotalFor;
+			titleBG.color = activeSkin.InfluenceVoteTitleFor;
 
-			timerColor = Color(0x00ff00ff);
+			timerColor = activeSkin.InfluenceVoteTimerFor;
 			timeText = formatTime(vote.remainingTime);
 		}
 		else {
-			totalPic.desc = Sprite(material::ThumbsDown);
-			totalBox.color = Color(0xff0000ff);
-			totalBG.color = Color(0xff0000ff);
-			titleBG.color = Color(0xff7c00ff);
+			totalPic.desc = Sprite(getSkinMaterial("ThumbsDown"));
+			totalBox.color = activeSkin.InfluenceVoteTotalAgainst;
+			totalBG.color = activeSkin.InfluenceVoteTotalAgainst;
+			titleBG.color = activeSkin.InfluenceVoteTitleAgainst;
 
 			timerColor = Color(0xff0000ff);
 			timeText = formatTime(vote.remainingTime);
@@ -895,15 +896,15 @@ class InfluenceVoteTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0x74fc4eff);
+		return activeSkin.InfluenceVoteActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0x37ff00ff);
+		return activeSkin.InfluenceVoteInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x408c2bff);
+		return activeSkin.InfluenceVoteSeparator;
 	}
 
 	TabCategory get_category() {
@@ -911,7 +912,7 @@ class InfluenceVoteTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabDiplomacy);
+		return Sprite(getSkinMaterial("TabDiplomacy"));
 	}
 
 	void draw() {
@@ -949,13 +950,13 @@ class DelegationBox : BaseGuiElement {
 		vote.font = FT_Medium;
 
 		@thumb = GuiSprite(this, recti(0, 0, 40, 40));
-		thumb.desc = Sprite(material::ThumbsUp);
+		thumb.desc = Sprite(getSkinMaterial("ThumbsUp"));
 
 		@mark = GuiSprite(this, Alignment(Left, Top, Width=42, Height=42));
 		mark.visible = false;
 
 		@leaderIcon = GuiSprite(picture, Alignment(Left, Bottom-56, Left+26, Bottom-30));
-		leaderIcon.desc = Sprite(material::LeaderIcon);
+		leaderIcon.desc = Sprite(getSkinMaterial("LeaderIcon"));
 		leaderIcon.tooltip = locale::SENATE_LEADER;
 		leaderIcon.visible = false;
 
@@ -988,19 +989,19 @@ class DelegationBox : BaseGuiElement {
 			vote.visible = true;
 
 			thumb.position = vec2i(DELEGATION_WIDTH - 43, 6);
-			thumb.desc = Sprite(material::ThumbsDown);
+			thumb.desc = Sprite(getSkinMaterial("ThumbsDown"));
 			thumb.visible = true;
 
 			vote.position = vec2i(DELEGATION_WIDTH - 46, 46);
 			vote.size = vec2i(46, DELEGATION_HEIGHT-46);
 		}
 		else {
-			vote.color = Color(0x00ff00ff);
+			vote.color = activeSkin.InfluenceVoteDelegationFor;
 			vote.text = toString(amount);
 			vote.visible = true;
 
 			thumb.position = vec2i(DELEGATION_WIDTH - 43, DELEGATION_HEIGHT - 46);
-			thumb.desc = Sprite(material::ThumbsUp);
+			thumb.desc = Sprite(getSkinMaterial("ThumbsUp"));
 			thumb.visible = true;
 
 			vote.position = vec2i(DELEGATION_WIDTH - 46, 5);
@@ -1022,12 +1023,12 @@ class DelegationBox : BaseGuiElement {
 
 		if(pts >= highest - 0.001 && pts > 0) {
 			mark.visible = true;
-			mark.desc = Sprite(spritesheet::QuickbarIcons, 6);
+			mark.desc = Sprite(getSkinSpriteSheet("QuickbarIcons"), 6);
 			setMarkupTooltip(mark, format(locale::TT_HIGHEST_CONTRIBUTOR, formatEmpireName(emp)));
 		}
 		else if(pts <= lowest + 0.001) {
 			mark.visible = true;
-			mark.desc = Sprite(spritesheet::QuickbarIcons, 3);
+			mark.desc = Sprite(getSkinSpriteSheet("QuickbarIcons"), 3);
 			setMarkupTooltip(mark, format(locale::TT_LOWEST_CONTRIBUTOR, formatEmpireName(emp)));
 		}
 		else {
@@ -1041,16 +1042,16 @@ class DelegationBox : BaseGuiElement {
 			col.a = 0x60;
 		Color voteCol;
 		if(prevVotes > 0)
-			voteCol = Color(0x88ff88ff);
+			voteCol = activeSkin.InfluenceVoteDelegationPreviousFor;
 		else if(prevVotes < 0)
-			voteCol = Color(0xff8888ff);
+			voteCol = activeSkin.InfluenceVoteDelegationPreviousAgainst;
 
 		if(petitioner || target) {
 			clearClip();
 
-			Color col = Color(0x00c7feff);
+			Color col = activeSkin.InfluenceVoteDelegationTitle;
 			if(petitioner)
-				col = Color(0x00ff00ff);
+				col = activeSkin.InfluenceVoteDelegationPetitionerTitle;
 
 			recti pos = recti_area(
 				AbsolutePosition.topLeft - vec2i(0, 16),

@@ -1,4 +1,5 @@
-﻿import elements.BaseGuiElement;
+﻿import skins;
+import elements.BaseGuiElement;
 import elements.GuiDraggable;
 import elements.GuiPanel;
 import elements.GuiTextbox;
@@ -815,13 +816,13 @@ class IRCButton : GuiButton {
 
 	IRCButton(Alignment@ align) {
 		super(null, align);
-		spriteStyle = Sprite(material::IRCButton);
+		spriteStyle = Sprite(getSkinMaterial("IRCButton"));
 		visible = false;
 
 		@missed = GuiText(this, Alignment().padded(4));
 		missed.horizAlign = 1.0;
 		missed.vertAlign = 0.6;
-		missed.stroke = colors::Black;
+		missed.stroke = activeSkin.Black;
 		missed.color = Color(0xff8000ff);
 		missed.font = FT_Bold;
 	}
@@ -852,7 +853,7 @@ class IRCButton : GuiButton {
 			if(IRC.highlight)
 				color = Color(0xffaaaaff);
 			else
-				color = colors::White;
+				color = activeSkin.White;
 		}
 
 		if(missedMessages != 0) {

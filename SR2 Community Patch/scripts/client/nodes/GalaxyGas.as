@@ -1,4 +1,5 @@
 import util.convar;
+import skins;
 
 final class GasSprite {
 	bool draw = true;
@@ -103,7 +104,7 @@ final class GalaxyGasScript {
 		for(uint i = 0, cnt = sprites.length; i < cnt; ++i) {
 			GasSprite@ sprite = sprites[sorter[i] & 0x7fffffff];
 			if(sprite.draw)
-				renderBillboard(spritesheet::Nebulas, sprite.index, sprite.position, sprite.scale, sprite.rotation, sprite.resultCol);
+				renderBillboard(getSkinSpriteSheet("Nebulas"), sprite.index, sprite.position, sprite.scale, sprite.rotation, sprite.resultCol);
 		}
 	}
 };

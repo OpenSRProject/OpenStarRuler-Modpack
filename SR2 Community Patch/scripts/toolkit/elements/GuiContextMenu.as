@@ -2,6 +2,7 @@ import elements.BaseGuiElement;
 import elements.GuiListbox;
 import elements.GuiMarkupText;
 from gui import clearTooltip;
+import skins;
 
 export GuiContextOption, GuiSubMenu, GuiContextMenu;
 export GuiMarkupContextOption;
@@ -163,7 +164,7 @@ class GuiContextMenu : BaseGuiElement {
 		@list = GuiListbox(this, recti_area(orig, vec2i(width, 0)));
 		list.style = SS_ContextMenu;
 		list.itemStyle = SS_ContextMenuItem;
-		list.itemHeight = 28;
+		list.itemHeight = activeSkin.ContextMenuItemHeight;
 		setGuiAbsorb(this);
 		clearTooltip();
 	}

@@ -1,3 +1,4 @@
+import skins;
 import tabs.Tab;
 import tabs.tabbar;
 import editor.editor;
@@ -62,10 +63,10 @@ class ModInfoTab : Tab, IInputDialogCallback {
 		folderText.text = topMod.abspath;
 
 		@folderButton = GuiButton(this, Alignment(Right-224, Top+200-46-12, Width=200, Height=40), "Open Directory");
-		folderButton.buttonIcon = spritesheet::FileIcons+2;
+		folderButton.buttonIcon = Sprite(getSkinSpriteSheet("FileIcons"), 2);
 
 		@uploadButton = GuiButton(this, Alignment(Left+24, Top+200-46-12, Width=400, Height=40), "Upload to Steam Workshop");
-		uploadButton.buttonIcon = icons::Export;
+		uploadButton.buttonIcon = iconWrapper.Export;
 		uploadButton.color = Color(0xffff00ff);
 
 		@editPanel = GuiPanel(this, Alignment(Left+12, Top+200, Right-12, Bottom-12));
@@ -204,7 +205,7 @@ class ModInfoTab : Tab, IInputDialogCallback {
 	}
 
 	Sprite get_icon() {
-		return icons::Info;
+		return iconWrapper.Info;
 	}
 
 	Color get_activeColor() {

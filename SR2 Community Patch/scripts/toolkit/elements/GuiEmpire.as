@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import settings.game_settings;
 import empire_data;
@@ -88,15 +89,15 @@ class GuiEmpire : BaseGuiElement {
 				const Font@ ft = skin.getFont(nameFont);
 				//Because fuck the police
 				ft.draw(pos=AbsolutePosition.padded(-1,-1,1,1), horizAlign=0.5, vertAlign=0.95,
-					color=colors::Black, text=empire.name);
+					color=activeSkin.Black, text=empire.name);
 				ft.draw(pos=AbsolutePosition.padded(1,1,-1,-1), horizAlign=0.5, vertAlign=0.95,
-					color=colors::Black, text=empire.name);
+					color=activeSkin.Black, text=empire.name);
 				ft.draw(pos=AbsolutePosition.padded(-1,1,1,-1), horizAlign=0.5, vertAlign=0.95,
-					color=colors::Black, text=empire.name);
+					color=activeSkin.Black, text=empire.name);
 				ft.draw(pos=AbsolutePosition.padded(1,-1,-1,1), horizAlign=0.5, vertAlign=0.95,
-					color=colors::Black, text=empire.name);
+					color=activeSkin.Black, text=empire.name);
 				ft.draw(pos=AbsolutePosition, horizAlign=0.5, vertAlign=0.95,
-					color=empire.color.interpolate(colors::White, 0.3), text=empire.name);
+					color=empire.color.interpolate(activeSkin.White, 0.3), text=empire.name);
 			}
 
 		}

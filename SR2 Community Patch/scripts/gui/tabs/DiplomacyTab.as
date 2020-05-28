@@ -25,6 +25,7 @@ import influence;
 import traits;
 from gui import animate_time, animate_retarget;
 import void zoomTo(Object@) from "tabs.GalaxyTab";
+import skins;
 
 from tabs.tabbar import ActiveTab, browseTab, newTab, switchToTab, findTab;
 from tabs.InfluenceVoteTab import createInfluenceVoteTab, InfluenceVoteTab;
@@ -139,27 +140,27 @@ class DiplomacyTab : Tab {
 		playerName.font = FT_Bold;
 
 		@leaderIcon = GuiSprite(playerIcon, Alignment(Left, Bottom-52, Left+52, Bottom));
-		leaderIcon.desc = Sprite(material::LeaderIcon);
+		leaderIcon.desc = Sprite(getSkinMaterial("LeaderIcon"));
 		setMarkupTooltip(leaderIcon, locale::TT_SENATE_LEADER);
 		leaderIcon.visible = false;
 
 		@infIcon = GuiSprite(playerPanel, recti(148, 34, 198, 64));
-		infIcon.desc = Sprite(material::PoliticalStrengthIcon);
+		infIcon.desc = Sprite(getSkinMaterial("PoliticalStrengthIcon"));
 		@infText = GuiText(playerPanel, recti(204, 34, 318, 64));
 		infText.color = Color(0xccccccff);
 
 		@strIcon = GuiSprite(playerPanel, recti(148, 68, 198, 98));
-		strIcon.desc = Sprite(material::MilitaryStrengthIcon);
+		strIcon.desc = Sprite(getSkinMaterial("MilitaryStrengthIcon"));
 		@strText = GuiText(playerPanel, recti(204, 68, 318, 98));
 		strText.color = Color(0xccccccff);
 
 		@plIcon = GuiSprite(playerPanel, recti(148, 102, 198, 132));
-		plIcon.desc = Sprite(material::TerritoryStrengthIcon);
+		plIcon.desc = Sprite(getSkinMaterial("TerritoryStrengthIcon"));
 		@plText = GuiText(playerPanel, recti(204, 102, 318, 132));
 		plText.color = Color(0xccccccff);
 
 		@ptsIcon = GuiSprite(playerPanel, recti(328, 34, 358, 64));
-		ptsIcon.desc = Sprite(material::PointsIcon);
+		ptsIcon.desc = Sprite(getSkinMaterial("PointsIcon"));
 		@ptsText = GuiText(playerPanel, recti(364, 34, 590, 64));
 		ptsText.color = Color(0xccccccff);
 
@@ -170,7 +171,7 @@ class DiplomacyTab : Tab {
 
 		@actionButton = GuiButton(playerPanel, recti(328, 103, 588, 131));
 		GuiSprite(actionButton, Alignment(Left+0.5f-11, Top+3, Left+0.5f+11, Bottom-3),
-					Sprite(material::DownIcon));
+					Sprite(getSkinMaterial("DownIcon")));
 		actionButton.visible = false;
 
 		@empirePanel = BaseGuiElement(panel, recti(0, 0, 500, 100));
@@ -179,37 +180,37 @@ class DiplomacyTab : Tab {
 		noEmpireText.text = locale::NO_MET_EMPIRES;
 		noEmpireText.font = FT_Subtitle;
 		noEmpireText.color = Color(0xaaaaaaff);
-		noEmpireText.stroke = colors::Black;
+		noEmpireText.stroke = activeSkin.Black;
 		noEmpireText.horizAlign = 0.5;
 		noEmpireText.visible = false;
 
 		//Card stack
 		@stackBG = GuiBackgroundPanel(panel, recti());
 		stackBG.title = locale::CARD_STACK;
-		stackBG.titleColor = Color(0x53feb3ff);
-		stackBG.picture = Sprite(material::DiplomacyActions);
+		stackBG.titleColor = activeSkin.DiplomacyStackTitle;
+		stackBG.picture = Sprite(getSkinMaterial("DiplomacyActions"));
 
 		@drawProgress = GuiProgressbar(stackBG, Alignment(Right-185, Top+3, Right-5, Top+28), 0.f);
-		drawProgress.frontColor = Color(0x20adffff);
+		drawProgress.frontColor = activeSkin.DiplomacyDrawProgress;
 
 		@stackPanel = BaseGuiElement(stackBG, recti(8, 34, 100, 100));
 
 		//Card list
 		@cardBG = GuiBackgroundPanel(panel, recti());
 		cardBG.title = locale::AVAILABLE_CARDS;
-		cardBG.titleColor = Color(0xb3fe00ff);
-		cardBG.picture = Sprite(material::DiplomacyActions);
+		cardBG.titleColor = activeSkin.DiplomacyCardTitle;
+		cardBG.picture = Sprite(getSkinMaterial("DiplomacyActions"));
 
 		@cardPanel = BaseGuiElement(cardBG, recti(8, 34, 100, 100));
 
 		//Vote list
 		@voteBG = GuiBackgroundPanel(panel, recti());
 		voteBG.title = locale::ACTIVE_VOTES;
-		voteBG.titleColor = Color(0x00bffeff);
-		voteBG.picture = Sprite(material::Propositions);
+		voteBG.titleColor = activeSkin.DiplomacyVoteTitle;
+		voteBG.picture = Sprite(getSkinMaterial("Propositions"));
 
 		@historyButton = GuiButton(voteBG, Alignment(Right-185, Top+3, Right-5, Top+28), locale::VIEW_VOTE_HISTORY);
-		historyButton.color = Color(0x9be5feff);
+		historyButton.color = activeSkin.DiplomacyHistoryButton;
 
 		@votePanel = BaseGuiElement(voteBG, recti(8, 34, 100, 100));
 		@noVotesText = GuiText(votePanel, recti(4, 4, 400, 24), locale::NO_VOTES);
@@ -218,8 +219,8 @@ class DiplomacyTab : Tab {
 		//Effect list
 		@effectBG = GuiBackgroundPanel(panel, recti());
 		effectBG.title = locale::ACTIVE_INFLUENCE_EFFECTS;
-		effectBG.titleColor = Color(0xfe8300ff);
-		effectBG.picture = Sprite(material::ActiveEffects);
+		effectBG.titleColor = activeSkin.DiplomacyEffectBG;
+		effectBG.picture = Sprite(getSkinMaterial("ActiveEffects"));
 
 		@effectPanel = BaseGuiElement(effectBG, recti(8, 34, 100, 100));
 		@noEffectsText = GuiText(effectPanel, recti(4, 4, 400, 24), locale::NO_EFFECTS);
@@ -228,8 +229,8 @@ class DiplomacyTab : Tab {
 		//Treaty list
 		@treatyBG = GuiBackgroundPanel(panel, recti());
 		treatyBG.title = locale::ACTIVE_TREATIES;
-		treatyBG.titleColor = Color(0x7300feff);
-		treatyBG.picture = Sprite(material::StatusPeace);
+		treatyBG.titleColor = activeSkin.DiplomacyTreatyBG;
+		treatyBG.picture = Sprite(getSkinMaterial("StatusPeace"));
 
 		@treatyPanel = BaseGuiElement(treatyBG, recti(8, 34, 400, 100));
 		@noTreatyText = GuiText(treatyPanel, recti(4, 4, 400, 24), locale::NO_TREATIES);
@@ -784,15 +785,15 @@ class DiplomacyTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0x74fc4eff);
+		return activeSkin.DiplomacyActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0x37ff00ff);
+		return activeSkin.DiplomacyInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x408c2bff);
+		return activeSkin.DiplomacySeparator;
 	}
 
 	TabCategory get_category() {
@@ -800,7 +801,7 @@ class DiplomacyTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabDiplomacy);
+		return Sprite(getSkinMaterial("TabDiplomacy"));
 	}
 
 	void draw() {
@@ -916,7 +917,7 @@ class EmpireBox : BaseGuiElement {
 		@picture = GuiEmpire(this, recti(8, 8, 120, 120));
 
 		@leaderIcon = GuiSprite(picture, Alignment(Left, Bottom-52, Left+52, Bottom));
-		leaderIcon.desc = Sprite(material::LeaderIcon);
+		leaderIcon.desc = Sprite(getSkinMaterial("LeaderIcon"));
 		setMarkupTooltip(leaderIcon, locale::TT_SENATE_LEADER);
 		leaderIcon.visible = false;
 
@@ -932,7 +933,7 @@ class EmpireBox : BaseGuiElement {
 		vassalText.visible = false;
 
 		@ptsIcon = GuiSprite(this, recti(132, 68, 162, 98));
-		ptsIcon.desc = Sprite(material::PointsIcon);
+		ptsIcon.desc = Sprite(getSkinMaterial("PointsIcon"));
 		@ptsText = GuiText(this, recti(172, 68, 330, 98));
 		ptsText.color = Color(0xccccccff);
 
@@ -942,16 +943,16 @@ class EmpireBox : BaseGuiElement {
 		@relationIcon = GuiSprite(this, Alignment(Left+280, Top+0.5f-25, Width=50, Height=50));
 
 		@politicalIcon = GuiSprite(this, recti(335, 16, 385, 46));
-		politicalIcon.desc = Sprite(material::PoliticalStrengthIcon);
+		politicalIcon.desc = Sprite(getSkinMaterial("PoliticalStrengthIcon"));
 
 		@militaryIcon = GuiSprite(this, recti(335, 50, 385, 80));
-		militaryIcon.desc = Sprite(material::MilitaryStrengthIcon);
+		militaryIcon.desc = Sprite(getSkinMaterial("MilitaryStrengthIcon"));
 
 		@territoryIcon = GuiSprite(this, recti(335, 84, 385, 114));
-		territoryIcon.desc = Sprite(material::TerritoryStrengthIcon);
+		territoryIcon.desc = Sprite(getSkinMaterial("TerritoryStrengthIcon"));
 
 		GuiSprite(actionButton, Alignment(Left+0.5f-11, Top+4, Left+0.5f+11, Bottom-4),
-					Sprite(material::DownIcon));
+					Sprite(getSkinMaterial("DownIcon")));
 
 		setState(WS_Peace);
 	}
@@ -962,12 +963,12 @@ class EmpireBox : BaseGuiElement {
 		if(emp.SubjugatedBy is null && playerEmpire.SubjugatedBy is null) {
 			//War status change
 			if(state == WS_Peace)
-				menu.addOption(WarOption(emp), locale::DECLARE_WAR, Sprite(material::StatusWar));
+				menu.addOption(WarOption(emp), locale::DECLARE_WAR, Sprite(getSkinMaterial("StatusWar")));
 			else if(state == WS_War)
-				menu.addOption(PeaceOption(emp), locale::PROPOSE_PEACE, Sprite(material::StatusPeace));
+				menu.addOption(PeaceOption(emp), locale::PROPOSE_PEACE, Sprite(getSkinMaterial("StatusPeace")));
 
 			//New treaty
-			menu.addOption(ProposeTreatyOption(emp), locale::PROPOSE_TREATY, Sprite(material::Propositions));
+			menu.addOption(ProposeTreatyOption(emp), locale::PROPOSE_TREATY, Sprite(getSkinMaterial("Propositions")));
 		}
 
 		//Invite to treaty
@@ -982,17 +983,17 @@ class EmpireBox : BaseGuiElement {
 			if(emp.team == -1 || config::ALLOW_TEAM_SURRENDER != 0)
 				menu.addOption(DemandSurrenderOption(emp),
 						playerEmpire.isHostile(emp) ? locale::DEMAND_SURRENDER_OPTION : locale::DEMAND_SUBJUGATE_OPTION,
-						Sprite(material::LoyaltyIcon));
+						Sprite(getSkinMaterial("LoyaltyIcon")));
 
 			if(playerEmpire.team == -1 || config::ALLOW_TEAM_SURRENDER != 0)
 				menu.addOption(OfferSurrenderOption(emp),
 						playerEmpire.isHostile(emp) ? locale::SURRENDER_OPTION : locale::OFFER_SUBJUGATE_OPTION,
-						Sprite(material::LoyaltyIcon, Color(0xff0000ff)));
+						Sprite(getSkinMaterial("LoyaltyIcon"), Color(0xff0000ff)));
 		}
 
 		//Donations
 		if(!playerEmpire.isHostile(emp))
-			menu.addOption(DonationOption(this, emp), locale::DONATE_OPTION, icons::Donate);
+			menu.addOption(DonationOption(this, emp), locale::DONATE_OPTION, iconWrapper.Donate);
 
 		//Edicts
 		bool haveVassals = false;
@@ -1006,7 +1007,7 @@ class EmpireBox : BaseGuiElement {
 			if(playerEmpire.isHostile(emp)) {
 				menu.addOption(ConquerEdictOption(emp),
 						format(locale::EDICT_CONQUER_OPTION, formatEmpireName(emp)),
-						Sprite(material::StatusWar));
+						Sprite(getSkinMaterial("StatusWar")));
 			}
 		}
 
@@ -1022,7 +1023,7 @@ class EmpireBox : BaseGuiElement {
 		if(emp.SubjugatedBy !is null) {
 			string txt = format(locale::VASSAL_TEXT, formatEmpireName(emp.SubjugatedBy));
 			if(playerEmpire.isHostile(emp))
-				txt = format("[color=#f00][b]$1[/b][/color]", txt);
+				txt = format("[color=$2][b]$1[/b][/color]", txt, toString(activeSkin.DiplomacyEnemyVassal));
 
 			vassalText.text = txt;
 			vassalText.updateAbsolutePosition();
@@ -1068,7 +1069,7 @@ class EmpireBox : BaseGuiElement {
 			stateLabel.font = FT_Normal;
 		}
 		else {
-			stateLabel.color = Color(0xff0000ff);
+			stateLabel.color = activeSkin.DiplomacyWarLabel;
 			stateLabel.text = locale::WAR;
 			stateLabel.font = FT_Bold;
 		}
@@ -1076,10 +1077,10 @@ class EmpireBox : BaseGuiElement {
 		switch(state) {
 			case WS_Peace_Forced:
 			case WS_Peace:
-				@statePicture.mat = material::StatusPeace;
+				@statePicture.mat = getSkinMaterial("StatusPeace");
 			break;
 			case WS_War:
-				@statePicture.mat = material::StatusWar;
+				@statePicture.mat = getSkinMaterial("StatusWar");
 			break;
 		}
 	}
@@ -1176,7 +1177,7 @@ class EmpireBox : BaseGuiElement {
 
 void setStrengthIcon(GuiSprite@ sprite, int str, const string& prefix) {
 	if(str == -1) {
-		sprite.color = Color(0xff8080aa);
+		sprite.color = activeSkin.DiplomacyStrengthWeak;
 		@sprite.shader = shader::Desaturate;
 		sprite.tooltip = prefix+" "+locale::STR_WEAK;
 	}
@@ -1250,7 +1251,7 @@ class VoteBox : BaseGuiElement {
 		@totalBox = GuiText(this, Alignment(Right-74, Top+6, Right-12, Bottom-6));
 		totalBox.horizAlign = 0.5;
 		totalBox.font = FT_Big;
-		totalBox.stroke = colors::Black;
+		totalBox.stroke = activeSkin.Black;
 
 		@totalPic = GuiSprite(this, Alignment(Right-74, Top+6, Right-12, Bottom-6));
 		totalPic.color = Color(0xffffff20);
@@ -1259,8 +1260,8 @@ class VoteBox : BaseGuiElement {
 
 		@againstBar = GuiProgressbar(this, Alignment(Left+47+74, Top+40, Left+0.5f-50, Bottom-6));
 		againstBar.invert = true;
-		againstBar.backColor = Color(0xffffff40);
-		againstBar.frontColor = Color(0xff0000ff);
+		againstBar.backColor = activeSkin.VoteAgainstBG;
+		againstBar.frontColor = activeSkin.VoteAgainstFG;
 
 		@timerBox = GuiText(this, Alignment(Left+0.5f-50, Top+40, Left+0.5f+50, Bottom-6));
 		timerBox.horizAlign = 0.5;
@@ -1268,18 +1269,18 @@ class VoteBox : BaseGuiElement {
 		timerBox.font = FT_Medium;
 
 		@forBar = GuiProgressbar(this, Alignment(Left+0.5f+50, Top+40, Right-47-74, Bottom-6));
-		forBar.backColor = Color(0xffffff40);
-		forBar.frontColor = Color(0x00ff00ff);
+		forBar.backColor = activeSkin.VoteForBG;
+		forBar.frontColor = activeSkin.VoteForFG;
 
-		GuiSprite failIcon(this, Alignment(Left+76+11, Top+40, Left+76+11+32, Bottom-2), Sprite(spritesheet::VoteIcons, 6));
+		GuiSprite failIcon(this, Alignment(Left+76+11, Top+40, Left+76+11+32, Bottom-2), Sprite(getSkinSpriteSheet("VoteIcons"), 6));
 		setMarkupTooltip(failIcon, locale::INFLUENCE_TT_FAIL);
-		GuiSprite passIcon(this, Alignment(Right-43-74, Top+40, Right-11-74, Bottom-2), Sprite(spritesheet::CardCategoryIcons, 4));
+		GuiSprite passIcon(this, Alignment(Right-43-74, Top+40, Right-11-74, Bottom-2), Sprite(getSkinSpriteSheet("CardCategoryIcons"), 4));
 		setMarkupTooltip(passIcon, locale::INFLUENCE_TT_PASS);
 
 		@zoomButton = GuiButton(this, Alignment(Right-74-80-47, Top+6, Right-74-47, Top+38));
 		zoomButton.visible = false;
 		zoomButton.text = locale::ZOOM;
-		zoomButton.buttonIcon = icons::Zoom;
+		zoomButton.buttonIcon = activeSkin.Zoom;
 
 		updateAbsolutePosition();
 	}
@@ -1337,14 +1338,14 @@ class VoteBox : BaseGuiElement {
 		Color timerColor;
 		string timeText;
 		if(vote.totalFor > vote.totalAgainst) {
-			totalPic.desc = Sprite(material::ThumbsUp);
+			totalPic.desc = Sprite(getSkinMaterial("ThumbsUp"));
 			totalBox.color = Color(0x00ff00ff);
 
 			timerColor = Color(0x00ff00ff);
 			timeText = formatTime(vote.remainingTime);
 		}
 		else {
-			totalPic.desc = Sprite(material::ThumbsDown);
+			totalPic.desc = Sprite(getSkinMaterial("ThumbsDown"));
 			totalBox.color = Color(0xff0000ff);
 
 			timerColor = Color(0xff0000ff);
@@ -1464,7 +1465,7 @@ class TreatyBox : BaseGuiElement, QuestionDialogCallback {
 		//Update title
 		string title;
 		if(treaty.leader !is null) {
-			title = format("$1's [b]$2[/b]",
+			title = format(activeSkin.DiplomacyTreatyLeader,
 					formatEmpireName(treaty.leader),
 					treaty.name);
 		}
@@ -1498,12 +1499,12 @@ class TreatyBox : BaseGuiElement, QuestionDialogCallback {
 		//Update button action
 		if(treaty.inviteMask & playerEmpire.mask != 0) {
 			btn1.text = locale::JOIN_TREATY;
-			btn1.buttonIcon = Sprite(material::Propositions);
-			btn1.color = colors::Green;
+			btn1.buttonIcon = Sprite(getSkinMaterial("Propositions"));
+			btn1.color = activeSkin.DiplomacyTreatyJoin;
 
 			btn2.text = locale::DECLINE_TREATY;
-			btn2.buttonIcon = icons::Remove;
-			btn2.color = colors::Red;
+			btn2.buttonIcon = iconWrapper.Remove;
+			btn2.color = activeSkin.DiplomacyTreatyDecline;
 
 			btn.visible = false;
 			btn1.visible = true;
@@ -1511,8 +1512,8 @@ class TreatyBox : BaseGuiElement, QuestionDialogCallback {
 		}
 		else if(treaty.presentMask & playerEmpire.mask != 0 && treaty.canLeave(playerEmpire)) {
 			btn.text = treaty.leader is playerEmpire ? locale::DISMISS_TREATY : locale::LEAVE_TREATY;
-			btn.buttonIcon = icons::Remove;
-			btn.color = colors::Red;
+			btn.buttonIcon = iconWrapper.Remove;
+			btn.color = activeSkin.DiplomacyTreatyDismiss;
 			btn.visible = true;
 			btn1.visible = false;
 			btn2.visible = false;
@@ -1594,7 +1595,7 @@ class EffectBox : BaseGuiElement {
 		@costBox = GuiText(this, Alignment(Right-328, Top+4, Right-168, Top+26));
 
 		@dismissButton = GuiButton(this, Alignment(Right-164, Top+2, Right-4, Bottom-2), locale::EFFECT_DISMISS);
-		dismissButton.buttonIcon = icons::Close;
+		dismissButton.buttonIcon = iconWrapper.Close;
 		updateAbsolutePosition();
 	}
 
@@ -1712,7 +1713,7 @@ class WarOption : GuiContextOption {
 			locale::DECLARE_WAR,
 			format(locale::PROMPT_WAR, formatEmpireName(emp)),
 			locale::DECLARE_WAR, locale::CANCEL,
-			WarCallback(emp)).titleBox.color = Color(0xe00000ff);
+			WarCallback(emp)).titleBox.color = activeSkin.DiplomacyDeclareWarTitle;
 	}
 };
 
@@ -1802,7 +1803,7 @@ class OfferSurrenderOption : GuiContextOption, QuestionDialogCallback {
 			locale::SURRENDER_OPTION,
 			format(locale::SURRENDER_PROMPT, formatEmpireName(emp)),
 			locale::OFFER, locale::CANCEL,
-			this).titleBox.color = Color(0xe00000ff);
+			this).titleBox.color = activeSkin.DiplomacySurrenderTitle;
 	}
 
 	void questionCallback(QuestionDialog@ dialog, int answer) {
@@ -1838,7 +1839,7 @@ class TreatyDialog : Dialog {
 		@accept = GuiButton(bg, recti());
 		accept.text = locale::PROPOSE;
 		accept.tabIndex = 100;
-		accept.color = Color(0xaaffaaff);
+		accept.color = activeSkin.DiplomacyProposeTreaty;
 		@accept.callback = this;
 
 		@cancel = GuiButton(bg, recti());
@@ -1890,7 +1891,7 @@ class TreatyDialog : Dialog {
 			y += 40;
 		}
 
-		addTitle(locale::PROPOSE_TREATY, color=colors::Green);
+		addTitle(locale::PROPOSE_TREATY, color=activeSkin.DiplomacyProposeTreatyTitle);
 		alignAcceptButtons(accept, cancel);
 
 		updatePosition();
@@ -1968,9 +1969,9 @@ class DonateDialog : Dialog {
 		@cancel.callback = this;
 
 		@description = GuiMarkupText(window, Alignment(Left+12, Top+32, Right-12, Top+58));
-		addTitle(locale::DONATE_OPTION, color=colors::Green);
+		addTitle(locale::DONATE_OPTION, color=activeSkin.DiplomacyDonateTitle);
 		description.text = locale::DONATE_TEXT;
-		accept.color = Color(0xaaffaaff);
+		accept.color = activeSkin.DiplomacyDonate;
 
 		alignAcceptButtons(accept, cancel);
 		@offer = GuiOfferList(window, Alignment(Left+4, Top+58, Right-4, Bottom-40), prefix="DONATE");
@@ -2022,10 +2023,10 @@ class DonateDialog : Dialog {
 
 Sprite getRelationIcon(int num) {
 	if(num < 0)
-		return Sprite(material::MaskAngry);
+		return Sprite(getSkinMaterial("MaskAngry"));
 	else if(num > 0)
-		return Sprite(material::MaskHappy);
-	return Sprite(material::MaskNeutral);
+		return Sprite(getSkinMaterial("MaskHappy"));
+	return Sprite(getSkinMaterial("MaskNeutral"));
 }
 
 Tab@ createDiplomacyTab() {

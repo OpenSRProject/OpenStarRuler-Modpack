@@ -1,3 +1,4 @@
+import skins;
 //Radius added to every entry
 const double ExtraRadius = 100.0;
 const double BorderThickness = 150.0;
@@ -303,7 +304,7 @@ class TerritoryNodeScript {
 			vec2f innerUV(0,0), outerUV(1,0);
 			vec2f innerUV_r(0,1), outerUV_r(1,1);
 			if(owner is playerEmpire) {
-				drawPolygonStart(edge_verts.length, material::Territory, Color(0xffffff80));
+				drawPolygonStart(edge_verts.length, getSkinMaterial("Territory"), Color(0xffffff80));
 					for(int i = 0, cnt = edge_verts.length; i < cnt; i += 2) {
 						drawPolygonPoint(edge_verts[i], outerUV);
 						drawPolygonPoint(edge_verts[(i+2)%cnt], outerUV);
@@ -327,7 +328,7 @@ class TerritoryNodeScript {
 				shader::STIPPLE_COLOR = vec4f(0.f, 0.f, 0.f, 0.f);
 			}
 
-			drawPolygonStart(inner_verts.length, material::Territory, owner.color);
+			drawPolygonStart(inner_verts.length, getSkinMaterial("Territory"), owner.color);
 				for(int i = 0, cnt = inner_verts.length; i < cnt; i += 2) {
 					if(stipple) {
 						outerUV.y = offset;

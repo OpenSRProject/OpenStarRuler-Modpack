@@ -1,3 +1,4 @@
+import skins;
 import saving;
 import hooks;
 import icons;
@@ -15,7 +16,7 @@ tidy final class AbilityType {
 	double energyCost = 0.0;
 	double cooldown = 0.0;
 	double range = INFINITY;
-	Sprite icon = icons::Ability;
+	Sprite icon = iconWrapper.Ability;
 	Targets targets;
 	int objectCast = -1;
 	int hotkey = 0;
@@ -127,7 +128,7 @@ tidy class Ability : Serializable, Savable {
 			if(type.hooks[i].getVariable(this, vicon, vname, vvalue, color)) {
 				tt += format("[nl/][vspace=6/][img=$1;22][b][color=$4]$2[/color][/b] [offset=120]$3[/offset][/img]",
 					getSpriteDesc(vicon), vname, vvalue, toString(color));
-				color = colors::White;
+				color = activeSkin.White;
 			}
 		}
 
@@ -478,7 +479,11 @@ void loadAbilities(const string& filename) {
 			type.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			type.icon = getSprite(value);
+			if(activeSkin.abilityIconOverrides.exists(type.ident)) {
+				activeSkin.abilityIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Energy Cost")) {
 			type.energyCost = toDouble(value);
@@ -499,7 +504,11 @@ void loadAbilities(const string& filename) {
 			parseTarget(type.targets, value);
 		}
 		else if(key.equals_nocase("Activate Sound")) {
-			@type.activateSound = getSound(value);
+			if(activeSkin.abilitySoundOverrides.exists(type.ident)) {
+				activeSkin.abilitySoundOverrides.get(type.ident, value);
+				@type.activateSound = getSound(value);
+			}
+			else @type.activateSound = getSkinSound(value);
 			if(type.activateSound is null)
 				file.error("Could not find activation sound '"+value+"'.");
 		}

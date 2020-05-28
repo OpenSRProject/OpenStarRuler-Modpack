@@ -1,4 +1,6 @@
-void drawLitModel(const Model& model, const Material@ material, const recti& position, const quaterniond& rotation, double scale = 1.0, const vec3f& lightPos = vec3f(), const Color& lightColor = colors::White) {
+import skins;
+
+void drawLitModel(const Model& model, const Material@ material, const recti& position, const quaterniond& rotation, double scale = 1.0, const vec3f& lightPos = vec3f(), const Color& lightColor = activeSkin.White) {
 	Light@ light = ::light[0];
 	light.position = vec3f(position.center.x, -100.f, position.center.y);
 	if(!lightPos.zero)

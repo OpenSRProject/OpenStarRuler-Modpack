@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import planet_types;
 import util.convar;
@@ -28,7 +29,7 @@ void init() {
 	@foodClass = getResourceClass("Food");
 	@scalableClass = getResourceClass("Scalable");
 
-	colors::Red.toVec4(DISABLE_NORMAL);
+	activeSkin.Red.toVec4(DISABLE_NORMAL);
 	Color(0xff6300ff).toVec4(DISABLE_POPULATION);
 }
 
@@ -107,12 +108,12 @@ final class PlanetIconNodeScript : StrategicIcon {
 			@levelMat = rs.getMaterial(level);
 		}
 		else switch(level) {
-			case 0: @levelMat = material::PlanetLevel0; break;
-			case 1: @levelMat = material::PlanetLevel1; break;
-			case 2: @levelMat = material::PlanetLevel2; break;
-			case 3: @levelMat = material::PlanetLevel3; break;
-			case 4: @levelMat = material::PlanetLevel4; break;
-			case 5: default: @levelMat = material::PlanetLevel5; break;
+			case 0: @levelMat = getSkinMaterial("PlanetLevel0"); break;
+			case 1: @levelMat = getSkinMaterial("PlanetLevel1"); break;
+			case 2: @levelMat = getSkinMaterial("PlanetLevel2"); break;
+			case 3: @levelMat = getSkinMaterial("PlanetLevel3"); break;
+			case 4: @levelMat = getSkinMaterial("PlanetLevel4"); break;
+			case 5: default: @levelMat = getSkinMaterial("PlanetLevel5"); break;
 		}
 	}
 
@@ -238,11 +239,11 @@ final class PlanetIconNodeScript : StrategicIcon {
 					Color scol(0xffffffff);
 					scol.a = col.a;
 
-					renderBillboard(material::DistantPlanetSelected, node.abs_position,
+					renderBillboard(getSkinMaterial("DistantPlanetSelected"), node.abs_position,
 							node.abs_scale * 2.0 * PlanetSelectedSize.value, 0, scol);
 					shader::APPROACH += APPROACH_EPSILON;
 				}
-				renderBillboard(material::FadedPlanet, node.abs_position, node.abs_scale * 2.0, 0, col);
+				renderBillboard(getSkinMaterial("FadedPlanet"), node.abs_position, node.abs_scale * 2.0, 0, col);
 				return;
 			}
 		}
@@ -259,7 +260,7 @@ final class PlanetIconNodeScript : StrategicIcon {
 		else if(isDecaying) {
 			shader::CAPTURE_PROGRESS = pl.decayTime / (config::LEVEL_DECAY_TIMER / owner.PlanetDecaySpeed);
 			float pct = abs((frameTime % 1.0) - 0.5f) * 2.f;
-			colors::Red.interpolate(colors::Orange, pct).toVec4(shader::CAPTURE_COLOR);
+			activeSkin.Red.interpolate(activeSkin.Orange, pct).toVec4(shader::CAPTURE_COLOR);
 		}
 		else {
 			shader::CAPTURE_COLOR = vec4f();
@@ -294,7 +295,7 @@ final class PlanetIconNodeScript : StrategicIcon {
 			
 			vec3d center = node.abs_position;
 			if(orbitColor.a > 0)
-				renderPlane(material::OrbitCircle, center, orbitSize, orbitColor);
+				renderPlane(getSkinMaterial("OrbitCircle"), center, orbitSize, orbitColor);
 
 			float prevA = shader::CAPTURE_COLOR.w;
 			Color flagColor = color;
@@ -330,19 +331,19 @@ final class PlanetIconNodeScript : StrategicIcon {
 				Color scol(0xffffffff);
 				scol.a = col.a;
 
-				renderBillboard(material::DistantPlanetSelected, node.abs_position,
+				renderBillboard(getSkinMaterial("DistantPlanetSelected"), node.abs_position,
 						node.abs_scale * 2.0 * PlanetSelectedSize.value, 0, scol);
 				shader::APPROACH += APPROACH_EPSILON;
 			}
 			
 			shader::DISTANT_SPRITE_FADE = iconFade;
 			
-			spritesheet::DistantPlanetType.getSourceUV(typeIcon, shader::DISTANT_SPRITE1);
+			getSkinSpriteSheet("DistantPlanetType").getSourceUV(typeIcon, shader::DISTANT_SPRITE1);
 
 			if(rs !is null)
 				rs.getUV(resourceIcon, shader::DISTANT_SPRITE2);
 			else if(resourceIcon < 0xffffffff)
-				spritesheet::ResourceIconsSmall.getSourceUV(resourceIcon, shader::DISTANT_SPRITE2);
+				getSkinSpriteSheet("ResourceIconsSmall").getSourceUV(resourceIcon, shader::DISTANT_SPRITE2);
 			else
 				shader::DISTANT_SPRITE2 = vec4f();
 			
@@ -367,7 +368,7 @@ final class PlanetIconNodeScript : StrategicIcon {
 			}
 
 			if(levelMat is null)
-				renderBillboard(material::PlanetLevel0, node.abs_position, node.abs_scale * 2.0, 0, col);
+				renderBillboard(getSkinMaterial("PlanetLevel0"), node.abs_position, node.abs_scale * 2.0, 0, col);
 			else
 				renderBillboard(levelMat, node.abs_position, node.abs_scale * 2.0, 0, col);
 		}

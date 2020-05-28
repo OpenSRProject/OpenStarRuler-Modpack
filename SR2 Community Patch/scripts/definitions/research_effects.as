@@ -1,3 +1,4 @@
+import skins;
 import research;
 from research import TechnologyHook;
 import bonus_effects;
@@ -22,7 +23,7 @@ class SecondaryInfluenceCost : TechnologyHook {
 
 	bool getSecondaryUnlock(TechnologyNode@ node, Empire@ emp, string& text) const {
 		text = format("[img=$1;20/][b][color=$2]$3[/color][/b]",
-			getSpriteDesc(icons::Influence), toString(colors::Influence),
+			getSpriteDesc(iconWrapper.Influence), toString(activeSkin.Influence),
 			toString(cost.integer));
 		return true;
 	}
@@ -53,7 +54,7 @@ class SecondaryMoneyCost : TechnologyHook {
 
 	bool getSecondaryUnlock(TechnologyNode@ node, Empire@ emp, string& text) const {
 		text = format("[img=$1;20/][b][color=$2]$3[/color][/b]",
-			getSpriteDesc(icons::Money), toString(colors::Money),
+			getSpriteDesc(iconWrapper.Money), toString(activeSkin.Money),
 			formatMoney(cost.integer));
 		return true;
 	}
@@ -84,7 +85,7 @@ class SecondaryEnergyCost : TechnologyHook {
 
 	bool getSecondaryUnlock(TechnologyNode@ node, Empire@ emp, string& text) const {
 		text = format("[img=$1;20/][b][color=$2]$3[/color][/b]",
-			getSpriteDesc(icons::Energy), toString(colors::Energy),
+			getSpriteDesc(iconWrapper.Energy), toString(activeSkin.Energy),
 			toString(cost.decimal, 0));
 		return true;
 	}
@@ -115,7 +116,7 @@ class SecondaryFTLCost : TechnologyHook {
 
 	bool getSecondaryUnlock(TechnologyNode@ node, Empire@ emp, string& text) const {
 		text = format("[img=$1;20/][b][color=$2]$3[/color][/b]",
-			getSpriteDesc(icons::FTL), toString(colors::FTL),
+			getSpriteDesc(iconWrapper.FTL), toString(activeSkin.FTL),
 			toString(cost.decimal, 0));
 		return true;
 	}
@@ -334,7 +335,7 @@ class RequireBuildShipsWith : TechnologyHook {
 		if(count >= amount.integer)
 			col = colors::Green;
 		else
-			col = colors::Red;
+			col = activeSkin.Red;
 
 		auto@ def = getSubsystemDef(subsystem.integer);
 		string req = format(locale::RESEARCH_REQ_BUILDSHIPS, toString(amount.integer), def.name, toString(count));
@@ -362,7 +363,7 @@ class RequireEmpireAttributeGTE : TechnologyHook {
 		if(count >= value.decimal)
 			col = colors::Green;
 		else
-			col = colors::Red;
+			col = activeSkin.Red;
 
 		string req = format(text.str, standardize(count,true), standardize(value.decimal,true));
 		req = format(locale::RESEARCH_REQ, req, toString(col));

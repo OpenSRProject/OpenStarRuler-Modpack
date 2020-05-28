@@ -28,7 +28,7 @@ class FileFolder : BaseGuiElement {
 		btn.horizAlign = 0.0;
 		btn.font = FT_Bold;
 		@toggle = GuiSprite(btn, Alignment(Right-26, Top+4, Right-4, Top+26));
-		toggle.desc = icons::Minus;
+		toggle.desc = iconWrapper.Minus;
 	}
 
 	void reset() {
@@ -42,10 +42,10 @@ class FileFolder : BaseGuiElement {
 
 	void update() {
 		if(expanded) {
-			toggle.desc = icons::Minus;
+			toggle.desc = iconWrapper.Minus;
 		}
 		else {
-			toggle.desc = icons::Plus;
+			toggle.desc = iconWrapper.Plus;
 		}
 
 		if(cast<FileFolder>(parent) !is null)

@@ -1,3 +1,4 @@
+import skins;
 import influence;
 import hooks;
 import util.formatting;
@@ -27,7 +28,7 @@ class BonusMoney : InfluenceCardEffect {
 	Argument qual("Per Quality", AT_Integer, "0", doc="Additional funds to award per card quality.");
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Money;
+		sprt = iconWrapper.Money;
 		name = locale::CARD_MONEY_GAIN;
 		tooltip = locale::CARD_MONEY_GAIN;
 		text = formatMoney(arguments[0].integer + card.extraQuality * arguments[1].integer);
@@ -88,7 +89,7 @@ class CreateEffect : InfluenceCardEffect {
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
 		if(effectType.reservation == 0)
 			return IVM_None;
-		sprt = icons::InfluenceUpkeep;
+		sprt = iconWrapper.InfluenceUpkeep;
 		name = locale::INFLUENCE_UPKEEP;
 		text = toString(effectType.reservation * 100.0, 0)+"%";
 		tooltip = format(locale::INFLUENCE_TT_UPKEEP, text);
@@ -123,7 +124,7 @@ class ShowUpkeep : InfluenceCardEffect {
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
 		int quality = card.extraQuality;
 		double value = arguments[0].decimal + double(quality) * arguments[1].decimal;
-		sprt = icons::InfluenceUpkeep;
+		sprt = iconWrapper.InfluenceUpkeep;
 		name = locale::INFLUENCE_UPKEEP;
 		text = toString(value * 100.0, 0)+"%";
 		tooltip = format(locale::INFLUENCE_TT_UPKEEP, text);
@@ -159,7 +160,7 @@ class ShowDuration : InfluenceCardEffect {
 		int quality = card.extraQuality;
 		double time = arguments[0].decimal + double(quality) * arguments[1].decimal;
 
-		sprt = icons::Duration;
+		sprt = iconWrapper.Duration;
 		name = locale::INFLUENCE_DURATION;
 		text = formatTime(time);
 		tooltip = format(locale::INFLUENCE_TT_DURATION, text);
@@ -176,7 +177,7 @@ class ShowPopulation : InfluenceCardEffect {
 	Argument qual("Per Quality", AT_Decimal, "0", doc="Additional population per quality.");
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Population;
+		sprt = iconWrapper.Population;
 		name = locale::INFLUENCE_POPULATION;
 		text = standardize(arguments[0].decimal + arguments[1].decimal * double(card.extraQuality), true);
 		tooltip = "";
@@ -193,7 +194,7 @@ class ShowLabor : InfluenceCardEffect {
 	Argument qual("Per Quality", AT_Decimal, "0", doc="Additional labor per quality.");
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Labor;
+		sprt = iconWrapper.Labor;
 		name = locale::RESOURCE_LABOR;
 		text = standardize(arguments[0].decimal + arguments[1].decimal * double(card.extraQuality), true);
 		tooltip = "";
@@ -210,7 +211,7 @@ class ShowEffectiveness : InfluenceCardEffect {
 	Argument qual("Per Quality", AT_Decimal, "0", doc="Additional effectiveness per quality.");
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Effectiveness;
+		sprt = iconWrapper.Effectiveness;
 		name = locale::EFFECTIVENESS;
 		text = toString((arguments[0].decimal + arguments[1].decimal * double(card.extraQuality)) * 100.0, 0)+"%";
 		tooltip = "";
@@ -913,7 +914,7 @@ class PurchaseMoneyCost : InfluenceCardEffect {
 		if(stackCard is null)
 			return IVM_None;
 		
-		sprt = icons::Money;
+		sprt = iconWrapper.Money;
 		name = locale::CARD_PURCHASE_MONEY;
 		tooltip = locale::CARD_PURCHASE_MONEY;
 		text = formatMoney(getCost(card.extraQuality, card.uses - 1, stackCard.placement));
@@ -955,7 +956,7 @@ class PlayMoneyCost : InfluenceCardEffect {
 	}
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Money;
+		sprt = iconWrapper.Money;
 		name = locale::CARD_PLAY_MONEY;
 		tooltip = locale::CARD_PLAY_MONEY;
 		text = formatMoney(getCost(card.extraQuality));
@@ -997,7 +998,7 @@ class PlayEnergyCost : InfluenceCardEffect {
 	}
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Energy;
+		sprt = iconWrapper.Energy;
 		name = locale::CARD_PLAY_ENERGY;
 		tooltip = locale::CARD_PLAY_ENERGY;
 		text = standardize(getCost(card.extraQuality), true);
@@ -1067,7 +1068,7 @@ class PlayEnergyCostPerPlay : InfluenceCardEffect {
 	}
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Energy;
+		sprt = iconWrapper.Energy;
 		name = locale::CARD_PLAY_ENERGY;
 		tooltip = locale::CARD_PLAY_ENERGY;
 		text = standardize(getCost(card, vote, card.targets), true);
@@ -1227,7 +1228,7 @@ class AddWeightToNextSupport : InfluenceCardEffect {
 		int amt = arguments[1].integer;
 		amt += floor(arguments[2].decimal * double(card.extraQuality));
 
-		sprt = icons::InfluenceWeight;
+		sprt = iconWrapper.InfluenceWeight;
 		name = locale::CARD_DESC_WEIGHT;
 		tooltip = format(locale::INFLUENCE_TT_WEIGHT_NEXT, toString(amt));
 		text = toString(amt);
@@ -1300,7 +1301,7 @@ class AddWeightToNextSupportBy : InfluenceCardEffect {
 		int amt = arguments[1].integer;
 		amt += floor(arguments[2].decimal * double(card.extraQuality));
 
-		sprt = icons::InfluenceWeight;
+		sprt = iconWrapper.InfluenceWeight;
 		name = locale::CARD_DESC_WEIGHT;
 		tooltip = format(locale::INFLUENCE_TT_WEIGHT_NEXT, toString(amt));
 		text = toString(amt);
@@ -1855,7 +1856,7 @@ class PlayMoneyCostFromGlobal : InfluenceCardEffect {
 	}
 
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
-		sprt = icons::Money;
+		sprt = iconWrapper.Money;
 		name = locale::CARD_PLAY_MONEY;
 		tooltip = locale::CARD_PLAY_MONEY;
 		text = formatMoney(getCost(card.extraQuality));
@@ -1893,7 +1894,7 @@ class ShowValue : InfluenceCardEffect {
 	InfluenceVariableMode getVariable(const InfluenceCard@ card, const InfluenceVote@ vote, Sprite& sprt, string& name, string& tooltip, string& text, bool& highlight) const override {
 		int quality = card.extraQuality;
 		double value = arguments[2].decimal + double(quality) * arguments[3].decimal;
-		sprt = getSprite(arguments[0].str);
+		sprt = getSkinSprite(arguments[0].str);
 		name = arguments[1].str;
 		if(arguments[4].boolean)
 			text = toString(value * 100.0, 0)+"%";
@@ -1926,7 +1927,7 @@ class ShowGlobalValue : InfluenceCardEffect {
 		double value = arguments[4].decimal + double(quality) * arguments[5].decimal;
 		auto@ glob = getGlobal(arguments[2].integer);
 		value += glob.value * arguments[3].decimal;
-		sprt = getSprite(arguments[0].str);
+		sprt = getSkinSprite(arguments[0].str);
 		name = arguments[1].str;
 		if(arguments[6].boolean)
 			text = toString(value * 100.0, 0)+"%";

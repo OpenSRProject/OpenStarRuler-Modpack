@@ -1,4 +1,5 @@
 #priority init -500
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiIconGrid;
 import elements.GuiMarkupText;
@@ -67,7 +68,7 @@ class Quickbar : BaseGuiElement, Savable {
 		quickButton.noClip = true;
 
 		@helpButton = GuiButton(this, recti());
-		helpButton.setIcon(Sprite(spritesheet::MenuIcons, 3));
+		helpButton.setIcon(Sprite(getSkinSpriteSheet("MenuIcons"), 3));
 		helpButton.noClip = true;
 
 		refresh();
@@ -159,9 +160,9 @@ class Quickbar : BaseGuiElement, Savable {
 			option.text = mode.name;
 
 			if(mode.closed)
-				option.icon = Sprite(spritesheet::ContextIcons, 10);
+				option.icon = Sprite(getSkinSpriteSheet("ContextIcons"), 10);
 			else
-				option.icon = Sprite(spritesheet::ContextIcons, 1);
+				option.icon = Sprite(getSkinSpriteSheet("ContextIcons"), 1);
 
 			menu.addOption(option);
 		}
@@ -471,7 +472,7 @@ class ObjectGrid : GuiIconGrid {
 				shifted.fromHSV((shifted.hue + 180.f)%360.f, shifted.saturation, shifted.value);
 				skin.getFont(FT_Bold).draw(horizAlign=0.85, vertAlign=0.85, text=count,
 						pos=pos, color=Color(shifted),
-						stroke=colors::Black);
+						stroke=activeSkin.Black);
 			}
 		}
 	}
@@ -632,7 +633,7 @@ class FreeResources : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 2);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 2);
 	}
 
 	void longUpdate() override {
@@ -728,7 +729,7 @@ class DisabledResources : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 3);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 3);
 	}
 
 	bool filter(ObjectData@ dat) {
@@ -758,7 +759,7 @@ class OverPressurePlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return icons::Pressure;
+		return iconWrapper.Pressure;
 	}
 
 	bool filter(ObjectData@ dat) {
@@ -789,7 +790,7 @@ class Replicators : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return spritesheet::GuiOrbitalIcons+20;
+		return Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 20);
 	}
 
 	bool filter(ObjectData@ dat) {
@@ -834,7 +835,7 @@ class NoPopResources : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 3, colors::Green);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 3, colors::Green);
 	}
 
 	bool filter(ObjectData@ dat) {
@@ -869,7 +870,7 @@ class DecayingPlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 4);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 4);
 	}
 
 	string get_name() override {
@@ -893,7 +894,7 @@ class ColonizingPlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 5);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 5);
 	}
 
 	string get_name() override {
@@ -959,7 +960,7 @@ class ColonizeSafePlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 5, Color(0x00ff00ff));
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 5, Color(0x00ff00ff));
 	}
 
 	string get_name() override {
@@ -981,7 +982,7 @@ class LaborPlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 1);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 1);
 	}
 
 	string get_name() override {
@@ -1021,7 +1022,7 @@ class DefenseTargets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 8);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 8);
 	}
 
 	string get_name() override {
@@ -1057,7 +1058,7 @@ class SiegePlanets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 7);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 7);
 	}
 
 	Color get_tabColor() override {
@@ -1075,7 +1076,7 @@ class FlingBeacons : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::GuiOrbitalIcons, 0);
+		return Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1104,7 +1105,7 @@ class Beacons : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::GuiOrbitalIcons, 0);
+		return Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1134,7 +1135,7 @@ class AllFleets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ShipIcons, 0);
+		return Sprite(getSkinSpriteSheet("ShipIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1164,7 +1165,7 @@ class CivilianFleets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ShipIcons, 0);
+		return Sprite(getSkinSpriteSheet("ShipIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1194,7 +1195,7 @@ class Motherships : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ShipIcons, 0);
+		return Sprite(getSkinSpriteSheet("ShipIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1222,7 +1223,7 @@ class DefenseStations : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::GuiOrbitalIcons, 0);
+		return Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1251,7 +1252,7 @@ class LowSupplyFleets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return icons::Supply;
+		return iconWrapper.Supply;
 	}
 
 	string get_name() override {
@@ -1279,7 +1280,7 @@ class CombatFleets : ObjectMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ShipIcons, 0);
+		return Sprite(getSkinSpriteSheet("ShipIcons"), 0);
 	}
 
 	Color get_tabColor() override {
@@ -1460,7 +1461,7 @@ class CardMode : QuickbarMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::QuickbarIcons, 0);
+		return Sprite(getSkinSpriteSheet("QuickbarIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1557,7 +1558,7 @@ class AutoImportGrid : GuiIconGrid {
 		if(count > 1) {
 			skin.getFont(FT_Bold).draw(horizAlign=0.85, vertAlign=0.85, text=count,
 					pos=pos, color=Color(0xf268ffff),
-					stroke=colors::Black);
+					stroke=activeSkin.Black);
 		}
 	}
 
@@ -1605,7 +1606,7 @@ class AutoImportMode : QuickbarMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ContextIcons, 0);
+		return Sprite(getSkinSpriteSheet("ContextIcons"), 0);
 	}
 
 	string get_name() override {
@@ -1743,7 +1744,7 @@ class ArtifGrid : GuiIconGrid {
 		if(desc.count > 1) {
 			int x = pos.size.x - 9;
 			if(desc.count > 5) {
-				font::DroidSans_11_Bold.draw(
+				activeSkin.skin.getFont(FT_Bold).draw(
 					pos=recti_area(vec2i(pos.topLeft.x + x - 30, pos.topLeft.y + 4), vec2i(35, 10)),
 					text=toString(desc.count),
 					color=Color(0xe32020ff),
@@ -1837,7 +1838,7 @@ class ArtifactMode : QuickbarMode {
 	}
 
 	Sprite get_icon() override {
-		return Sprite(spritesheet::ArtifactIcon, 0);
+		return Sprite(getSkinSpriteSheet("ArtifactIcon"), 0);
 	}
 
 	string get_name() override {

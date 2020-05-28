@@ -1,3 +1,4 @@
+import skins;
 import menus;
 import elements.GuiDropdown;
 import elements.BaseGuiElement;
@@ -27,7 +28,7 @@ class OptionsMenu : MenuBox {
 	void buildMenu() {
 		title.text = locale::MENU_OPTIONS;
 
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 11), locale::MENU_BACK, OA_Back));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 11), locale::MENU_BACK, OA_Back));
 		items.addItem(MenuAction(locale::OPT_GRAPHICS, OA_Graphics));
 		items.addItem(MenuAction(locale::OPT_GAME, OA_Game));
 		items.addItem(MenuAction(locale::OPT_CAMERA, OA_Camera));
@@ -469,6 +470,44 @@ class GuiAudioOption : GuiDropdownOption, EngineOption {
 	}
 };
 
+class GuiSkinOption : GuiDropdownOption, EngineOption {
+	string[]@ names = skins.getKeys();
+
+	GuiSkinOption(BaseGuiElement@ parent, const recti& pos) {
+		super(parent, pos, locale::GUI_SKIN);
+
+		box.addItem(locale::GUI_SKIN_DEFAULT);
+		for(uint i = 0, cnt = names.length; i < cnt; ++i) {
+			if(names[i] != "Default")
+				box.addItem(localize("GUI_SKIN_" + names[i]));
+		}
+		reset();
+	}
+
+	void reset() {
+		string name = settings::sSkinName;
+
+		box.selected = 0;
+		if(name == "Default")
+			return;
+
+		for(uint i = 0, cnt = names.length; i < cnt; ++i) {
+			if(names[i] == name) {
+				box.selected = i+1;
+				break;
+			}
+		}
+	}
+
+	void apply() {
+		string name = "Default";
+		if(box.selected > 0)
+			name = names[box.selected-1];
+
+		settings::sSkinName = name;
+	}
+}
+
 void updateGuiScale() {
 	uiScale = getSettingDouble("dGUIScale");
 }
@@ -614,6 +653,8 @@ class GraphicsOptions : OptionsBox {
 		shaderWatch.insertLast(tog);
 
 		y += 32;
+		options.insertLast(GuiSkinOption(
+			panel, recti_area(8, y, 550, 32)));
 
 		GuiText text(this, Alignment(Left+12, Bottom-32, Right-12, Bottom-8), locale::OPT_RESTART);
 		text.color = Color(0xaaaaaaff);

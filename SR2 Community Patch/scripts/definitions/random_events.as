@@ -1,3 +1,4 @@
+import skins;
 import saving;
 import hooks;
 
@@ -330,7 +331,8 @@ void loadRandomEvents(const string& filename) {
 
 bool loadEvent(ReadFile@ file) {
 	RandomEvent evt;
-	evt.ident = file.value;
+	string key, value = file.value;
+	evt.ident = value;
 	addRandomEvent(evt);
 
 	int blockIndent = file.indent;
@@ -338,6 +340,8 @@ bool loadEvent(ReadFile@ file) {
 		return false;
 
 	while(true) {
+		key = file.key;
+		value = file.value;
 		if(file.indent <= blockIndent)
 			return true;
 		if(file.fullLine) {
@@ -349,34 +353,34 @@ bool loadEvent(ReadFile@ file) {
 			if(file.indent <= blockIndent)
 				return true;
 		}
-		else if(file.key.equals_nocase("Option")) {
+		else if(key.equals_nocase("Option")) {
 			if(!loadOption(evt, file))
 				return false;
 		}
 		else {
-			if(file.key.equals_nocase("Name")) {
-				evt.name = localize(file.value);
+			if(key.equals_nocase("Name")) {
+				evt.name = localize(value);
 			}
-			else if(file.key.equals_nocase("Text")) {
-				evt.text = localize(file.value);
+			else if(key.equals_nocase("Text")) {
+				evt.text = localize(value);
 			}
-			else if(file.key.equals_nocase("Frequency")) {
-				evt.frequency = toDouble(file.value);
+			else if(key.equals_nocase("Frequency")) {
+				evt.frequency = toDouble(value);
 			}
-			else if(file.key.equals_nocase("Unique")) {
-				evt.unique = toBool(file.value);
+			else if(key.equals_nocase("Unique")) {
+				evt.unique = toBool(value);
 			}
-			else if(file.key.equals_nocase("Target")) {
-				parseTarget(evt.targets, file.value);
+			else if(key.equals_nocase("Target")) {
+				parseTarget(evt.targets, value);
 			}
-			else if(file.key.equals_nocase("Timer")) {
-				evt.timer = toDouble(file.value);
+			else if(key.equals_nocase("Timer")) {
+				evt.timer = toDouble(value);
 			}
-			else if(file.key.equals_nocase("Mode")) {
-				if(file.value.equals_nocase("Random"))
+			else if(key.equals_nocase("Mode")) {
+				if(value.equals_nocase("Random"))
 					evt.mode = RTM_Random;
 				else
-					file.error("Unknown random event mode: "+file.value);
+					file.error("Unknown random event mode: "+value);
 			}
 			else {
 				auto@ hook = cast<IRandomEventHook>(parseHook(file.line, "event_effects::", instantiate=false));
@@ -392,11 +396,12 @@ bool loadEvent(ReadFile@ file) {
 
 bool loadOption(RandomEvent@ evt, ReadFile@ file) {
 	EventOption opt;
+	string key, value = file.value;
 	opt.id = optionId++;
-	if(file.value.length == 0)
+	if(value.length == 0)
 		opt.ident = evt.ident+"::__"+evt.options.length;
 	else
-		opt.ident = evt.ident+"::"+file.value;
+		opt.ident = evt.ident+"::"+value;
 	evt.options.insertLast(opt);
 
 	int blockIndent = file.indent;
@@ -404,6 +409,8 @@ bool loadOption(RandomEvent@ evt, ReadFile@ file) {
 		return false;
 
 	while(true) {
+		key = file.key;
+		value = file.value;
 		if(file.indent <= blockIndent)
 			return true;
 		if(file.fullLine) {
@@ -413,26 +420,30 @@ bool loadOption(RandomEvent@ evt, ReadFile@ file) {
 			if(!file++)
 				return false;
 		}
-		else if(file.key.equals_nocase("Result")) {
+		else if(key.equals_nocase("Result")) {
 			if(!loadResult(evt, opt, file))
 				return false;
 		}
-		else if(file.key.equals_nocase("On")) {
+		else if(key.equals_nocase("On")) {
 			if(!loadOnBlock(evt, opt.result, file))
 				return false;
 		}
 		else {
-			if(file.key.equals_nocase("Text")) {
-				opt.text = localize(file.value);
+			if(key.equals_nocase("Text")) {
+				opt.text = localize(value);
 			}
-			else if(file.key.equals_nocase("Icon")) {
-				opt.icon = getSprite(file.value);
+			else if(key.equals_nocase("Icon")) {
+				if(activeSkin.randomEventOptionIconOverrides.exists(evt.ident + "." + opt.ident)) {
+				activeSkin.randomEventOptionIconOverrides.get(evt.ident + "." + opt.ident, value);
+				opt.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
 			}
-			else if(file.key.equals_nocase("Default")) {
-				opt.defaultOption = toBool(file.value);
+			else opt.icon = getSkinSprite(value);
 			}
-			else if(file.key.equals_nocase("Safe")) {
-				opt.safe = toBool(file.value);
+			else if(key.equals_nocase("Default")) {
+				opt.defaultOption = toBool(value);
+			}
+			else if(key.equals_nocase("Safe")) {
+				opt.safe = toBool(value);
 			}
 			else {
 				auto@ hook = cast<IRandomOptionHook>(parseHook(file.line, "event_effects::", instantiate=false));
@@ -448,11 +459,12 @@ bool loadOption(RandomEvent@ evt, ReadFile@ file) {
 
 bool loadResult(RandomEvent@ evt, EventOption@ opt, ReadFile@ file) {
 	EventResult res;
-	if(file.value.length != 0) {
-		if(file.value[file.value.length-1] == '%')
-			res.frequency = toDouble(file.value.substr(0, file.value.length-1)) / 100.0;
+	string key, value = file.value;
+	if(value.length != 0) {
+		if(value[value.length-1] == '%')
+			res.frequency = toDouble(value.substr(0, value.length-1)) / 100.0;
 		else
-			res.frequency = toDouble(file.value);
+			res.frequency = toDouble(value);
 	}
 	opt.inner.insertLast(res);
 
@@ -461,6 +473,8 @@ bool loadResult(RandomEvent@ evt, EventOption@ opt, ReadFile@ file) {
 		return false;
 
 	while(true) {
+		key = file.key;
+		value = file.value;
 		if(file.indent <= blockIndent)
 			return true;
 		if(file.fullLine) {
@@ -470,7 +484,7 @@ bool loadResult(RandomEvent@ evt, EventOption@ opt, ReadFile@ file) {
 			if(!file++)
 				return false;
 		}
-		else if(file.key.equals_nocase("On")) {
+		else if(key.equals_nocase("On")) {
 			if(!loadOnBlock(evt, res, file))
 				return false;
 		}

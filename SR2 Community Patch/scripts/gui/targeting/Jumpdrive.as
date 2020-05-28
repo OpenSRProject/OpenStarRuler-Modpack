@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import ftl;
 from obj_selection import selectedObject, selectedObjects, getSelectionPosition, getSelectionScale;
@@ -71,7 +72,7 @@ class JumpdriveDisplay : PointDisplay {
 
 		if(range is null) {
 			jumpRange = cast<Ship>(ht.obj).blueprint.getEfficiencySum(SV_JumpRange);
-			@range = PlaneNode(material::RangeCircle, jumpRange);
+			@range = PlaneNode(getSkinMaterial("RangeCircle"), jumpRange);
 			range.visible = false;
 			range.position = ht.obj.node_position;
 			range.rebuildTransform();
@@ -92,24 +93,24 @@ class JumpdriveDisplay : PointDisplay {
 		else
 			color = Color(0x00ff00ff);
 
-		font::DroidSans_11_Bold.draw(mousePos + vec2i(16, 0),
+		activeSkin.skin.getFont(FT_Bold).draw(mousePos + vec2i(16, 0),
 			toString(int(ht.cost)) + " " + locale::FTL
 			 + " (" + toString(ht.distance, 0) + "u)",
 			color);
 		
 		if(ht.cost > playerEmpire.FTLStored) {
-			font::OpenSans_11_Italic.draw(mousePos + vec2i(16, 16),
+			activeSkin.skin.getFont(FT_Italic).draw(mousePos + vec2i(16, 16),
 				locale::INSUFFICIENT_FTL,
 				color);
 		}
 		else if(ht.distance >= jumpRange && !isSafe) {
 			if(ht.distance >= jumpRange * 2.0) {
-				font::DroidSans_11_Bold.draw(mousePos + vec2i(16, 16),
+				activeSkin.skin.getFont(FT_Bold).draw(mousePos + vec2i(16, 16),
 					locale::JUMPDRIVE_SAFETY_WARNING_SEVERE,
 					Color(0xff0000ff));
 			}
 			else {
-				font::DroidSans_11.draw(mousePos + vec2i(16, 16),
+				activeSkin.skin.getFont(FT_Normal).draw(mousePos + vec2i(16, 16),
 					locale::JUMPDRIVE_SAFETY_WARNING,
 					Color(0xff0000ff));
 			}

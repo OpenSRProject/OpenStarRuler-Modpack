@@ -1,3 +1,6 @@
+#priority init 9990
+import skins;
+
 enum SupportBehavior {
 	SG_Brawler,
 	SG_Shield,
@@ -18,14 +21,7 @@ const array<string> SUPPORT_BEHAVIOR_NAMES = {
 	"Cannon",
 	"Support",
 };
-const array<Sprite> SUPPORT_BEHAVIOR_ICONS = {
-	Sprite(spritesheet::AttributeIcons, 3),
-	Sprite(spritesheet::ResourceIcon, 5),
-	Sprite(material::StatusWar),
-	Sprite(spritesheet::CardCategoryIcons, 5),
-	Sprite(spritesheet::AttributeIcons, 4),
-	Sprite(material::SupplyIcon),
-};
+array<Sprite> SUPPORT_BEHAVIOR_ICONS;
 
 enum SupportRange {
 	SR_Auto,
@@ -97,3 +93,15 @@ final class DesignSettings : Serializable, Savable {
 		}
 	}
 };
+
+void init() {
+	array<Sprite> behaviorIcons = {
+		Sprite(getSkinSpriteSheet("AttributeIcons"), 3),
+		activeSkin.SupportBehaviorShield,
+		activeSkin.SupportBehaviorCavalry,
+		Sprite(getSkinSpriteSheet("CardCategoryIcons"), 5),
+		Sprite(getSkinSpriteSheet("AttributeIcons"), 4),
+		Sprite(getSkinMaterial("SupplyIcon")),
+	};
+	SUPPORT_BEHAVIOR_ICONS = behaviorIcons;
+}

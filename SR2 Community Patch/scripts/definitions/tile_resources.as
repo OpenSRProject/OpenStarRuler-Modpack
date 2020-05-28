@@ -1,4 +1,5 @@
 import icons;
+import skins;
 
 enum TileResources {
 	TR_Money,
@@ -59,24 +60,24 @@ string getTileResourceSpriteSpec(uint r) {
 
 const Sprite& getTileResourceSprite(uint r) {
 	switch(r) {
-		case TR_Money: return icons::Money;
-		case TR_Influence: return icons::Influence;
-		case TR_Energy: return icons::Energy;
-		case TR_Defense: return icons::Defense;
-		case TR_Labor: return icons::Labor;
-		case TR_Research: return icons::Research;
+		case TR_Money: return iconWrapper.Money;
+		case TR_Influence: return iconWrapper.Influence;
+		case TR_Energy: return iconWrapper.Energy;
+		case TR_Defense: return iconWrapper.Defense;
+		case TR_Labor: return iconWrapper.Labor;
+		case TR_Research: return iconWrapper.Research;
 	}
-	return icons::Empty;
+	return iconWrapper.Empty;
 }
 
 Color getTileResourceColor(uint r) {
 	switch(r) {
-		case TR_Money: return Color(0xd1cb6aff);
-		case TR_Influence: return Color(0x0087c7ff);
-		case TR_Energy: return Color(0x42b4bdff);
-		case TR_Defense: return Color(0xaf7926ff);
-		case TR_Labor: return Color(0xb1b4b6ff);
-		case TR_Research: return Color(0x8c4ec9ff);
+		case TR_Money: return activeSkin.Money;
+		case TR_Influence: return activeSkin.Influence;
+		case TR_Energy: return activeSkin.Energy;
+		case TR_Defense: return activeSkin.Defense;
+		case TR_Labor: return activeSkin.Labor;
+		case TR_Research: return activeSkin.Research;
 	}
 	return Color();
 }
@@ -95,37 +96,37 @@ string getTileResourceName(uint r) {
 
 Sprite getAffinitySprite(uint a) {
 	if(a == A_ALL) {
-		return Sprite(spritesheet::AffinityIcons, 11);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 11);
 	}
 	else if(a & A_Money != 0) {
 		if(a & A_Energy != 0)
-			return Sprite(spritesheet::AffinityIcons, 8);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 8);
 		if(a & A_Influence != 0)
-			return Sprite(spritesheet::AffinityIcons, 10);
-		return Sprite(spritesheet::AffinityIcons, 0);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 10);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 0);
 	}
 	else if(a & A_Influence != 0) {
 		if(a & A_Research != 0)
-			return Sprite(spritesheet::AffinityIcons, 9);
-		return Sprite(spritesheet::AffinityIcons, 1);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 9);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 1);
 	}
 	else if(a & A_Energy != 0) {
 		if(a & A_Labor != 0)
-			return Sprite(spritesheet::AffinityIcons, 7);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 7);
 		else if(a & A_Defense != 0)
-			return Sprite(spritesheet::AffinityIcons, 12);
-		return Sprite(spritesheet::AffinityIcons, 2);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 12);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 2);
 	}
 	else if(a & A_Defense != 0) {
 		if(a & A_Research != 0)
-			return Sprite(spritesheet::AffinityIcons, 6);
-		return Sprite(spritesheet::AffinityIcons, 3);
+			return Sprite(getSkinSpriteSheet("AffinityIcons"), 6);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 3);
 	}
 	else if(a & A_Labor != 0) {
-		return Sprite(spritesheet::AffinityIcons, 4);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 4);
 	}
 	else if(a & A_Research != 0) {
-		return Sprite(spritesheet::AffinityIcons, 5);
+		return Sprite(getSkinSpriteSheet("AffinityIcons"), 5);
 	}
 	return Sprite();
 }

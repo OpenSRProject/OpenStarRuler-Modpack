@@ -1,3 +1,4 @@
+import skins;
 import elements.IGuiElement;
 RootElement gui_root;
 
@@ -222,7 +223,7 @@ class RootElement : IGuiElement {
 	IGuiElement@ AbsorbTo;
 	recti absRect;
 	ITooltip@ Tooltip;
-	const Skin@ skin = getSkin(settings::sSkinName);
+	const Skin@ skin = activeSkin.skin;
 	float showTooltipDelay = -1;
 	IGuiElement@ prevTabFocus;
 	bool Visible = true;

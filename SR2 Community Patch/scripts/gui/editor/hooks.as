@@ -1,3 +1,4 @@
+import skins;
 import elements.GuiMarkupText;
 import elements.GuiListbox;
 import editor.fields;
@@ -203,7 +204,7 @@ class HookList : Dialog {
 		cancel.text = locale::CANCEL;
 		cancel.tabIndex = 101;
 		@cancel.callback = this;
-		cancel.color = colors::Red;
+		cancel.color = activeSkin.Red;
 
 		alignAcceptButtons(accept, cancel);
 

@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import hooks;
 import saving;
 
@@ -271,8 +272,13 @@ void loadAnomaly(const string& filename) {
 				anomaly.frequency = toDouble(value);
 		}
 		else if(key == "Icon") {
-			if(opt !is null)
-				opt.icon = getSprite(value);
+			if(opt !is null) {
+				if(activeSkin.anomalyOptionIconOverrides.exists(anomaly.ident + "." + opt.ident)) {
+					activeSkin.anomalyOptionIconOverrides.get(anomaly.ident + "." + opt.ident, value);
+					opt.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+				}
+				else opt.icon = getSkinSprite(value);
+			}
 			else
 				file.error("Icon outside option block.");
 		}

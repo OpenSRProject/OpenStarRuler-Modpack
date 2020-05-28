@@ -1,3 +1,4 @@
+import skins;
 import menus;
 import settings.game_settings;
 import util.engine_options;
@@ -44,34 +45,34 @@ class MainMenu : MenuBox {
 
 		if(game_running) {
 			if(gameSpeed == 0 && settings::bMenuPause)
-				items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 10), locale::RESUME_GAME, MA_Resume));
+				items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 10), locale::RESUME_GAME, MA_Resume));
 			else
-				items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 10), locale::RETURN_TO_GAME, MA_Resume));
+				items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 10), locale::RETURN_TO_GAME, MA_Resume));
 		}
 
 		if(mpClient)
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 8), locale::DISCONNECT, MA_Disconnect));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 8), locale::DISCONNECT, MA_Disconnect));
 		else if(game_running)
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 8), locale::END_GAME, MA_EndGame));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 8), locale::END_GAME, MA_EndGame));
 		
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 3), locale::TUTORIAL, MA_Tutorial));
-		//items.addItem(MenuAction(Sprite(material::TabPlanets), locale::CAMPAIGN, MA_Campaign));
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 0), locale::NEW_GAME, MA_NewGame));
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 1), locale::LOAD_GAME, MA_LoadGame));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 3), locale::TUTORIAL, MA_Tutorial));
+		//items.addItem(MenuAction(Sprite(getSkinMaterial("TabPlanets")), locale::CAMPAIGN, MA_Campaign));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 0), locale::NEW_GAME, MA_NewGame));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 1), locale::LOAD_GAME, MA_LoadGame));
 		
 		if(game_running && !mpClient)
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 2), locale::SAVE_GAME, MA_SaveGame));
-		items.addItem(MenuAction(Sprite(spritesheet::ResourceIconsSmall, 46), locale::MODS_MENU, MA_Mods));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 2), locale::SAVE_GAME, MA_SaveGame));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("ResourceIconsSmall"), 46), locale::MODS_MENU, MA_Mods));
 		if(!game_running && !STEAM_EQUIV_BUILD)
-			items.addItem(MenuAction(icons::Refresh, locale::CHECK_FOR_UPDATES, MA_Update));
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 4), locale::MULTIPLAYER, MA_Multiplayer));
-		items.addItem(MenuAction(Sprite(material::TabDesigns), locale::SANDBOX, MA_Sandbox));
+			items.addItem(MenuAction(iconWrapper.Refresh, locale::CHECK_FOR_UPDATES, MA_Update));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 4), locale::MULTIPLAYER, MA_Multiplayer));
+		items.addItem(MenuAction(Sprite(getSkinMaterial("TabDesigns")), locale::SANDBOX, MA_Sandbox));
 		if(IRC.running)
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 5), locale::CLOSE_IRC, MA_CloseIRC));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 5), locale::CLOSE_IRC, MA_CloseIRC));
 		else
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 6), locale::OPEN_IRC, MA_OpenIRC));
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 7), locale::MENU_OPTIONS, MA_Options));
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 8), locale::QUIT_GAME, MA_Quit));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 6), locale::OPEN_IRC, MA_OpenIRC));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 7), locale::MENU_OPTIONS, MA_Options));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 8), locale::QUIT_GAME, MA_Quit));
 	}
 
 	void tick(double time) {
@@ -243,10 +244,10 @@ class MenuNews : DescBox {
 		modsText.defaultFont = FT_Bold;
 
 		@modsButton = GuiButton(modsPanel, Alignment(Left+0.5f-204, Bottom-50, Width=200, Height=40), locale::MANAGE_MODS);
-		modsButton.buttonIcon = Sprite(spritesheet::ResourceIconsSmall, 46);
+		modsButton.buttonIcon = Sprite(getSkinSpriteSheet("ResourceIconsSmall"), 46);
 
 		@workshopButton = GuiButton(modsPanel, Alignment(Left+0.5f+4, Bottom-50, Width=200, Height=40), locale::OPEN_WORKSHOP);
-		workshopButton.buttonIcon = icons::Import;
+		workshopButton.buttonIcon = iconWrapper.Import;
 
 		@internetButton = GuiButton(newsPanel, Alignment(Left+0.5f-200, Top+0.5f-30, Left+0.5f+200, Top+0.5f+30), locale::ENABLE_INTERNET);
 		internetButton.visible = false;

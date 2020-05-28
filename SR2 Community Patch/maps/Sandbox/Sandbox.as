@@ -1,5 +1,6 @@
 #priority init 1501
 import maps;
+import skins;
 
 #section game
 import dialogue;
@@ -302,7 +303,7 @@ class FlagshipElement : GuiMarkupContextOption {
 				dsg.name,
 				standardize(dsg.size, true),
 				getSpriteDesc(dsg.icon),
-				toString(dsg.color.interpolate(colors::White, 0.5))),
+				toString(dsg.color.interpolate(activeSkin.White, 0.5))),
 				FT_Subtitle);
 		icon = dsg.icon;
 		icon.color = dsg.color;
@@ -406,10 +407,10 @@ class SandboxUI : BaseGuiElement {
 
 		@warToggle = GuiButton(this, Alignment(Right-204, Top+3, Right-4, Bottom-5));
 
-		@warIcon = GuiSprite(warToggle, recti(), Sprite(material::StatusWar));
-		@peaceIcon = GuiSprite(warToggle, recti(), Sprite(material::StatusPeace));
+		@warIcon = GuiSprite(warToggle, recti(), Sprite(getSkinMaterial("StatusWar")));
+		@peaceIcon = GuiSprite(warToggle, recti(), Sprite(getSkinMaterial("StatusPeace")));
 
-		@warArrow = GuiSprite(warToggle, recti_area(84,16, 32,32), Sprite(spritesheet::ContextIcons, 0));
+		@warArrow = GuiSprite(warToggle, recti_area(84,16, 32,32), Sprite(getSkinSpriteSheet("ContextIcons"), 0));
 
 		@warText = GuiText(warToggle, Alignment().padded(4));
 		warText.stroke = Color(0x00000080);
@@ -422,24 +423,24 @@ class SandboxUI : BaseGuiElement {
 		int w = 160;
 		@allyButton = GuiButton(this, Alignment(Left+0.5f-w-w/2-6, Top+5, Left+0.5f-w/2-6, Bottom-5));
 		allyButton.text = locale::SPAWN_ALLIED;
-		allyButton.color = colors::Green;
-		allyButton.buttonIcon = Sprite(spritesheet::ShipIcons, 1, playerEmpire.color);
+		allyButton.color = activeSkin.Green;
+		allyButton.buttonIcon = Sprite(getSkinSpriteSheet("ShipIcons"), 1, playerEmpire.color);
 
 		@enemyButton = GuiButton(this, Alignment(Left+0.5f-w/2, Top+5, Left+0.5f+w/2, Bottom-5));
 		enemyButton.text = locale::SPAWN_ENEMY;
-		enemyButton.color = colors::Red;
-		enemyButton.buttonIcon = Sprite(spritesheet::ShipIcons, 1, otherEmp.color);
+		enemyButton.color = activeSkin.Red;
+		enemyButton.buttonIcon = Sprite(getSkinSpriteSheet("ShipIcons"), 1, otherEmp.color);
 
 		@clearButton = GuiButton(this, Alignment(Left+0.5f+w/2+6, Top+5, Left+0.5f+w+w/2+6, Bottom-5));
 		clearButton.text = locale::SANDBOX_CLEAR;
-		clearButton.color = colors::Orange;
-		clearButton.buttonIcon = icons::Close;
+		clearButton.color = activeSkin.Orange;
+		clearButton.buttonIcon = iconWrapper.Close;
 
 		@descText = RootText(this, Alignment(Left+250, Bottom+4, Right-4, Bottom+74), locale::SANDBOX_DESC);
 		descText.noClip = true;
 		descText.font = FT_Bold;
 		descText.color = Color(0xaaaaaaff);
-		descText.stroke = colors::Black;
+		descText.stroke = activeSkin.Black;
 		descText.horizAlign = 1.0;
 
 		updateAbsolutePosition();
@@ -498,7 +499,7 @@ class SandboxUI : BaseGuiElement {
 			warText.color = Color(0xff8080ff);
 			warToggle.color = Color(0xff8080ff);
 
-			warArrow.desc = Sprite(spritesheet::ContextIcons, 0);
+			warArrow.desc = Sprite(getSkinSpriteSheet("ContextIcons"), 0);
 
 			warIcon.rect = recti_area(6,4, 36,36);
 			peaceIcon.rect = recti_area(174,20, 20,20);
@@ -508,7 +509,7 @@ class SandboxUI : BaseGuiElement {
 			warText.color = Color(0x80ff80ff);
 			warToggle.color = Color(0x80ff80ff);
 
-			warArrow.desc = Sprite(spritesheet::ContextIcons, 2);
+			warArrow.desc = Sprite(getSkinSpriteSheet("ContextIcons"), 2);
 
 			peaceIcon.rect = recti_area(158,4, 36,36);
 			warIcon.rect = recti_area(6,20, 20,20);

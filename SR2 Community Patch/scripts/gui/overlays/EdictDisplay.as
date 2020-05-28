@@ -11,6 +11,7 @@ import util.formatting;
 import timing;
 import influence;
 from tabs.tabbar import TAB_HEIGHT, GLOBAL_BAR_HEIGHT, ActiveTab;
+import skins;
 
 class ClearEdictOption : GuiContextOption {
 	ClearEdictOption() {
@@ -28,7 +29,7 @@ class EdictDisplay : BaseGuiElement {
 	bool clicking = false;
 
 	EdictDisplay() {
-		super(null, recti_area(210,TAB_HEIGHT+GLOBAL_BAR_HEIGHT, 200, 30));
+		super(null, recti_area(210,TAB_HEIGHT+GLOBAL_BAR_HEIGHT+activeSkin.EdictDisplayExtraHeight, 200, 30));
 		@text = GuiMarkupText(this, recti_area(6,6, 120,24));
 		text.expandWidth = true;
 

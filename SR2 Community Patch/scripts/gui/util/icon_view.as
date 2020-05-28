@@ -1,3 +1,4 @@
+import skins;
 import elements.GuiResources;
 import planet_types;
 import resources;
@@ -15,16 +16,16 @@ void drawPlanetIcon(Planet@ obj, const recti& pos) {
 		const Material@ mat;
 		uint level = obj.visibleLevel;
 		switch(level) {
-			case 0: @mat = material::PlanetIcon0; break;
-			case 1: @mat = material::PlanetIcon1; break;
-			case 2: @mat = material::PlanetIcon2; break;
-			case 3: @mat = material::PlanetIcon3; break;
-			case 4: @mat = material::PlanetIcon4; break;
-			case 5: @mat = material::PlanetIcon5; break;
+			case 0: @mat = getSkinMaterial("PlanetIcon0"); break;
+			case 1: @mat = getSkinMaterial("PlanetIcon1"); break;
+			case 2: @mat = getSkinMaterial("PlanetIcon2"); break;
+			case 3: @mat = getSkinMaterial("PlanetIcon3"); break;
+			case 4: @mat = getSkinMaterial("PlanetIcon4"); break;
+			case 5: @mat = getSkinMaterial("PlanetIcon5"); break;
 			default:
-				@mat = getMaterial("PlanetIcon"+obj.visibleLevel);
+				@mat = getSkinMaterial("PlanetIcon"+obj.visibleLevel);
 				if(mat is material::error)
-					@mat = material::PlanetIcon4;
+					@mat = getSkinMaterial("PlanetIcon4");
 			break;
 		}
 		mat.draw(pos, col);
@@ -53,16 +54,16 @@ void drawPlanetIcon(Planet@ obj, const recti& pos, Resource@ r, bool showType = 
 			const Material@ mat;
 			uint level = obj.visibleLevel;
 			switch(level) {
-				case 0: @mat = material::PlanetIcon0; break;
-				case 1: @mat = material::PlanetIcon1; break;
-				case 2: @mat = material::PlanetIcon2; break;
-				case 3: @mat = material::PlanetIcon3; break;
-				case 4: @mat = material::PlanetIcon4; break;
-				case 5: @mat = material::PlanetIcon5; break;
+				case 0: @mat = getSkinMaterial("PlanetIcon0"); break;
+				case 1: @mat = getSkinMaterial("PlanetIcon1"); break;
+				case 2: @mat = getSkinMaterial("PlanetIcon2"); break;
+				case 3: @mat = getSkinMaterial("PlanetIcon3"); break;
+				case 4: @mat = getSkinMaterial("PlanetIcon4"); break;
+				case 5: @mat = getSkinMaterial("PlanetIcon5"); break;
 				default:
-					@mat = getMaterial("PlanetIcon"+obj.visibleLevel);
+					@mat = getSkinMaterial("PlanetIcon"+obj.visibleLevel);
 					if(mat is material::error)
-						@mat = material::PlanetIcon4;
+						@mat = getSkinMaterial("PlanetIcon4");
 				break;
 			}
 			mat.draw(pos, col);
@@ -82,11 +83,11 @@ void drawPlanetIcon(Planet@ obj, const recti& pos, Resource@ r, bool showType = 
 
 	//Draw colonizing tick
 	if(obj.isBeingColonized)
-		spritesheet::ResourceIconsSmallMods.draw(8, expandPos-(resourcePos.size * 0.5));
+		getSkinSpriteSheet("ResourceIconsSmallMods").draw(8, expandPos-(resourcePos.size * 0.5));
 
 	//Draw decay icon
 	if(obj.decayTime > 0)
-		spritesheet::ResourceIconsSmallMods.draw(9, expandPos);
+		getSkinSpriteSheet("ResourceIconsSmallMods").draw(9, expandPos);
 }
 
 void drawAsteroidIcon(Asteroid@ obj, const recti& pos, Resource@ r = null) {
@@ -104,7 +105,7 @@ void drawAsteroidIcon(Asteroid@ obj, const recti& pos, Resource@ r = null) {
 	resourcePos += offset;
 
 	//Draw asteroid icon
-	material::AsteroidIcon.draw(iconPos, col);
+	getSkinMaterial("AsteroidIcon").draw(iconPos, col);
 
 	//Draw resource
 	if(r !is null)
@@ -184,7 +185,7 @@ void drawFleetIcon(Ship@ leader, const recti& pos, bool showStrength = true) {
 }
 
 void drawRegionIcon(Region@ region, const recti& pos) {
-	material::SystemUnderAttack.draw(pos);
+	getSkinMaterial("SystemUnderAttack").draw(pos);
 }
 
 export drawObjectIcon;
@@ -198,7 +199,7 @@ void drawObjectIcon(Object@ obj, const recti& pos) {
 	else if(obj.isShip && obj.hasLeaderAI)
 		drawFleetIcon(cast<Ship>(obj), pos);
 	else if(obj.isArtifact)
-		icons::Artifact.draw(pos);
+		iconWrapper.Artifact.draw(pos);
 	else if(obj.isRegion)
 		drawRegionIcon(cast<Region>(obj), pos);
 }
@@ -213,7 +214,7 @@ void drawObjectIcon(Object@ obj, const recti& pos, Resource@ r) {
 	else if(obj.isShip && obj.hasLeaderAI)
 		drawFleetIcon(cast<Ship>(obj), pos);
 	else if(obj.isArtifact)
-		icons::Artifact.draw(pos);
+		iconWrapper.Artifact.draw(pos);
 	else if(obj.isRegion)
 		drawRegionIcon(cast<Region>(obj), pos);
 }

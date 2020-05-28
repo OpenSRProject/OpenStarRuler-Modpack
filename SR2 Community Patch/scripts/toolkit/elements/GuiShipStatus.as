@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 
 export GuiShipStatus;
@@ -17,7 +18,7 @@ void drawShipStatus(const recti& pos, const Blueprint@ bp, const Design@ design)
 	Color deadColor(0x000000cc);
 	const Hull@ hull = design.hull;
 
-	const Material@ hex = material::StatusHex;
+	const Material@ hex = getSkinMaterial("StatusHex");
 	vec2i hexSize = hex.size;
 	vec2i cellSize = hexSize + vec2i(0, 1);
 

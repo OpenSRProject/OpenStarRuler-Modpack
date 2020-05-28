@@ -1,3 +1,4 @@
+import skins;
 
 //Draws a blackhole and its accretion disk
 final class BlackholeNodeScript {	
@@ -23,18 +24,18 @@ final class BlackholeNodeScript {
 		if(dist < 1.0) {
 			node.applyTransform();
 			
-			material::Blackhole.switchTo();
+			getSkinMaterial("Blackhole").switchTo();
 			model::Sphere_max.draw(node.sortDistance / (node.abs_scale * pixelSizeRatio));
 			
 			undoTransform();
 			
-			renderPlane(material::AccretionDisk, node.abs_position, node.abs_scale * 20.0, Color(0xffffffff));
+			renderPlane(getSkinMaterial("AccretionDisk"), node.abs_position, node.abs_scale * 20.0, Color(0xffffffff));
 		}
 		
 		if(dist > 0.5) {
 			Color col(node.color);
 			col.a = dist > 1.0 ? 255 : int((dist - 0.5)*255.0/0.5);
-			renderBillboard(material::DistantStar, node.abs_position, node.abs_scale * 320.0, 0.0, col);
+			renderBillboard(getSkinMaterial("DistantStar"), node.abs_position, node.abs_scale * 320.0, 0.0, col);
 		}
 	}
 };

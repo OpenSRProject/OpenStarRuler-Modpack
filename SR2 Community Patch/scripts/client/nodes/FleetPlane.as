@@ -1,3 +1,5 @@
+import skins;
+
 const double MAX_SIZE = 4000.0;
 const double APPROACH_EPSILON = 0.0002;
 
@@ -149,7 +151,7 @@ class FleetPlaneNodeScript {
 			if(fleetIcon.valid)
 				renderBillboard(fleetIcon.sheet, fleetIcon.index, node.abs_position, node.scale * 2.0, rot);
 			else
-				renderBillboard(spritesheet::ShipGroupIcons, 0, node.abs_position, node.scale * 2.0, rot);
+				renderBillboard(getSkinSpriteSheet("ShipGroupIcons"), 0, node.abs_position, node.scale * 2.0, rot);
 		}
 	}
 };

@@ -1,3 +1,4 @@
+import skins;
 import tabs.tabbar;
 import elements.GuiBlueprint;
 import community.DesignElement;
@@ -31,19 +32,19 @@ class CommunityDesignList : Tab {
 
 	CommunityDesignList(const string& spec) {
 		@backButton = GuiButton(this, Alignment(Left+8, Top+8, Left+144, Height=50), locale::BACK);
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 
 		@titleBox = GuiText(this, Alignment(Left+164, Top+8, Right-8, Top+60));
 		titleBox.font = FT_Medium;
-		titleBox.stroke = colors::Black;
+		titleBox.stroke = activeSkin.Black;
 
 		@prevButton = GuiButton(this, Alignment(Left+0.5f-152, Bottom-60, Left+0.5f-2, Bottom-8), locale::PREVIOUS);
 		prevButton.disabled = true;
-		prevButton.setIcon(icons::Previous);
+		prevButton.setIcon(iconWrapper.Previous);
 
 		@nextButton = GuiButton(this, Alignment(Left+0.5f+2, Bottom-60, Left+0.5f+152, Bottom-8), locale::NEXT);
 		nextButton.disabled = true;
-		nextButton.setIcon(icons::Next);
+		nextButton.setIcon(iconWrapper.Next);
 
 		@panel = GuiPanel(this, Alignment(Left, Top+64, Right, Bottom-64));
 
@@ -147,7 +148,7 @@ class CommunityDesignList : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabWiki);
+		return Sprite(getSkinMaterial("TabWiki"));
 	}
 
 	int get_elemsPerRow() {

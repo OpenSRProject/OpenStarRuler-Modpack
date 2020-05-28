@@ -23,6 +23,7 @@ import heralds_icons;
 import designs;
 import design_settings;
 from traits import getTraitID;
+import skins;
 
 import Tab@ createDesignOverviewTab() from "tabs.DesignOverviewTab";
 import const Design@ createRandomDesign(uint type, int size, Empire@ emp) from "util.random_designs";
@@ -265,7 +266,7 @@ class SubsystemSelector : BaseGuiElement {
 				picture.index += 2;
 
 			//Draw the background
-			spritesheet::SubsystemButton.draw(sprite,
+			getSkinSpriteSheet("SubsystemButton").draw(sprite,
 				recti_area(btnPos, vec2i(w, h)), color);
 
 			//Modify size to draw size
@@ -296,7 +297,7 @@ class SubsystemSelector : BaseGuiElement {
 			//Draw glow
 			if(!def.isApplied) {
 				if(selected) {
-					material::SubsystemButtonGlow.draw(
+					getSkinMaterial("SubsystemButtonGlow").draw(
 						recti_area(btnPos, vec2i(w, h)), color);
 				}
 			}
@@ -315,13 +316,13 @@ class SubsystemSelector : BaseGuiElement {
 				bool curApplied = cons.editor.data.appliedSubsystems.find(def) != -1;
 				if(curApplied) {
 					btn.text = locale::REMOVE;
-					btn.buttonIcon = icons::Remove;
-					btn.color = colors::Red;
+					btn.buttonIcon = iconWrapper.Remove;
+					btn.color = activeSkin.DesignEditorRemove;
 				}
 				else {
 					btn.text = locale::APPLY;
-					btn.buttonIcon = icons::Add;
-					btn.color = colors::Green;
+					btn.buttonIcon = iconWrapper.Add;
+					btn.color = activeSkin.DesignEditorApply;
 				}
 				if(curApplied)
 					skin.draw(SS_Glow, SF_Normal, recti_area(btnPos, vec2i(w, h)), color);
@@ -1930,75 +1931,75 @@ class Construction : BaseGuiElement {
 		hullList.visible = false;
 		updateHullList();
 
-		@arcButton = GuiButton(this, Alignment(Right-686-36-36-60, Top+2, Width=32, Height=32), spritesheet::ActionBarIcons+20);
+		@arcButton = GuiButton(this, Alignment(Right-686-36-36-60, Top+2, Width=32, Height=32), Sprite(getSkinSpriteSheet("ActionBarIcons"), 20));
 		arcButton.style = SS_IconToggle;
-		arcButton.color = Color(0x80a0ffff);
+		arcButton.color = activeSkin.DesignEditorButton;
 		arcButton.toggleButton = true;
 		arcButton.pressed = SHOW_ARC_UNDERLAY;
 		setMarkupTooltip(arcButton, locale::DESIGN_SHOW_ARCS);
 
 		@hullButton = GuiButton(this, Alignment(Right-686-36-60, Top+2, Width=32, Height=32),
-				Sprite(spritesheet::ShipIcons, 1, Color(0x8080ffff)));
+				activeSkin.DesignEditorHull);
 		hullButton.style = SS_IconToggle;
-		hullButton.color = Color(0x80a0ffff);
+		hullButton.color = activeSkin.DesignEditorButton;
 		hullButton.toggleButton = true;
 		hullButton.pressed = SHOW_HULL_UNDERLAY;
 		setMarkupTooltip(hullButton, locale::DESIGN_SHOW_HULL);
 
-		@centerButton = GuiButton(this, Alignment(Right-686-60, Top+2, Width=32, Height=32), Sprite(material::TabPlanets));
+		@centerButton = GuiButton(this, Alignment(Right-686-60, Top+2, Width=32, Height=32), Sprite(getSkinMaterial("TabPlanets")));
 		centerButton.style = SS_IconButton;
-		centerButton.color = Color(0x80a0ffff);
+		centerButton.color = activeSkin.DesignEditorButton;
 		setMarkupTooltip(centerButton, locale::DESIGN_CENTER);
 
-		@randomButton = GuiButton(this, Alignment(Right-650-26, Top+2, Width=32, Height=32), Sprite(spritesheet::MenuIcons, 4, Color(0xff8040ff)));
+		@randomButton = GuiButton(this, Alignment(Right-650-26, Top+2, Width=32, Height=32), Sprite(getSkinSpriteSheet("MenuIcons"), 4, Color(0xff8040ff)));
 		randomButton.style = SS_IconButton;
-		randomButton.color = Color(0x80a0ffff);
+		randomButton.color = activeSkin.DesignEditorButton;
 		randomButton.visible = !playerEmpire.hasTrait(getTraitID("Verdant"));
 		setMarkupTooltip(randomButton, locale::DESIGN_RANDOMIZE);
 
-		@configButton = GuiButton(this, Alignment(Right-650, Top+2, Width=32, Height=32), Sprite(spritesheet::MenuIcons, 7, Color(0xff8040ff)));
+		@configButton = GuiButton(this, Alignment(Right-650, Top+2, Width=32, Height=32), Sprite(getSkinSpriteSheet("MenuIcons"), 7, Color(0xff8040ff)));
 		configButton.style = SS_IconButton;
-		configButton.color = Color(0xa080ffff);
+		configButton.color = activeSkin.DesignEditorButton;
 		configButton.visible = false;
 		setMarkupTooltip(configButton, locale::DESIGN_RANDOMIZE_CONFIGURE);
 
-		@undoButton = GuiButton(this, Alignment(Right-568, Top+2, Width=32, Height=32), icons::Undo);
+		@undoButton = GuiButton(this, Alignment(Right-568, Top+2, Width=32, Height=32), iconWrapper.Undo);
 		undoButton.style = SS_IconButton;
 		setMarkupTooltip(undoButton, format(locale::DESIGN_UNDO, getKey(KB_DESIGN_UNDO)));
 
-		@redoButton = GuiButton(this, Alignment(Right-532, Top+2, Width=32, Height=32), icons::Redo);
+		@redoButton = GuiButton(this, Alignment(Right-532, Top+2, Width=32, Height=32), iconWrapper.Redo);
 		redoButton.style = SS_IconButton;
 		setMarkupTooltip(redoButton, format(locale::DESIGN_REDO, getKey(KB_DESIGN_REDO)));
 
-		@paintButton = GuiButton(this, Alignment(Right-476, Top+2, Width=32, Height=32), icons::Paint);
+		@paintButton = GuiButton(this, Alignment(Right-476, Top+2, Width=32, Height=32), iconWrapper.Paint);
 		paintButton.style = SS_IconToggle;
 		paintButton.toggleButton = true;
 		paintButton.pressed = true;
-		paintButton.color = colors::Green;
+		paintButton.color = activeSkin.DesignEditorTool;
 		setMarkupTooltip(paintButton, format(locale::DESIGN_PAINT_TOOL, getKey(KB_DESIGN_TOOL_PAINT)));
 
-		@moveButton = GuiButton(this, Alignment(Right-440, Top+2, Width=32, Height=32), icons::Move);
+		@moveButton = GuiButton(this, Alignment(Right-440, Top+2, Width=32, Height=32), iconWrapper.Move);
 		moveButton.style = SS_IconToggle;
 		moveButton.toggleButton = true;
-		moveButton.color = colors::Green;
+		moveButton.color = activeSkin.DesignEditorTool;
 		setMarkupTooltip(moveButton, format(locale::DESIGN_MOVE_TOOL, getKey(KB_DESIGN_TOOL_MOVE)));
 
-		@dropButton = GuiButton(this, Alignment(Right-404, Top+2, Width=32, Height=32), icons::Eyedrop);
+		@dropButton = GuiButton(this, Alignment(Right-404, Top+2, Width=32, Height=32), iconWrapper.Eyedrop);
 		dropButton.style = SS_IconToggle;
 		dropButton.toggleButton = true;
-		dropButton.color = colors::Green;
+		dropButton.color = activeSkin.DesignEditorTool;
 		setMarkupTooltip(dropButton, format(locale::DESIGN_DROP_TOOL, getKey(KB_DESIGN_TOOL_DROP)));
 
-		@replaceButton = GuiButton(this, Alignment(Right-368, Top+2, Width=32, Height=32), icons::Replace);
+		@replaceButton = GuiButton(this, Alignment(Right-368, Top+2, Width=32, Height=32), iconWrapper.Replace);
 		replaceButton.style = SS_IconToggle;
 		replaceButton.toggleButton = true;
 		replaceButton.pressed = false;
-		replaceButton.color = colors::Green;
+		replaceButton.color = activeSkin.DesignEditorTool;
 		setMarkupTooltip(replaceButton, format(locale::DESIGN_REPLACE_TOOL, getKey(KB_DESIGN_TOOL_REPLACE)));
 
-		@clearButton = GuiButton(this, Alignment(Right-300, Top+2, Width=32, Height=32), icons::Clear);
+		@clearButton = GuiButton(this, Alignment(Right-300, Top+2, Width=32, Height=32), iconWrapper.Clear);
 		clearButton.style = SS_IconButton;
-		clearButton.color = colors::Red;
+		clearButton.color = activeSkin.DesignEditorClear;
 		setMarkupTooltip(clearButton, locale::DESIGN_CLEAR);
 
 		@displayPanel = GuiPanel(this, Alignment(Left+258+12, Top+32+12, Right-258-12, Bottom-44));
@@ -2012,7 +2013,7 @@ class Construction : BaseGuiElement {
 		display.activateAll = true;
 
 		@sizeBar = GuiProgressbar(this, Alignment(Left+258+12, Bottom-38, Right-258-12, Bottom-4));
-		sizeBar.strokeColor = colors::Black;
+		sizeBar.strokeColor = activeSkin.Black;
 		sizeBar.font = FT_Bold;
 		sizeBar.backColor = Color(0xffffff80);
 		setMarkupTooltip(sizeBar, locale::TT_DESIGN_HEX_LIMIT);
@@ -2136,15 +2137,15 @@ class Construction : BaseGuiElement {
 	void update() {
 		undoButton.disabled = editor.data.undoHead is null;
 		if(undoButton.disabled)
-			undoButton.setIcon(icons::UndoDisabled);
+			undoButton.setIcon(iconWrapper.UndoDisabled);
 		else
-			undoButton.setIcon(icons::Undo);
+			undoButton.setIcon(iconWrapper.Undo);
 
 		redoButton.disabled = editor.data.redoHead is null;
 		if(redoButton.disabled)
-			redoButton.setIcon(icons::RedoDisabled);
+			redoButton.setIcon(iconWrapper.RedoDisabled);
 		else
-			redoButton.setIcon(icons::Redo);
+			redoButton.setIcon(iconWrapper.Redo);
 
 		//randomButton.visible = editor.concept.getSelectedTypeTag() != "Station";
 		//configButton.visible = randomButton.visible;
@@ -2160,7 +2161,7 @@ class Construction : BaseGuiElement {
 		double fillPct = clamp(usedHexes / hexLimit, 0.0, 1.0);
 
 		if(usedHexes > hexLimit)
-			sizeBar.frontColor = colors::Red;
+			sizeBar.frontColor = activeSkin.Red;
 		else
 			sizeBar.frontColor = Color(0xff8080ff).interpolate(Color(0x80ff80ff), fillPct);
 
@@ -2966,13 +2967,13 @@ class Construction : BaseGuiElement {
 		for(uint i = 0; i < errCnt; ++i) {
 			DesignError@ err = editor.design.errors[i];
 
-			Color col = Color(0xff8000ff);
+			Color col = activeSkin.DesignWarningColor;
 			if(err.fatal)
-				col = colors::Red;
+				col = activeSkin.Red;
 
 			skin.getFont(FT_Subtitle).draw(pos=recti_area(pos, vec2i(size.width-500, 64)),
 					text=err.text, horizAlign=0.0, vertAlign=0.5,
-					color=col, stroke=colors::Black);
+					color=col, stroke=activeSkin.Black);
 
 			pos.y += 30;
 		}
@@ -3067,11 +3068,11 @@ class Concept : BaseGuiElement {
 		nameBox.setFilenameLimit();
 
 		@typeBox = GuiDropdown(this, Alignment(Left+145, Top+44, Left+322, Height=30));
-		typeBox.addItem(GuiListText(locale::DESIGN_FLAGSHIP, Sprite(spritesheet::AttributeIcons, 1, Color(0x00e5f7ff))));
-		typeBox.addItem(GuiListText(locale::DESIGN_SUPPORT, icons::ManageSupports));
-		typeBox.addItem(GuiListText(locale::DESIGN_STATION, Sprite(spritesheet::GuiOrbitalIcons, 0, Color(0x00e5f7ff))));
+		typeBox.addItem(GuiListText(locale::DESIGN_FLAGSHIP, Sprite(getSkinSpriteSheet("AttributeIcons"), 1, activeSkin.DesignEditorLeader)));
+		typeBox.addItem(GuiListText(locale::DESIGN_SUPPORT, iconWrapper.ManageSupports));
+		typeBox.addItem(GuiListText(locale::DESIGN_STATION, Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 0, activeSkin.DesignEditorLeader)));
 		if(hasDLC("Heralds"))
-			typeBox.addItem(GuiListText(locale::DESIGN_SATELLITE, Sprite(spritesheet::GuiOrbitalIcons, 14, Color(0xe759ffff))));
+			typeBox.addItem(GuiListText(locale::DESIGN_SATELLITE, Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 14, Color(0xe759ffff))));
 
 		@sizeLabel = GuiText(this, Alignment(Left+330, Top+44, Left+370, Height=30),
 				locale::DESIGN_SIZE_INPUT);
@@ -3087,10 +3088,10 @@ class Concept : BaseGuiElement {
 		classBox.font = FT_Subtitle;
 		classBox.tabIndex = 3;
 
-		@moneyIcon = GuiSprite(this, Alignment(Right-732-20, Top+42, Width=30, Height=30), icons::Money);
+		@moneyIcon = GuiSprite(this, Alignment(Right-732-20, Top+42, Width=30, Height=30), iconWrapper.Money);
 		@moneyValue = GuiText(this, Alignment(Right-692-20, Top+44, Width=110, Height=28));
 
-		@laborIcon = GuiSprite(this, Alignment(Right-582-20, Top+42, Width=30, Height=30), icons::Labor);
+		@laborIcon = GuiSprite(this, Alignment(Right-582-20, Top+42, Width=30, Height=30), iconWrapper.Labor);
 		@laborValue = GuiText(this, Alignment(Right-542-20, Top+44, Width=60, Height=28));
 
 		@roleButton = GuiButton(this, recti_area(vec2i(512, 8), vec2i(270, 66)));
@@ -3221,9 +3222,9 @@ class Concept : BaseGuiElement {
 		//Size box validity
 		sizeBox.text = toString(editor.data.size, 0);
 		if(editor.data.size < editor.data.hull.minSize-0.001 || (editor.data.size > editor.data.hull.maxSize+0.001 && editor.data.hull.maxSize > 0))
-			sizeBox.bgColor = colors::Red;
+			sizeBox.bgColor = activeSkin.Red;
 		else
-			sizeBox.bgColor = colors::White;
+			sizeBox.bgColor = activeSkin.White;
 
 		//Update cost
 		int buildCost = 0;
@@ -3238,11 +3239,11 @@ class Concept : BaseGuiElement {
 		string roleName = SUPPORT_BEHAVIOR_NAMES[clamp(settings.behavior, 0, SUPPORT_BEHAVIOR_NAMES.length-1)];
 		Sprite roleIcon = SUPPORT_BEHAVIOR_ICONS[clamp(settings.behavior, 0, SUPPORT_BEHAVIOR_ICONS.length-1)];
 		if(size.width >= 1600) {
-			roleText.text = format("[img=$1;$4][vspace=$5]$3:\n[offset=15][font=Subtitle][b]$2[/b][/font][/offset][/vspace][/img]", getSpriteDesc(roleIcon), localize("#BEH_"+roleName), locale::SUPPORT_BEH,
+			roleText.text = format(activeSkin.DesignEditorRoleWide, getSpriteDesc(roleIcon), localize("#BEH_"+roleName), locale::SUPPORT_BEH,
 					toString(roleButton.size.height-6), toString(max((roleButton.size.height-50)/2, 0)));
 		}
 		else {
-			roleText.text = format("[img=$1;$4][vspace=$5][vspace=4]$3:[/vspace] [font=Subtitle][b]$2[/b][/font][/vspace][/img]", getSpriteDesc(roleIcon), localize("#BEH_"+roleName), locale::SUPPORT_BEH,
+			roleText.text = format(activeSkin.DesignEditorRole, getSpriteDesc(roleIcon), localize("#BEH_"+roleName), locale::SUPPORT_BEH,
 					toString(roleButton.size.height-6), toString(max((roleButton.size.height-36)/2, 0)));
 		}
 	}
@@ -3356,35 +3357,35 @@ class DesignEditor : Tab {
 		//Create the global buttons
 		@backButton = GuiButton(this, Alignment(Left+4, Top+10, Left+134, Height=60),
 				locale::BACK);
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 
 		@duplicateButton = GuiButton(this, Alignment(Right-436, Top+43, Right-292, Height=30),
 				locale::DUPLICATE_DESIGN);
-		duplicateButton.buttonIcon = icons::Forward;
+		duplicateButton.buttonIcon = iconWrapper.Forward;
 		duplicateButton.color = Color(0xeeeeeeff);
 
 		@exportButton = GuiButton(this, Alignment(Right-288, Top+43, Right-140, Height=30),
 				locale::EXPORT_DESIGN);
-		exportButton.buttonIcon = icons::Export;
+		exportButton.buttonIcon = iconWrapper.Export;
 		exportButton.color = Color(0xeeeeeeff);
 
 		@saveButton = GuiButton(this, Alignment(Right-134, Top+10, Right-4, Height=60),
 				locale::SAVE);
-		saveButton.buttonIcon = icons::Save;
+		saveButton.buttonIcon = iconWrapper.Save;
 		saveButton.font = FT_Bold;
-		saveButton.color = Color(0x88ff88ff);
+		saveButton.color = activeSkin.DesignEditorSave;
 	}
 
 	Color get_activeColor() {
-		return Color(0x83cfffff);
+		return activeSkin.DesignEditorActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0x009cffff);
+		return activeSkin.DesignEditorInactive;
 	}
 
 	Color get_seperatorColor() {
-		return Color(0x49738dff);
+		return activeSkin.DesignEditorSeparator;
 	}		
 
 	TabCategory get_category() {
@@ -3392,7 +3393,7 @@ class DesignEditor : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabDesigns);
+		return Sprite(getSkinMaterial("TabDesigns"));
 	}
 
 	void show() {

@@ -1,4 +1,5 @@
 #section game
+import skins;
 import influence;
 import elements.BaseGuiElement;
 import elements.GuiButton;
@@ -41,36 +42,36 @@ class GuiOfferList : BaseGuiElement {
 		float x = 0.f, w = 0.33f;
 		int y = 0;
 		@moneyButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_MONEY"));
-		moneyButton.color = colors::Money;
-		moneyButton.buttonIcon = icons::Money;
+		moneyButton.color = activeSkin.Money;
+		moneyButton.buttonIcon = iconWrapper.Money;
 		x += w;
 
 		@energyButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_ENERGY"));
-		energyButton.color = colors::Energy;
-		energyButton.buttonIcon = icons::Energy;
+		energyButton.color = activeSkin.Energy;
+		energyButton.buttonIcon = iconWrapper.Energy;
 		x += w;
 
 		@cardButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_CARD"));
-		cardButton.color = colors::Influence;
-		cardButton.buttonIcon = icons::Action;
+		cardButton.color = activeSkin.Influence;
+		cardButton.buttonIcon = iconWrapper.Action;
 		x += w;
 
 		x = 0.f;
 		y += 38;
 
 		@fleetButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_FLEET"));
-		fleetButton.color = colors::Defense;
-		fleetButton.buttonIcon = icons::Strength;
+		fleetButton.color = activeSkin.Defense;
+		fleetButton.buttonIcon = iconWrapper.Strength;
 		x += w;
 
 		@planetButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_PLANET"));
-		planetButton.color = colors::Planet;
-		planetButton.buttonIcon = icons::Planet;
+		planetButton.color = activeSkin.Planet;
+		planetButton.buttonIcon = iconWrapper.Planet;
 		x += w;
 
 		@artifButton = GuiButton(this, Alignment(Left+4+x, Top+y, Left-4+x+w, Height=34), localize("#"+prefix+"_ARTIFACT"));
-		artifButton.color = colors::Artifact;
-		artifButton.buttonIcon = icons::Artifact;
+		artifButton.color = activeSkin.Artifact;
+		artifButton.buttonIcon = iconWrapper.Artifact;
 		x += w;
 
 		updateAbsolutePosition();
@@ -186,8 +187,8 @@ class GuiOffer : BaseGuiElement {
 		super(parent, recti());
 
 		@removeButton = GuiButton(this, Alignment(Right-34, Top, Right, Bottom));
-		removeButton.color = colors::Red;
-		GuiSprite(removeButton, Alignment().padded(4), icons::Remove);
+		removeButton.color = activeSkin.Red;
+		GuiSprite(removeButton, Alignment().padded(4), iconWrapper.Remove);
 		updateAbsolutePosition();
 	}
 
@@ -225,12 +226,12 @@ class MoneyOffer : GuiOffer {
 		super(parent);
 		offer.type = DOT_Money;
 
-		@icon = GuiSprite(this, recti_area(4,4, 28,28), icons::Money);
+		@icon = GuiSprite(this, recti_area(4,4, 28,28), iconWrapper.Money);
 		@label = GuiText(this, recti_area(40,6, 100,26), locale::OFFER_MONEY);
 		label.font = FT_Bold;
 		@input = GuiSpinbox(this, Alignment(Left+150, Top+4, Right-40, Bottom),
 				num=200, min=100, max=INFINITY, step=100, decimals=0);
-		input.color = colors::Money;
+		input.color = activeSkin.Money;
 
 		updateAbsolutePosition();
 		apply();
@@ -259,12 +260,12 @@ class EnergyOffer : GuiOffer {
 		super(parent);
 		offer.type = DOT_Energy;
 
-		@icon = GuiSprite(this, recti_area(4,4, 28,28), icons::Energy);
+		@icon = GuiSprite(this, recti_area(4,4, 28,28), iconWrapper.Energy);
 		@label = GuiText(this, recti_area(40,6, 100,26), locale::OFFER_ENERGY);
 		label.font = FT_Bold;
 		@input = GuiSpinbox(this, Alignment(Left+150, Top+4, Right-40, Bottom),
 				num=200, min=100, max=INFINITY, step=100, decimals=0);
-		input.color = colors::Energy;
+		input.color = activeSkin.Energy;
 
 		updateAbsolutePosition();
 		apply();
@@ -295,7 +296,7 @@ class CardOffer : GuiOffer {
 		super(parent);
 		offer.type = DOT_Card;
 
-		@icon = GuiSprite(this, recti_area(4,4, 28,28), icons::Influence);
+		@icon = GuiSprite(this, recti_area(4,4, 28,28), iconWrapper.Influence);
 		@label = GuiText(this, recti_area(40,6, 100,26), locale::OFFER_CARD);
 		label.font = FT_Bold;
 
@@ -349,7 +350,7 @@ class ObjectOffer : GuiOffer {
 
 		@label = GuiText(this, Alignment(Left+50, Top, Right-40, Bottom));
 		label.font = FT_Bold;
-		label.stroke = colors::Black;
+		label.stroke = activeSkin.Black;
 		label.color = obj.owner.color;
 		label.text = obj.name;
 
@@ -499,42 +500,42 @@ void drawDiplomacyOffer(DiplomacyOffer& offer, const recti& position) {
 	switch(offer.type) {
 		case DOT_Money:
 		{
-			icons::Money.draw(recti_area(position.topLeft+vec2i(5,5), vec2i(position.height-10, position.height-10)));
-			font::DroidSans_11_Bold.draw(
+			iconWrapper.Money.draw(recti_area(position.topLeft+vec2i(5,5), vec2i(position.height-10, position.height-10)));
+			activeSkin.skin.getFont(FT_Bold).draw(
 				pos=position, horizAlign=0.95, vertAlign=0.5,
-				text=formatMoney(offer.value), stroke=colors::Black);
+				text=formatMoney(offer.value), stroke=activeSkin.Black);
 		}
 		break;
 		case DOT_Energy:
 		{
-			icons::Energy.draw(recti_area(position.topLeft+vec2i(5,5), vec2i(position.height-10, position.height-10)));
-			font::DroidSans_11_Bold.draw(
+			iconWrapper.Energy.draw(recti_area(position.topLeft+vec2i(5,5), vec2i(position.height-10, position.height-10)));
+			activeSkin.skin.getFont(FT_Bold).draw(
 				pos=position, horizAlign=0.95, vertAlign=0.5,
-				text=standardize(offer.value, true), stroke=colors::Black);
+				text=standardize(offer.value, true), stroke=activeSkin.Black);
 		}
 		break;
 		case DOT_Planet:
 		{
 			drawObjectIcon(offer.obj, position.aspectAligned(1.0));
-			font::DroidSans_8.draw(
+			activeSkin.skin.getFont(FT_Small).draw(
 				pos=position, horizAlign=0.5, vertAlign=0.0,
-				text=offer.obj.name, stroke=colors::Black);
+				text=offer.obj.name, stroke=activeSkin.Black);
 		}
 		break;
 		case DOT_Fleet:
 		{
 			drawObjectIcon(offer.obj, position.aspectAligned(1.0));
-			font::DroidSans_8.draw(
+			activeSkin.skin.getFont(FT_Small).draw(
 				pos=position, horizAlign=0.5, vertAlign=0.0,
-				text=formatShipName(cast<Ship>(offer.obj)), stroke=colors::Black);
+				text=formatShipName(cast<Ship>(offer.obj)), stroke=activeSkin.Black);
 		}
 		break;
 		case DOT_Artifact:
 		{
-			icons::Artifact.draw(position.aspectAligned(1.0));
-			font::DroidSans_8.draw(
+			iconWrapper.Artifact.draw(position.aspectAligned(1.0));
+			activeSkin.skin.getFont(FT_Small).draw(
 				pos=position, horizAlign=0.5, vertAlign=0.0,
-				text=formatObjectName(offer.obj), stroke=colors::Black);
+				text=formatObjectName(offer.obj), stroke=activeSkin.Black);
 		}
 		break;
 		case DOT_Card:
@@ -542,14 +543,14 @@ void drawDiplomacyOffer(DiplomacyOffer& offer, const recti& position) {
 			InfluenceCard card;
 			if(offer.bound !is null && receive(offer.bound.getInfluenceCard(offer.id), card)) {
 				drawCardIcon(card, position, int(offer.value));
-				font::DroidSans_8.draw(
+				activeSkin.skin.getFont(FT_Small).draw(
 					pos=position, horizAlign=0.5, vertAlign=0.0,
-					text=card.formatTitle(pretty=false), stroke=colors::Black);
+					text=card.formatTitle(pretty=false), stroke=activeSkin.Black);
 				if(int(offer.value) != 0) {
-					font::DroidSans_8.draw(
+					activeSkin.skin.getFont(FT_Small).draw(
 						pos=position, horizAlign=0.5, vertAlign=1.0,
-						text=toString(int(offer.value),0)+"x", stroke=colors::Black,
-						color=colors::Red);
+						text=toString(int(offer.value),0)+"x", stroke=activeSkin.Black,
+						color=activeSkin.Red);
 				}
 			}
 		}

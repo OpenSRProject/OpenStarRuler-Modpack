@@ -9,6 +9,7 @@ import tabs.Tab;
 import util.formatting;
 import timing;
 from tabs.tabbar import TAB_HEIGHT, GLOBAL_BAR_HEIGHT, ActiveTab;
+import skins;
 
 class TimeDisplay : BaseGuiElement {
 	GuiSprite@ icon;
@@ -23,7 +24,7 @@ class TimeDisplay : BaseGuiElement {
 	GuiButton@ fastButton;
 
 	TimeDisplay() {
-		super(null, recti_area(-4,TAB_HEIGHT+GLOBAL_BAR_HEIGHT, 210, 30));
+		super(null, recti_area(-4,TAB_HEIGHT+GLOBAL_BAR_HEIGHT+activeSkin.TimeDisplayExtraHeight, 210, 30));
 		@icon = GuiSprite(this, recti_area(9,3, 24,24));
 		@text = GuiMarkupText(this, recti_area(35,6, 120,24));
 		setMarkupTooltip(icon, locale::TT_GAMETIME);
@@ -36,17 +37,17 @@ class TimeDisplay : BaseGuiElement {
 			@slowButton = GuiButton(this, Alignment(Right-69, Top+7, Width=18, Height=18));
 			setMarkupTooltip(slowButton, locale::TT_SLOWER);
 			slowButton.allowOtherButtons = true;
-			slowButton.spriteStyle = Sprite(spritesheet::TimeSlow, 0);
+			slowButton.spriteStyle = Sprite(getSkinSpriteSheet("TimeSlow"), 0);
 
 			@pauseButton = GuiButton(this, Alignment(Right-48, Top+7, Width=18, Height=18));
 			setMarkupTooltip(pauseButton, locale::TT_PAUSE);
 			pauseButton.allowOtherButtons = true;
-			pauseButton.spriteStyle = Sprite(spritesheet::TimeStop, 0);
+			pauseButton.spriteStyle = Sprite(getSkinSpriteSheet("TimeStop"), 0);
 
 			@fastButton = GuiButton(this, Alignment(Right-26, Top+7, Width=18, Height=18));
 			setMarkupTooltip(fastButton, locale::TT_FASTER);
 			fastButton.allowOtherButtons = true;
-			fastButton.spriteStyle = Sprite(spritesheet::TimeHaste, 0);
+			fastButton.spriteStyle = Sprite(getSkinSpriteSheet("TimeHaste"), 0);
 		}
 
 		updateAbsolutePosition();
@@ -73,10 +74,10 @@ class TimeDisplay : BaseGuiElement {
 			int mins = floor(time - (hrs * 60.0));
 			str = format(locale::TIME_HM, toString(hrs), toString(mins));
 
-			icon.desc = Sprite(spritesheet::MenuIcons, 0);
+			icon.desc = Sprite(getSkinSpriteSheet("MenuIcons"), 0);
 		}
 		else {
-			icon.desc = Sprite(material::TimeReal);
+			icon.desc = Sprite(getSkinMaterial("TimeReal"));
 			str = strftime("%H:%M", getSystemTime());
 		}
 		if(abs(gameSpeed - 1.0) > 0.05) {
@@ -96,9 +97,9 @@ class TimeDisplay : BaseGuiElement {
 		}
 		if(pauseButton !is null) {
 			if(gameSpeed == 0.0)
-				pauseButton.spriteStyle = Sprite(spritesheet::TimeResume, 0);
+				pauseButton.spriteStyle = Sprite(getSkinSpriteSheet("TimeResume"), 0);
 			else
-				pauseButton.spriteStyle = Sprite(spritesheet::TimeStop, 0);
+				pauseButton.spriteStyle = Sprite(getSkinSpriteSheet("TimeStop"), 0);
 		}
 	}
 

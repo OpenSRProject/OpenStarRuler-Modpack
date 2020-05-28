@@ -1,3 +1,4 @@
+import skins;
 import elements.GuiMarkupText;
 import elements.GuiButton;
 import elements.GuiTextbox;
@@ -224,7 +225,7 @@ class LocaleEditor : Dialog {
 		cancel.text = locale::CANCEL;
 		cancel.tabIndex = 101;
 		@cancel.callback = this;
-		cancel.color = colors::Red;
+		cancel.color = activeSkin.Red;
 
 		alignAcceptButtons(accept, cancel);
 

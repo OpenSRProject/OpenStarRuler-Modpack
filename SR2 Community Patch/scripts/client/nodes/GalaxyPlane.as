@@ -1,5 +1,6 @@
 export setGalaxyPlanesShown;
 export getGalaxyPlanesShown;
+import skins;
 
 bool SHOW_GALAXY_PLANES = false;
 void setGalaxyPlanesShown(bool enabled) {
@@ -53,7 +54,7 @@ class GalaxyPlaneScript  {
 		shader::RADIUS = radius;
 		shader::PLANE_DISTANCE = planeDist;
 
-		drawPolygonStart(PT_Quads, 1, material::GalaxyPlane);
+		drawPolygonStart(PT_Quads, 1, getSkinMaterial("GalaxyPlane"));
 		drawPolygonPoint(origin + vec3d(-radius, 0, -radius), vec2f(0.f, 0.f));
 		drawPolygonPoint(origin + vec3d(+radius, 0, -radius), vec2f(1.f, 0.f));
 		drawPolygonPoint(origin + vec3d(+radius, 0, +radius), vec2f(1.f, 1.f));

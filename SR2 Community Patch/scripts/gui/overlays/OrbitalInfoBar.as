@@ -1,3 +1,4 @@
+import skins;
 import overlays.InfoBar;
 import elements.BaseGuiElement;
 import elements.GuiResources;
@@ -168,11 +169,11 @@ class OrbitalInfoBar : InfoBar {
 			//Update name
 			name.text = obj.name;
 			if(obj.isDisabled)
-				name.color = colors::Red;
+				name.color = activeSkin.Red;
 			else if(owner !is null)
 				name.color = owner.color;
 			else
-				name.color = colors::White;
+				name.color = activeSkin.White;
 
 			const Font@ ft = skin.getFont(FT_Medium);
 			if(ft.getDimension(name.text).x > name.size.width)
@@ -237,7 +238,7 @@ class OrbitalInfoBar : InfoBar {
 
 class ManageAction : BarAction {
 	void init() override {
-		icon = icons::Manage;
+		icon = iconWrapper.Manage;
 		tooltip = locale::TT_MANAGE_ORBITAL;
 	}
 
@@ -249,7 +250,7 @@ class ManageAction : BarAction {
 
 class PackUpAction : BarAction {
 	void init() override {
-		icon = icons::Gate;
+		icon = iconWrapper.Gate;
 		tooltip = locale::TT_PACKUP_ORBITAL;
 	}
 

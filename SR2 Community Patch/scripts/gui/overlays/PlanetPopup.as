@@ -19,6 +19,7 @@ import util.obj_locate;
 import util.icon_view;
 from overlays.ContextMenu import openContextMenu;
 import statuses;
+import skins;
 
 const uint CONSTRUCTION_SLIDESHOW_TIMER = 2.0;
 
@@ -59,32 +60,32 @@ class PlanetPopup : Popup {
 		super(parent);
 		size = vec2i(190, 160);
 
-		@name = GuiText(this, Alignment(Left+50, Top+6, Right-4, Top+28));
-		@ownerName = GuiText(this, Alignment(Left+48, Top+28, Right-6, Top+46));
-		ownerName.horizAlign = 1.0;
+		@name = GuiText(this, activeSkin.PlanetPopupNameAlignment);
+		@ownerName = GuiText(this, activeSkin.PlanetPopupOwnerAlignment);
+		ownerName.horizAlign = activeSkin.PlanetPopupOwnerHorizAlign;
 
-		@objView = Gui3DObject(this, Alignment(Left+4, Top+50, Right-4, Top+120));
+		@objView = Gui3DObject(this, activeSkin.PlanetPopupViewAlignment);
 
 		@cargo = GuiCargoDisplay(objView, Alignment(Left, Top, Right, Top+25));
 
 		@defIcon = GuiSprite(this, Alignment(Left+4, Top+50, Width=40, Height=40));
-		defIcon.desc = icons::Defense;
+		defIcon.desc = iconWrapper.Defense;
 		setMarkupTooltip(defIcon, locale::TT_IS_DEFENDING);
 		defIcon.visible = false;
 
-		GuiSkinElement band(this, Alignment(Left+3, Bottom-35, Right-4, Bottom-2), SS_SubTitle);
+		GuiSkinElement band(this, activeSkin.PlanetPopupBandAlignment, SS_SubTitle);
 		band.color = Color(0xaaaaaaff);
 
 		@popBox = BaseGuiElement(this, Alignment(Left+3, Bottom-67, Left+50, Bottom-35));
 		@popIcon = GuiSprite(popBox, Alignment(Left-12, Top+2, Left+24, Bottom+6));
-		popIcon.desc = icons::Population;
+		popIcon.desc = iconWrapper.Population;
 		@popValue = GuiText(popBox, Alignment(Left+26, Top+12, Right, Height=20));
 		popIcon.tooltip = locale::POPULATION;
 		popValue.tooltip = locale::POPULATION;
 
 		@loyBox = BaseGuiElement(this, Alignment(Right-50, Bottom-67, Right-5, Bottom-35));
 		@loyIcon = GuiSprite(loyBox, Alignment(Right-24, Top+8, Right, Bottom-1));
-		loyIcon.desc = icons::Loyalty;
+		loyIcon.desc = iconWrapper.Loyalty;
 		@loyValue = GuiText(loyBox, Alignment(Right-50, Top+12, Right-26, Height=20));
 		loyValue.horizAlign = 1.0;
 		loyIcon.tooltip = locale::LOYALTY;
@@ -92,14 +93,14 @@ class PlanetPopup : Popup {
 
 		@resources = GuiResourceGrid(band, Alignment(Left+4, Top+4, Right-3, Bottom-4));
 
-		@statusBox = GuiSkinElement(this, Alignment(Right-2, Top, Right+34, Bottom), SS_PlainBox);
+		@statusBox = GuiSkinElement(this, activeSkin.PlanetPopupStatusAlignment, SS_PlainBox);
 		statusBox.noClip = true;
 		statusBox.visible = false;
 
 		@health = GuiProgressbar(this, Alignment(Left+8, Top+53, Right-8, Top+75));
 		health.visible = false;
 
-		auto@ healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), icons::Health);
+		auto@ healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), iconWrapper.Health);
 		healthIcon.noClip = true;
 
 		updateAbsolutePosition();
@@ -149,7 +150,7 @@ class PlanetPopup : Popup {
 			skin.draw(style, flags, bgPos, Color(0xffffffff));
 		}
 
-		skin.draw(SS_SubTitle, SF_Normal, recti_area(bgPos.topLeft + vec2i(2,2), vec2i(bgPos.width-5, 50-4)), color);
+		skin.draw(SS_SubTitle, SF_Normal, activeSkin.PlanetPopupSubtitleArea(bgPos), color);
 
 		if(resources.resources.length != 0)
 			drawPlanetIcon(pl, recti_area(bgPos.topLeft+vec2i(2, 2), vec2i(46,46)), resources.resources[0]);
@@ -279,7 +280,7 @@ class PlanetPopup : Popup {
 		//Update health
 		if(pl.Health < pl.MaxHealth) {
 			health.progress = pl.Health / pl.MaxHealth;
-			health.frontColor = colors::Red.interpolate(colors::Green, health.progress);
+			health.frontColor = activeSkin.Red.interpolate(colors::Green, health.progress);
 			health.text = standardize(pl.Health)+" / "+standardize(pl.MaxHealth);
 			health.visible = true;
 		}

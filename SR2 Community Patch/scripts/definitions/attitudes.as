@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import hooks;
 import saving;
 import abilities;
@@ -378,12 +379,15 @@ bool loadAttitude(ReadFile@ file) {
 	AttitudeType att;
 	att.ident = file.value;
 	addAttitude(att);
+	string key, value;
 
 	int blockIndent = file.indent;
 	if(!file++)
 		return false;
 
 	while(true) {
+		key = file.key;
+		value = file.value;
 		if(file.indent <= blockIndent)
 			return true;
 		if(file.fullLine) {
@@ -395,24 +399,27 @@ bool loadAttitude(ReadFile@ file) {
 			if(file.indent <= blockIndent)
 				return true;
 		}
-		else if(file.key.equals_nocase("Level")) {
+		else if(key.equals_nocase("Level")) {
 			if(!loadLevel(att, file))
 				return false;
 		}
 		else {
-			if(file.key.equals_nocase("Name")) {
-				att.name = localize(file.value);
+			if(key.equals_nocase("Name")) {
+				att.name = localize(value);
 			}
-			else if(file.key.equals_nocase("Description")) {
-				att.description = localize(file.value);
+			else if(key.equals_nocase("Description")) {
+				att.description = localize(value);
 			}
-			else if(file.key.equals_nocase("Progress")) {
-				att.progress = localize(file.value);
+			else if(key.equals_nocase("Progress")) {
+				att.progress = localize(value);
 			}
-			else if(file.key.equals_nocase("Color")) {
-				att.color = toColor(file.value);
+			else if(key.equals_nocase("Color")) {
+				if(activeSkin.attitudeColorOverrides.exists(att.ident)) {
+					activeSkin.attitudeColorOverrides.get(att.ident, att.color);
+				}
+				else att.color = toColor(value);
 			}
-			else if(file.key.equals_nocase("Sort")) {
+			else if(key.equals_nocase("Sort")) {
 				att.sort = toInt(file.value);
 			}
 			else {
@@ -430,6 +437,7 @@ bool loadAttitude(ReadFile@ file) {
 bool loadLevel(AttitudeType@ att, ReadFile@ file) {
 	AttitudeLevel lv;
 	lv.level = att.levels.length;
+	string key, value;
 
 	att.levels.insertLast(lv);
 
@@ -438,6 +446,8 @@ bool loadLevel(AttitudeType@ att, ReadFile@ file) {
 		return false;
 
 	while(true) {
+		key = file.key;
+		value = file.value;
 		if(file.indent <= blockIndent)
 			return true;
 		if(file.fullLine) {
@@ -448,14 +458,18 @@ bool loadLevel(AttitudeType@ att, ReadFile@ file) {
 				return false;
 		}
 		else {
-			if(file.key.equals_nocase("Description")) {
+			if(key.equals_nocase("Description")) {
 				lv.description = localize(file.value);
 			}
-			else if(file.key.equals_nocase("Threshold")) {
+			else if(key.equals_nocase("Threshold")) {
 				lv.threshold = toDouble(file.value);
 			}
-			else if(file.key.equals_nocase("Icon")) {
-				lv.icon = getSprite(file.value);
+			else if(key.equals_nocase("Icon")) {
+				if(activeSkin.attitudeLevelIconOverrides.exists(att.ident + "." + lv.level)) {
+					activeSkin.attitudeLevelIconOverrides.get(att.ident + "." + lv.level, value);
+					lv.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+				}
+				else lv.icon = getSkinSprite(value);
 			}
 			else {
 				auto@ hook = cast<IAttitudeHook>(parseHook(file.line, "attitude_effects::", instantiate=false));

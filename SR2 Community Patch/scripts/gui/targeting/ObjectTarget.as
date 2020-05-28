@@ -1,3 +1,4 @@
+import skins;
 import tabs.Tab;
 import tabs.tabbar;
 import abilities;
@@ -16,12 +17,12 @@ import Tab@ createGalaxyTab() from "tabs.GalaxyTab";
 
 class ObjectTargeting {
 	Tab@ returnTo;
-	Sprite icon(spritesheet::ContextIcons, 1);
+	Sprite icon(getSkinSpriteSheet("ContextIcons"), 1);
 	bool allowMultiple = false;
 	bool isTemporary = false;
 	bool drawCrosshair = true;
 	Color validIconColor = colors::Green;
-	Color errorIconColor = colors::Red;
+	Color errorIconColor = activeSkin.Red;
 	vec2i iconSize(40, 40);
 
 	bool valid(Object@ target) {
@@ -196,7 +197,7 @@ class ObjectDisplay : TargetVisuals {
 
 		//Draw the cursor
 		vec2i isize = vec2i(40, 40);
-		Sprite icon = spritesheet::ContextIcons+1;
+		Sprite icon = Sprite(getSkinSpriteSheet("ContextIcons"), 1);
 
 		if(targ !is null) {
 			icon = targ.icon;
@@ -212,15 +213,15 @@ class ObjectDisplay : TargetVisuals {
 			targ.draw(mode.target, mode.valid);
 
 		//Draw the message
-		const Font@ ft = font::DroidSans_11_Bold;
+		const Font@ ft = activeSkin.skin.getFont(FT_Bold);
 		string err = mode.desc;
 		if(err.length != 0) {
-			ft.draw(recti_area(mousePos-vec2i(200,isize.y+30), vec2i(400, 20)), mode.message, horizAlign=0.5, color=color, stroke=colors::Black);
-			@ft = font::OpenSans_11_Italic;
-			ft.draw(recti_area(mousePos-vec2i(200,isize.y+5), vec2i(400, 20)), err, horizAlign=0.5, color=color, stroke=colors::Black);
+			ft.draw(recti_area(mousePos-vec2i(200,isize.y+30), vec2i(400, 20)), mode.message, horizAlign=0.5, color=color, stroke=activeSkin.Black);
+			@ft = activeSkin.skin.getFont(FT_Italic);
+			ft.draw(recti_area(mousePos-vec2i(200,isize.y+5), vec2i(400, 20)), err, horizAlign=0.5, color=color, stroke=activeSkin.Black);
 		}
 		else {
-			ft.draw(recti_area(mousePos-vec2i(200,isize.y+5), vec2i(400, 20)), mode.message, horizAlign=0.5, color=color, stroke=colors::Black);
+			ft.draw(recti_area(mousePos-vec2i(200,isize.y+5), vec2i(400, 20)), mode.message, horizAlign=0.5, color=color, stroke=activeSkin.Black);
 		}
 	}
 };

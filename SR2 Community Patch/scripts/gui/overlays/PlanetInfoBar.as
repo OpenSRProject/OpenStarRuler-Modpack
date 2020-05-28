@@ -1,3 +1,4 @@
+import skins;
 import overlays.InfoBar;
 import elements.GuiResources;
 import elements.GuiIconGrid;
@@ -85,13 +86,13 @@ class PlanetInfoBar : InfoBar {
 		nameBox.color = boxColors;
 		@name = GuiText(nameBox, Alignment().padded(10, 0));
 		name.font = FT_Medium;
-		name.stroke = colors::Black;
+		name.stroke = activeSkin.Black;
 
 		y += 40;
 		@levelBox = GuiSkinElement(this, Alignment(Left+5, Top+y, Left+0.22f-4, Top+y+34), SS_PlainOverlay);
 		levelBox.color = boxColors;
 		@level = GuiText(levelBox, Alignment().padded(8, 0));
-		level.stroke = colors::Black;
+		level.stroke = activeSkin.Black;
 		level.font = FT_Medium;
 
 		@requireBox = GuiSkinElement(this, Alignment(Left+0.22f+4, Top+y, Left+0.55f, Top+y+34), SS_PlainOverlay);
@@ -99,14 +100,14 @@ class PlanetInfoBar : InfoBar {
 		@reqLabel = GuiText(requireBox, Alignment(Left-4, Top-6, Left+96, Top+6), locale::REQUIRED_RESOURCES);
 		reqLabel.noClip = true;
 		reqLabel.font = FT_Small;
-		reqLabel.stroke = colors::Black;
+		reqLabel.stroke = activeSkin.Black;
 		@reqTimer = GuiText(requireBox, Alignment(Right-96, Top-6, Right+4, Top+6));
 		reqTimer.color = Color(0xff0000fff);
 		reqTimer.noClip = true;
 		reqTimer.font = FT_Small;
 		reqTimer.horizAlign = 1.0;
 		reqTimer.visible = false;
-		reqTimer.stroke = colors::Black;
+		reqTimer.stroke = activeSkin.Black;
 		@reqDisplay = GuiResourceReqGrid(requireBox, Alignment(Left+8, Top+8, Right-8, Bottom));
 		reqDisplay.spacing.x = 6;
 		reqDisplay.horizAlign = 0.0;
@@ -142,10 +143,10 @@ class PlanetInfoBar : InfoBar {
 		popBox.padding = recti(0,4,4,4);
 		@popIcon = GuiSprite(popBox, Alignment(Left-16, Top-8, Width=50, Height=50));
 		popIcon.noClip = true;
-		popIcon.desc = icons::Population;
+		popIcon.desc = iconWrapper.Population;
 		@popValue = GuiText(popBox, Alignment(Left+32, Top, Right-8, Bottom));
 		popValue.horizAlign = 0.5;
-		popValue.stroke = colors::Black;
+		popValue.stroke = activeSkin.Black;
 
 		MarkupTooltip popTT(locale::PLANET_POPULATION_TIP);
 		@popIcon.tooltipObject = popTT;
@@ -153,7 +154,7 @@ class PlanetInfoBar : InfoBar {
 
 		@consBox = GuiSkinElement(this, Alignment(Left+112, Bottom-33, Left+336, Bottom-2), SS_PlainOverlay);
 		consBox.color = boxColors;
-		GuiSprite consIcon(consBox, Alignment(Left-16, Top-10, Left+35, Bottom+10), icons::Labor);
+		GuiSprite consIcon(consBox, Alignment(Left-16, Top-10, Left+35, Bottom+10), iconWrapper.Labor);
 
 		y += 30;
 
@@ -483,18 +484,18 @@ class PlanetInfoBar : InfoBar {
 		if(cons.length != 0) {
 			recti pos = consBox.AbsolutePosition.padded(4);
 			drawConstructible(cons[0], consBox.AbsolutePosition, isBox=true);
-			ft.draw(pos=pos, text=formatTime(cons[0].getETA(pl)), horizAlign=1.0, vertAlign=1.0, stroke=colors::Black);
+			ft.draw(pos=pos, text=formatTime(cons[0].getETA(pl)), horizAlign=1.0, vertAlign=1.0, stroke=activeSkin.Black);
 
 			if(ft.bold !is null)
 				@ft = ft.bold;
-			ft.draw(pos=pos, text=cons[0].name, horizAlign=0.0, vertAlign=0.0, stroke=colors::Black);
+			ft.draw(pos=pos, text=cons[0].name, horizAlign=0.0, vertAlign=0.0, stroke=activeSkin.Black);
 		}
 	}
 };
 
 class ManageAction : BarAction {
 	void init() override {
-		icon = icons::Manage;
+		icon = iconWrapper.Manage;
 		tooltip = locale::TT_MANAGE_PLANET;
 	}
 
@@ -506,7 +507,7 @@ class ManageAction : BarAction {
 
 class ColonizeAction : BarAction {
 	void init() override {
-		icon = icons::Colonize;
+		icon = iconWrapper.Colonize;
 		tooltip = locale::TT_COLONIZE;
 	}
 
@@ -541,7 +542,7 @@ class ColonizeTarget : ObjectTargeting {
 
 class ColonizeThisAction : BarAction {
 	void init() override {
-		icon = icons::ColonizeThis;
+		icon = iconWrapper.ColonizeThis;
 		tooltip = locale::TT_COLONIZE_THIS;
 	}
 

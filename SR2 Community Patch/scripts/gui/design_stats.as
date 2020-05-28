@@ -1,4 +1,5 @@
 #priority init 10
+import skins;
 
 enum StatType {
 	ST_Hex,
@@ -294,7 +295,7 @@ void loadStats(const string& filename) {
 			stat.importance = toInt(value);
 		}
 		else if(key == "Icon") {
-			stat.icon = getSprite(value);
+			stat.icon = getSkinSprite(value);
 		}
 		else if(key == "Color") {
 			stat.color = toColor(value);

@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import ftl;
 from obj_selection import selectedObject, selectedObjects, getSelectionPosition, getSelectionScale;
@@ -75,7 +76,7 @@ class FlingDisplay : PointDisplay {
 			return;
 
 		if(range is null && ht.beacon !is null) {
-			@range = PlaneNode(material::RangeCircle, FLING_BEACON_RANGE);
+			@range = PlaneNode(getSkinMaterial("RangeCircle"), FLING_BEACON_RANGE);
 			range.visible = false;
 			range.position = ht.beacon.node_position;
 			range.rebuildTransform();
@@ -89,23 +90,23 @@ class FlingDisplay : PointDisplay {
 		else
 			color = Color(0xff0000ff);
 
-		font::DroidSans_11_Bold.draw(mousePos + vec2i(16, 0),
+		activeSkin.skin.getFont(FT_Bold).draw(mousePos + vec2i(16, 0),
 			toString(int(ht.cost)) + " " + locale::FTL
 			 + " (" + toString(ht.distance, 0) + "u)",
 			color);
 		
 		if(ht.beacon is null) {
-			font::OpenSans_11_Italic.draw(mousePos + vec2i(16, 16),
+			activeSkin.skin.getFont(FT_Italic).draw(mousePos + vec2i(16, 16),
 				locale::NEED_FLING_BEACON,
 				color);
 		}
 		else if(!ht.inRange) {
-			font::OpenSans_11_Italic.draw(mousePos + vec2i(16, 16),
+			activeSkin.skin.getFont(FT_Italic).draw(mousePos + vec2i(16, 16),
 				locale::OUT_OF_BEACON_RANGE,
 				color);
 		}
 		else if(ht.distance > ht.range) {
-			font::OpenSans_11_Italic.draw(mousePos + vec2i(16, 16),
+			activeSkin.skin.getFont(FT_Italic).draw(mousePos + vec2i(16, 16),
 				locale::INSUFFICIENT_FTL,
 				color);
 		}
@@ -116,7 +117,7 @@ class FlingDisplay : PointDisplay {
 		if(shiftKey)
 			outColor = Color(0xffe400ff);
 		else
-			outColor = colors::Red;
+			outColor = activeSkin.Red;
 		FlingTarget@ ht = cast<FlingTarget>(mode);
 		if(ht !is null && range !is null && ht.beacon !is null) {
 			range.position = ht.beacon.node_position;

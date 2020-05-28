@@ -1,3 +1,4 @@
+import skins;
 import targeting.targeting;
 from obj_selection import selectedObjects, getSelectionPosition, selectedObject;
 from navigation.elevation import getElevationIntersect;
@@ -169,23 +170,23 @@ class MoveVisuals : TargetVisuals {
 	BeamNode@ destHeightBeam;
 
 	MoveVisuals() {
-		@moveBeam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		@moveBeam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		moveBeam.color = Color(0x00ff00ff);
 		moveBeam.visible = false;
 
-		@facingBeam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		@facingBeam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		facingBeam.color = Color(0x00adffff);
 		facingBeam.visible = false;
 
-		@heightBeam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		@heightBeam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		heightBeam.color = Color(0xaaaaaaff);
 		heightBeam.visible = false;
 
-		@destHeightBeam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		@destHeightBeam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		destHeightBeam.color = Color(0xaaaaaaff);
 		destHeightBeam.visible = false;
 
-		@lengthBeam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		@lengthBeam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		lengthBeam.color = Color(0xaaaaaaff);
 		lengthBeam.visible = false;
 	}
@@ -259,7 +260,7 @@ class MoveVisuals : TargetVisuals {
 							VECTOR_DELAY - VECTOR_PROGRESS_DELAY))
 					/ float(VECTOR_DELAY - VECTOR_PROGRESS_DELAY);
 				vec2i pos = mousePos;
-				material::RadialProgress.draw(recti_area(
+				getSkinMaterial("RadialProgress").draw(recti_area(
 					pos - vec2i(VECTOR_RADIAL_SIZE / 2, VECTOR_RADIAL_SIZE / 2),
 					vec2i(VECTOR_RADIAL_SIZE, VECTOR_RADIAL_SIZE)),
 					VECTOR_RADIAL_COLOR);

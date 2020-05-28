@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import systems;
 
@@ -235,7 +236,7 @@ class TradeLinesNodeScript {
 			Color color = LINE_MIDDLE;
 			color.a = min(ALPHA_MAX, ALPHA_MIN + ALPHA_STEP * line.trades);
 
-			drawPolygonStart(2, material::TradePaths, color);
+			drawPolygonStart(2, getSkinMaterial("TradePaths"), color);
 			drawPolygonPoint(line.path.start + line.side, startDistLeft);
 			drawPolygonPoint(line.path.end + line.side, endDistLeft);
 			drawPolygonPoint(line.path.start - line.side, startDistRight);
@@ -295,7 +296,7 @@ class TradeLinesNodeScript {
 		
 		vec3d side = (quaterniond_fromAxisAngle(vec3d_up(), pi * 0.5) * off) * 10.0;
 
-		drawPolygonStart(2, material::TradePaths);
+		drawPolygonStart(2, getSkinMaterial("TradePaths"));
 		drawPolygonPoint(path.start + side, startLeft, fromColor);
 		drawPolygonPoint(path.end + side, endLeft, toColor);
 		drawPolygonPoint(path.start - side, startRight, fromColor);

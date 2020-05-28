@@ -46,17 +46,17 @@ class DesignElement : BaseGuiElement {
 
 		 @downloadEmpire = GuiButton(this, Alignment(Right-42, Top+8, Width=34, Height=34));
 		 downloadEmpire.style = SS_IconButton;
-		 downloadEmpire.setIcon(icons::Add);
+		 downloadEmpire.setIcon(iconWrapper.Add);
 		 setMarkupTooltip(downloadEmpire, locale::TT_DOWNLOAD_TO_EMPIRE, width=400);
 
 		 @downloadProfile = GuiButton(this, Alignment(Right-42, Top+8+40, Width=34, Height=34));
 		 downloadProfile.style = SS_IconButton;
-		 downloadProfile.setIcon(icons::Import);
+		 downloadProfile.setIcon(iconWrapper.Import);
 		 setMarkupTooltip(downloadProfile, locale::TT_DOWNLOAD_TO_PROFILE, width=400);
 
 		 @editButton = GuiButton(this, Alignment(Right-42, Top+8+40+40, Width=34, Height=34));
 		 editButton.style = SS_IconButton;
-		 editButton.setIcon(icons::Edit);
+		 editButton.setIcon(iconWrapper.Edit);
 		 editButton.allowOtherButtons = true;
 		 setMarkupTooltip(editButton, locale::TT_DOWNLOAD_EDIT, width=400);
 	}

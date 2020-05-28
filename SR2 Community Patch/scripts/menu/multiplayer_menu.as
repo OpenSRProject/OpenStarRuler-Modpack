@@ -12,6 +12,7 @@ import elements.GuiBackgroundPanel;
 import dialogs.MessageDialog;
 import dialogs.InputDialog;
 import icons;
+import skins;
 from irc_window import showIRC;
 from new_game import showNewGame;
 
@@ -118,17 +119,17 @@ class Multiplayer : BaseGuiElement {
 		@gamesBG = GuiBackgroundPanel(this, Alignment(
 			Left+0.05f, Top+0.1f, Right-0.05f, Bottom-0.1f-242));
 		gamesBG.title = locale::MENU_GAMES;
-		gamesBG.titleColor = Color(0x00ff00ff);
+		gamesBG.titleColor = activeSkin.MultiplayerGamesTitle;
 
 		@optionsBG = GuiBackgroundPanel(this, Alignment(
 			Left+0.05f, Bottom-0.1f-230, Right-0.5f-6, Bottom-0.1f));
 		optionsBG.title = locale::MP_OPTIONS;
-		optionsBG.titleColor = Color(0xd0ffefff);
+		optionsBG.titleColor = activeSkin.MultiplayerOptionsTitle;
 
 		@hostBG = GuiBackgroundPanel(this, Alignment(
 			Left+0.5f+6, Bottom-0.1f-230, Right-0.05f, Bottom-0.1f));
 		hostBG.title = locale::MP_HOST_OPTIONS;
-		hostBG.titleColor = Color(0xd0ffefff);
+		hostBG.titleColor = activeSkin.MultiplayerHostTitle;
 		
 		@noServers = GuiText(gamesBG, Alignment(Left+12,Top+33,Right-4,Top+55), locale::MP_NO_GAMES);
 		noServers.color = Color(0xaaaaaaff);
@@ -159,43 +160,43 @@ class Multiplayer : BaseGuiElement {
 		@refreshButton = GuiButton(gamesBG, Alignment(
 			Right-174, Bottom-40, Width=170, Height=36),
 			locale::REFRESH);
-		refreshButton.buttonIcon = Sprite(spritesheet::MenuIcons, 12);
+		refreshButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 12);
 
 		@ircButton = GuiButton(gamesBG, Alignment(
 			Left+4, Bottom-40, Width=200, Height=36),
 			locale::MP_IRC_CHAT);
-		ircButton.buttonIcon = icons::Chat;
+		ircButton.buttonIcon = iconWrapper.Chat;
 
 		@ipButton = GuiButton(gamesBG, Alignment(
 			Left+208, Bottom-40, Width=200, Height=36),
 			locale::MP_JOIN_IP);
-		ipButton.buttonIcon = Sprite(spritesheet::MenuIcons, 13);
+		ipButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 13);
 		
 		@joinButton = GuiButton(this, Alignment(
 			Right-0.05f-200, Bottom-0.1f+6, Width=200, Height=46),
 			locale::MP_JOIN);
-		joinButton.buttonIcon = Sprite(spritesheet::MenuIcons, 13);
+		joinButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 13);
 
 		@hostButton = GuiButton(this, Alignment(
 			Right-0.05f-412, Bottom-0.1f+6, Width=200, Height=46),
 			locale::MP_HOST);
-		hostButton.buttonIcon = Sprite(spritesheet::MenuIcons, 14);
+		hostButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 14);
 
 		@hostLoadButton = GuiButton(this, Alignment(
 			Right-0.05f-624, Bottom-0.1f+6, Width=200, Height=46),
 			locale::MP_HOST_LOAD);
-		hostLoadButton.buttonIcon = Sprite(spritesheet::MenuIcons, 15);
+		hostLoadButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 15);
 
 		@backButton = GuiButton(this, Alignment(
 			Left+0.05f, Bottom-0.1f+6, Width=200, Height=46),
 			locale::BACK);
-		backButton.buttonIcon = Sprite(spritesheet::MenuIcons, 11);
+		backButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 11);
 
 		if(cloud::isActive) {
 			@queueButton = GuiButton(this, Alignment(
 				Right-0.05f-836, Bottom-0.1f+6, Width=200, Height=46),
 				locale::MP_QUEUE);
-			queueButton.buttonIcon = Sprite(spritesheet::MenuIcons, 4);
+			queueButton.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 4);
 		
 			@inQueue = GuiText(gamesBG, Alignment(Left+12,Top+33,Right-4,Top+61), locale::MP_QUEUE_ACTIVE);
 			inQueue.font = FT_Medium;
@@ -206,14 +207,14 @@ class Multiplayer : BaseGuiElement {
 				Left+0.5f-205, Top+65, Width=200, Height=46),
 				locale::MP_QUEUE_ACCEPT);
 			queueAccept.font = FT_Medium;
-			queueAccept.color = Color(0x88ff88ff);
+			queueAccept.color = activeSkin.MultiplayerQueueAccept;
 			queueAccept.visible = false;
 			
 			@queueReject = GuiButton(gamesBG, Alignment(
 				Left+0.5f+5, Top+65, Width=200, Height=46),
 				locale::MP_QUEUE_REJECT);
 			queueReject.font = FT_Medium;
-			queueReject.color = Color(0xff8888ff);
+			queueReject.color = activeSkin.MultiplayerQueueReject;
 			queueReject.visible = false;
 			
 			@queueLeave = GuiButton(gamesBG, Alignment(
@@ -234,7 +235,7 @@ class Multiplayer : BaseGuiElement {
 		cancelButton.visible = false;
 
 		@transferProgress = GuiProgressbar(this, Alignment(Left+0.25f, Bottom-0.25f-25, Right-0.25f, Bottom-0.25f+25));
-		transferProgress.frontColor = colors::Orange;
+		transferProgress.frontColor = activeSkin.MultiplayerTransferProgress;
 		transferProgress.visible = false;
 
 		updateAbsolutePosition();
@@ -455,12 +456,12 @@ class Multiplayer : BaseGuiElement {
 				ServerElement elem;
 				if(desc.srv.version != MP_VERSION) {
 					elem.disabled = true;
-					elem.color = colors::Red;
+					elem.color = activeSkin.MultiplayerVersionMismatch;
 					name += " "+locale::MP_VERSION_MISMATCH;
 				}
 				else if(!haveMods) {
 					elem.disabled = true;
-					elem.color = colors::Red;
+					elem.color = activeSkin.MultiplayerModMismatch;
 					name += " "+locale::MP_MISSING_MODS;
 				}
 				else if(desc.srv.password) {

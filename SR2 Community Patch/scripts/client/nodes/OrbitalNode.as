@@ -1,3 +1,4 @@
+import skins;
 import orbitals;
 from nodes.FleetPlane import SHOW_FLEET_PLANES;
 
@@ -30,7 +31,7 @@ final class OrbitalNodeScript {
 			Color color(0xffffff14);
 			if(node.sortDistance < 250.0)
 				color.a = double(color.a) * (node.sortDistance - 150.0) / 100.0;
-			renderPlane(material::FleetCircle, node.abs_position, fleetPlane, color);
+			renderPlane(getSkinMaterial("FleetCircle"), node.abs_position, fleetPlane, color);
 		}
 	
 		node.applyTransform();
@@ -40,7 +41,7 @@ final class OrbitalNodeScript {
 		
 		/*if(obj.Shield > 0) {*/
 		/*	shader::SHIELD_STRENGTH = float(obj.Shield / obj.MaxShield);*/
-		/*	material::Shield.switchTo();*/
+		/*	getSkinMaterial("Shield").switchTo();*/
 		/*	def.model.draw();*/
 		/*}*/
 		

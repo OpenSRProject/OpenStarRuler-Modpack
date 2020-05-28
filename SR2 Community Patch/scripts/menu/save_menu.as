@@ -1,3 +1,4 @@
+import skins;
 import menus;
 import elements.GuiTextbox;
 from load_menu import SaveItem;
@@ -41,7 +42,7 @@ class SaveMenu : MenuBox {
 	void buildMenu() {
 		title.text = locale::SAVE_GAME;
 
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 11), locale::MENU_BACK, 0));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 11), locale::MENU_BACK, 0));
 
 		string dir = baseProfile["saves"];
 		FileList files(dir, "*.sr2");

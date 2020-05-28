@@ -1,3 +1,4 @@
+import skins;
 
 //Draws the physical star, its corona, and a distant star sprite
 final class StarNodeScript {
@@ -15,7 +16,7 @@ final class StarNodeScript {
 			drawBuffers();
 			node.applyTransform();
 			
-			material::StarSurface.switchTo();
+			getSkinMaterial("StarSurface").switchTo();
 			model::Sphere_max.draw(node.sortDistance / (node.abs_scale * pixelSizeRatio));
 			
 			/*vec4f pos;
@@ -29,7 +30,7 @@ final class StarNodeScript {
 			}
 			
 			applyAbsTransform(vec3d(0,1.0,0), vec3d(0.2), quaterniond());
-			material::Prominence.switchTo();
+			getSkinMaterial("Prominence").switchTo();
 			model::Prominence.draw();
 			undoTransform();*/
 			
@@ -41,7 +42,7 @@ final class StarNodeScript {
 			upLeft *= node.abs_scale * 1.5;
 			upRight *= node.abs_scale * 1.5;
 			
-			drawPolygonStart(PT_Quads, 1, material::Corona);
+			drawPolygonStart(PT_Quads, 1, getSkinMaterial("Corona"));
 			drawPolygonPoint(center + upLeft, vec2f(0,0));
 			drawPolygonPoint(center + upRight, vec2f(1,0));
 			drawPolygonPoint(center - upLeft, vec2f(1,1));
@@ -52,7 +53,7 @@ final class StarNodeScript {
 		if(dist > 0.5) {
 			Color col(node.color);
 			col.a = dist > 1.0 ? 255 : int((dist - 0.5)*255.0/0.5);
-			renderBillboard(material::DistantStar, node.abs_position, node.abs_scale * 32.0, 0.0, col);
+			renderBillboard(getSkinMaterial("DistantStar"), node.abs_position, node.abs_scale * 32.0, 0.0, col);
 		}
 	}
 };

@@ -1,6 +1,7 @@
 import elements.BaseGuiElement;
 import elements.GuiScrollbar;
 import elements.GuiMarkupText;
+import skins;
 
 export GuiListElement, GuiListText, GuiListbox;
 export GuiMarkupListText;
@@ -67,14 +68,14 @@ class GuiListText : GuiListElement {
 			ele.skin.draw(SS_ListboxItem, flags, absPos);
 
 		if(icon.valid) {
-			vec2i iconSize = icon.size;
+			vec2i iconSize = activeSkin.ListTextIconSize(icon);
 			if(iconSize.y > absPos.height) {
 				iconSize.x = double(absPos.height) / double(iconSize.y) * double(iconSize.x);
 				iconSize.y = absPos.height;
 			}
 			vec2i iconOffset(ele.horizPadding, (absPos.height - iconSize.height) / 2);
 			icon.draw(recti_area(absPos.topLeft + iconOffset, iconSize));
-			textOffset.x += iconSize.width + 8;
+			textOffset.x += activeSkin.ListTextOffsetHorizontal(iconSize);
 		}
 
 		font.draw(absPos.topLeft + textOffset, text);
@@ -115,8 +116,8 @@ class GuiListbox : BaseGuiElement {
 	int selected = -1;
 	int hovered = -1;
 	int lineHeight = 0;
-	int horizPadding = 6;
-	int vertPadding = 5;
+	int horizPadding = activeSkin.ListboxDefaultPaddingHorizontal;
+	int vertPadding = activeSkin.ListboxDefaultPaddingVertical;
 	bool Required = false;
 	bool hoverSelect = false;
 	bool ElementHovered = false;

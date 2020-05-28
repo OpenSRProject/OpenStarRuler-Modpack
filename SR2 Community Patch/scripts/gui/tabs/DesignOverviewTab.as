@@ -12,6 +12,7 @@ import tile_resources;
 import icons;
 import heralds_icons;
 #include "dialogs/include/UniqueDialogs.as"
+import skins;
 
 from tabs.tabbar import newTab, browseTab, switchToTab;
 from tabs.DesignEditorTab import createDesignEditorTab, loadDesignEditor;
@@ -24,15 +25,15 @@ const uint D_ICON_HEIGHT = 28;
 const uint D_ICON_SPACING = 4;
 
 const Color[] CLASS_COLORS = {
-	Color(0x00c3ffff),
-	Color(0xcf4cffff),
-	Color(0xbaff4cff),
-	Color(0xff6c00ff),
-	Color(0xebc0ffff),
-	Color(0xc7af99ff),
-	Color(0xf49bcfff),
-	Color(0x00ff9cff),
-	Color(0x00deffff)
+	activeSkin.DesignOverviewClass1,
+	activeSkin.DesignOverviewClass2,
+	activeSkin.DesignOverviewClass3,
+	activeSkin.DesignOverviewClass4,
+	activeSkin.DesignOverviewClass5,
+	activeSkin.DesignOverviewClass6,
+	activeSkin.DesignOverviewClass7,
+	activeSkin.DesignOverviewClass8,
+	activeSkin.DesignOverviewClass9
 };
 
 enum Dialogs {
@@ -88,18 +89,18 @@ class DesignOverview : Tab {
 		@createClassButton = GuiButton(clsPanel, recti(0, 0, 195, 47),
 			locale::CREATE_DESIGN_CLASS);
 		createClassButton.font = FT_Medium;
-		createClassButton.buttonIcon = icons::Create.colorized(Color(0x8888ffff));
+		createClassButton.buttonIcon = iconWrapper.Create.colorized(activeSkin.DesignOverviewCreateClass);
 
 		@importButton = GuiButton(clsPanel, recti(0, 0, 195, 47),
 			locale::IMPORT_DESIGNS);
 		importButton.font = FT_Medium;
-		importButton.buttonIcon = icons::Import;
+		importButton.buttonIcon = iconWrapper.Import;
 
 		@showObsoleteButton = GuiButton(clsPanel, recti(0, 0, 195, 47),
 			locale::SHOW_OBSOLETE);
 		showObsoleteButton.tooltip = locale::TT_SHOW_OBSOLETE;
 		showObsoleteButton.font = FT_Medium;
-		showObsoleteButton.buttonIcon = icons::Obsolete;
+		showObsoleteButton.buttonIcon = iconWrapper.Obsolete;
 		showObsoleteButton.toggleButton = true;
 
 		title = locale::DESIGNS;
@@ -107,15 +108,15 @@ class DesignOverview : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0x83cfffff);
+		return activeSkin.DesignOverviewActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0x009cffff);
+		return activeSkin.DesignOverviewInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x49738dff);
+		return activeSkin.DesignOverviewSeparator;
 	}		
 
 	TabCategory get_category() {
@@ -123,7 +124,7 @@ class DesignOverview : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabDesigns);
+		return Sprite(getSkinMaterial("TabDesigns"));
 	}
 
 	void showDesignEditor(const Design@ dsg) {
@@ -353,7 +354,7 @@ class DesignClassElement : BaseGuiElement {
 			recti(0, 0, int(D_EL_WIDTH * 0.6),
 						int(D_EL_HEIGHT * 0.3)),
 			locale::CREATE_DESIGN);
-		createButton.buttonIcon = icons::Create;
+		createButton.buttonIcon = iconWrapper.Create;
 		createButton.font = FT_Medium;
 	}
 
@@ -512,48 +513,48 @@ class DesignElement : BaseGuiElement {
 
 		@editButton = GuiButton(this, Alignment(Right-40, Top+38, Width=34, Height=34));
 		editButton.style = SS_IconButton;
-		editButton.setIcon(icons::Edit);
+		editButton.setIcon(iconWrapper.Edit);
 		setMarkupTooltip(editButton, locale::TT_EDIT_DESIGN);
 
 		@obsoleteButton = GuiButton(this, Alignment(Right-40, Top+76, Width=34, Height=34));
 		obsoleteButton.style = SS_IconButton;
-		obsoleteButton.setIcon(icons::Obsolete);
+		obsoleteButton.setIcon(iconWrapper.Obsolete);
 		setMarkupTooltip(obsoleteButton, locale::TT_OBSOLETE_DESIGN);
 
 		@title = GuiText(this, Alignment(Left+8, Top+3, Right-100, Top+30));
 		title.font = FT_Subtitle;
-		title.stroke = colors::Black;
+		title.stroke = activeSkin.Black;
 
 		@sizeBox = GuiText(this, Alignment(Right-150, Top+3, Right-10, Top+30));
 		sizeBox.horizAlign = 1.0;
 		sizeBox.font = FT_Subtitle;
-		sizeBox.stroke = colors::Black;
+		sizeBox.stroke = activeSkin.Black;
 
 		@moneyBox = GuiText(this, Alignment(Left+30, Bottom-31, Right, Bottom-4));
-		moneyBox.stroke = colors::Black;
+		moneyBox.stroke = activeSkin.Black;
 
 		@laborBox = GuiText(this, Alignment(Left+0.5f, Bottom-31, Right-30, Bottom-4));
 		laborBox.horizAlign = 1.0;
-		laborBox.stroke = colors::Black;
+		laborBox.stroke = activeSkin.Black;
 
 		@supportIcon = GuiSprite(this, Alignment(Left+8, Top+38, Width=30, Height=30));
-		supportIcon.desc = icons::ManageSupports;
+		supportIcon.desc = iconWrapper.ManageSupports;
 		setMarkupTooltip(supportIcon, locale::TT_SUPPORT_DESIGN);
 		supportIcon.visible = false;
 
 		@satelliteIcon = GuiSprite(this, Alignment(Left+10, Top+38, Width=36, Height=36));
-		satelliteIcon.desc = icons::Satellite;
+		satelliteIcon.desc = iconWrapper.Satellite;
 		setMarkupTooltip(satelliteIcon, locale::TT_SATELLITE_DESIGN);
 		satelliteIcon.visible = false;
 
 		@flagshipIcon = GuiSprite(this, Alignment(Left+8, Top+38, Width=30, Height=30));
-		flagshipIcon.desc = Sprite(spritesheet::AttributeIcons, 1);
-		flagshipIcon.color = Color(0x00e5f7ff);
+		flagshipIcon.desc = Sprite(getSkinSpriteSheet("AttributeIcons"), 1);
+		flagshipIcon.color = activeSkin.DesignOverviewFlagship;
 		setMarkupTooltip(flagshipIcon, locale::TT_FLAGSHIP_DESIGN);
 		flagshipIcon.visible = false;
 
 		@stationIcon = GuiSprite(this, Alignment(Left+8, Top+38, Width=30, Height=30));
-		stationIcon.desc = Sprite(spritesheet::GuiOrbitalIcons, 0);
+		stationIcon.desc = Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 0);
 		stationIcon.color = Color(0x00e5f7ff);
 		setMarkupTooltip(stationIcon, locale::TT_STATION_DESIGN);
 		stationIcon.visible = false;
@@ -594,11 +595,11 @@ class DesignElement : BaseGuiElement {
 		flagshipIcon.visible = !supportIcon.visible && !stationIcon.visible && !satelliteIcon.visible;
 
 		if(dsg.obsolete) {
-			obsoleteButton.setIcon(icons::Unobsolete);
+			obsoleteButton.setIcon(iconWrapper.Unobsolete);
 			setMarkupTooltip(obsoleteButton, locale::TT_UNOBSOLETE_DESIGN);
 		}
 		else {
-			obsoleteButton.setIcon(icons::Obsolete);
+			obsoleteButton.setIcon(iconWrapper.Obsolete);
 			setMarkupTooltip(obsoleteButton, locale::TT_OBSOLETE_DESIGN);
 		}
 	}

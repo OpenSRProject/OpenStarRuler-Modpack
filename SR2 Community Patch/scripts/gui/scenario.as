@@ -1,3 +1,4 @@
+import skins;
 import dialogue;
 import elements.BaseGuiElement;
 import elements.GuiPanel;
@@ -43,7 +44,7 @@ class ScenarioWindow : GuiDraggable {
 
 		@minButton = GuiButton(this, Alignment(Right-30, Top+2, Right-4, Top+28));
 		minButton.color = Color(0xff8080ff);
-		minButton.setIcon(Sprite(material::Minus));
+		minButton.setIcon(Sprite(getSkinMaterial("Minus")));
 
 		@objBG = GuiSkinElement(this, Alignment(Left+8, Top+188, Right-8, Bottom-8), SS_PlainBox);
 		@objBox = GuiMarkupText(objBG, Alignment(Left+4, Top+4, Right-4, Bottom-4));
@@ -72,7 +73,7 @@ class ScenarioWindow : GuiDraggable {
 		expanded = !expanded;
 		if(expanded) {
 			minButton.color = Color(0xff8080ff);
-			minButton.setIcon(Sprite(material::Minus));
+			minButton.setIcon(Sprite(getSkinMaterial("Minus")));
 
 			recti pos;
 			if(rect == prevSmallPos && prevBigPos.width != 0)
@@ -86,7 +87,7 @@ class ScenarioWindow : GuiDraggable {
 		}
 		else {
 			minButton.color = Color(0x80ff80ff);
-			minButton.setIcon(Sprite(material::Plus));
+			minButton.setIcon(Sprite(getSkinMaterial("Plus")));
 
 			recti pos;
 			if(rect == prevBigPos && prevSmallPos.width != 0)

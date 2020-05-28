@@ -6,6 +6,7 @@ import elements.GuiSkinElement;
 import elements.GuiBackgroundPanel;
 import influence;
 import util.formatting;
+import skins;
 
 from tabs.tabbar import popTab, browseTab, get_ActiveTab;
 from tabs.InfluenceVoteTab import createInfluenceVoteTab;
@@ -34,8 +35,8 @@ class InfluenceHistoryTab : Tab {
 
 		@bg = GuiBackgroundPanel(this, Alignment(Left+8, Top+8, Right-8, Bottom-8));
 		bg.title = locale::VOTE_HISTORY;
-		bg.titleColor = Color(0x00bffeff);
-		bg.picture = Sprite(material::Propositions);
+		bg.titleColor = activeSkin.InfluenceHistoryTitle;
+		bg.picture = Sprite(getSkinMaterial("Propositions"));
 
 		@backButton = GuiButton(this, recti(14, 40, 212, 70), locale::DIPLOMACY_BACK);
 
@@ -130,15 +131,15 @@ class InfluenceHistoryTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0x74fc4eff);
+		return activeSkin.InfluenceHistoryActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0x37ff00ff);
+		return activeSkin.InfluenceHistoryInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x408c2bff);
+		return activeSkin.InfluenceHistorySeparator;
 	}
 
 	TabCategory get_category() {
@@ -146,7 +147,7 @@ class InfluenceHistoryTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabDiplomacy);
+		return Sprite(getSkinMaterial("TabDiplomacy"));
 	}
 
 	void draw() {

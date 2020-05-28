@@ -1,119 +1,115 @@
-namespace icons {
-	const Sprite Loyalty(spritesheet::AttributeIcons, 1);
-	const Sprite Population(spritesheet::ResourceIcon, 8);
-	const Sprite Pressure(spritesheet::AttributeIcons, 0);
-	const Sprite Effectiveness(spritesheet::StatusIcons, 0);
+#priority init 9990
+import skins;
 
-	const Sprite Planet(spritesheet::PlanetType, 2);
-	const Sprite Artifact(spritesheet::ArtifactIcon, 0);
-	const Sprite Anomaly(spritesheet::AnomalyIcons, 0);
-	const Sprite Asteroid(material::AsteroidIcon);
-	const Sprite Building(material::Warehouse);
-	const Sprite Orbital(spritesheet::GuiOrbitalIcons, 0, Color(0x9e33ddff));
-	const Sprite Ship(spritesheet::ActionBarIcons, 2);
-	const Sprite Project(spritesheet::ResourceIcon, 6);
+IconWrapper@ iconWrapper;
 
-	const Sprite Money(spritesheet::ResourceIcon, 0);
-	const Sprite Influence(spritesheet::ResourceIcon, 1);
-	const Sprite Energy(spritesheet::ResourceIcon, 2);
-	const Sprite Labor(spritesheet::ResourceIcon, 6);
-	const Sprite Defense(spritesheet::ResourceIcon, 5);
-	const Sprite Research(spritesheet::ResourceIcon, 4);
-	const Sprite FTL(spritesheet::ResourceIcon, 3);
-	const Sprite Empty;
+class IconWrapper {
+	Sprite Loyalty(getSkinSpriteSheet("AttributeIcons"), 1);
+	Sprite Population(getSkinSpriteSheet("ResourceIcon"), 8);
+	Sprite Pressure(getSkinSpriteSheet("AttributeIcons"), 0);
+	Sprite Effectiveness(getSkinSpriteSheet("StatusIcons"), 0);
 
-	const Sprite Health(spritesheet::AttributeIcons, 6);
-	const Sprite Strength(spritesheet::AttributeIcons, 3);
-	const Sprite Supply(spritesheet::AttributeIcons, 4);
-	const Sprite Shield(spritesheet::ResourceIcon, 5, Color(0x429cffff));
+	Sprite Planet(getSkinSpriteSheet("PlanetType"), 2);
+	Sprite Artifact(getSkinSpriteSheet("ArtifactIcon"), 0);
+	Sprite Anomaly(getSkinSpriteSheet("AnomalyIcons"), 0);
+	Sprite Asteroid(getSkinMaterial("AsteroidIcon"));
+	Sprite Building(getSkinMaterial("Warehouse"));
+	Sprite Orbital(getSkinSpriteSheet("GuiOrbitalIcons"), 0, Color(0x9e33ddff));
+	Sprite Ship(getSkinSpriteSheet("ActionBarIcons"), 2);
+	Sprite Project(getSkinSpriteSheet("ResourceIcon"), 6);
 
-	const Sprite FoodRequirement(spritesheet::ResourceClassIcons, 3);
-	const Sprite WaterRequirement(spritesheet::ResourceClassIcons, 4);
-	const Sprite FoodWaterRequirement(spritesheet::ResourceClassIcons, 7);
+	Sprite Money(getSkinSpriteSheet("ResourceIcon"), 0);
+	Sprite Influence(getSkinSpriteSheet("ResourceIcon"), 1);
+	Sprite Energy(getSkinSpriteSheet("ResourceIcon"), 2);
+	Sprite Labor(getSkinSpriteSheet("ResourceIcon"), 6);
+	Sprite Defense(getSkinSpriteSheet("ResourceIcon"), 5);
+	Sprite Research(getSkinSpriteSheet("ResourceIcon"), 4);
+	Sprite FTL(getSkinSpriteSheet("ResourceIcon"), 3);
+	Sprite Empty;
 
-	const Sprite InfluenceWeight(material::SupportIcon);
-	const Sprite InfluencePlayCost = Influence;
-	const Sprite InfluencePurchaseCost(spritesheet::ConvertIcon, 0);
-	const Sprite InfluenceUpkeep(material::SupplyIcon);
-	const Sprite Duration(spritesheet::ContextIcons, 1);
+	Sprite Health(getSkinSpriteSheet("AttributeIcons"), 6);
+	Sprite Strength(getSkinSpriteSheet("AttributeIcons"), 3);
+	Sprite Supply(getSkinSpriteSheet("AttributeIcons"), 4);
+	Sprite Shield(getSkinSpriteSheet("ResourceIcon"), 5, Color(0x429cffff));
 
-	const Sprite Manage(spritesheet::ActionBarIcons, 0);
-	const Sprite ManageSupports(spritesheet::ActionBarIcons, 2);
-	const Sprite Colonize(spritesheet::ActionBarIcons, 1);
-	const Sprite ProjectDefense(spritesheet::ActionBarIcons, 3);
-	const Sprite ColonizeThis(spritesheet::ActionBarIcons, 4);
-	const Sprite UnderSiege(spritesheet::QuickbarIcons, 7);
+	Sprite FoodRequirement(getSkinSpriteSheet("ResourceClassIcons"), 3);
+	Sprite WaterRequirement(getSkinSpriteSheet("ResourceClassIcons"), 4);
+	Sprite FoodWaterRequirement(getSkinSpriteSheet("ResourceClassIcons"), 7);
+
+	Sprite InfluenceWeight(getSkinMaterial("SupportIcon"));
+	Sprite InfluencePlayCost = Influence;
+	Sprite InfluenceUpkeep(getSkinMaterial("SupplyIcon"));
+	Sprite Duration(getSkinSpriteSheet("ContextIcons"), 1);
+
+	Sprite Manage(getSkinSpriteSheet("ActionBarIcons"), 0);
+	Sprite ManageSupports(getSkinSpriteSheet("ActionBarIcons"), 2);
+	Sprite Colonize(getSkinSpriteSheet("ActionBarIcons"), 1);
+	Sprite ProjectDefense(getSkinSpriteSheet("ActionBarIcons"), 3);
+	Sprite ColonizeThis(getSkinSpriteSheet("ActionBarIcons"), 4);
+	Sprite UnderSiege(getSkinSpriteSheet("QuickbarIcons"), 7);
 	
-	const Sprite Hyperdrive(spritesheet::ActionBarIcons, 5);
-	const Sprite Slipstream(spritesheet::ActionBarIcons, 6);
-	const Sprite Gate(spritesheet::ActionBarIcons, 7);
-	const Sprite Fling(spritesheet::ActionBarIcons, 8);
+	Sprite Hyperdrive(getSkinSpriteSheet("ActionBarIcons"), 5);
+	Sprite Slipstream(getSkinSpriteSheet("ActionBarIcons"), 6);
+	Sprite Gate(getSkinSpriteSheet("ActionBarIcons"), 7);
+	Sprite Fling(getSkinSpriteSheet("ActionBarIcons"), 8);
 	
-	const Sprite Explore(spritesheet::ActionBarIcons, 9);
-	const Sprite HyperExplore(spritesheet::ActionBarIcons, 10);
+	Sprite Explore(getSkinSpriteSheet("ActionBarIcons"), 9);
+	Sprite HyperExplore(getSkinSpriteSheet("ActionBarIcons"), 10);
 
-	const Sprite Ability(spritesheet::ActionBarIcons, 7);
+	Sprite Ability(getSkinSpriteSheet("ActionBarIcons"), 7);
 
-	const Sprite Customize(spritesheet::StatusIcons, 0);
+	Sprite Customize(getSkinSpriteSheet("StatusIcons"), 0);
 
-	const Sprite NotReady(spritesheet::CardCategoryIcons, 0);
-	const Sprite Ready(spritesheet::CardCategoryIcons, 4);
+	Sprite NotReady(getSkinSpriteSheet("CardCategoryIcons"), 0);
+	Sprite Ready(getSkinSpriteSheet("CardCategoryIcons"), 4);
 
-	const Sprite Obsolete(spritesheet::CardCategoryIcons, 0);
-	const Sprite Unobsolete(spritesheet::CardCategoryIcons, 3);
+	Sprite Obsolete(getSkinSpriteSheet("CardCategoryIcons"), 0);
+	Sprite Unobsolete(getSkinSpriteSheet("CardCategoryIcons"), 3);
 
-	const Sprite Back(spritesheet::MenuIcons, 11);
-	const Sprite Close(spritesheet::MenuIcons, 8);
-	const Sprite Remove(spritesheet::MenuIcons, 8);
-	const Sprite Delete(spritesheet::MenuIcons, 8);
-	const Sprite Create(spritesheet::AttributeIcons, 2);
-	const Sprite Add(spritesheet::AttributeIcons, 2);
-	const Sprite Plus(spritesheet::AttributeIcons, 2);
-	const Sprite Minus(material::Minus);
-	const Sprite Exclaim(spritesheet::MenuIcons, 5);
-	const Sprite Info(spritesheet::MenuIcons, 3);
-	const Sprite Details(spritesheet::MenuIcons, 10);
-	const Sprite Chat(spritesheet::MenuIcons, 6);
-	const Sprite Go(spritesheet::MenuIcons, 9);
-	const Sprite Refresh(spritesheet::MenuIcons, 12);
-	const Sprite Repeat(spritesheet::MenuIcons, 12);
-	const Sprite Reset(spritesheet::MenuIcons, 12, colors::Red);
-	const Sprite Import(spritesheet::MenuIcons, 13);
-	const Sprite Export(spritesheet::MenuIcons, 13);
-	const Sprite Forward(spritesheet::MenuIcons, 10);
-	const Sprite Load(spritesheet::MenuIcons, 1);
-	const Sprite Save(spritesheet::MenuIcons, 2);
-	const Sprite Edit(material::TabDesigns);
-	const Sprite Action(spritesheet::CardCategoryIcons, 0);
+	Sprite Back(getSkinSpriteSheet("MenuIcons"), 11);
+	Sprite Close(getSkinSpriteSheet("MenuIcons"), 8);
+	Sprite Remove(getSkinSpriteSheet("MenuIcons"), 8);
+	Sprite Delete(getSkinSpriteSheet("MenuIcons"), 8);
+	Sprite Create(getSkinSpriteSheet("AttributeIcons"), 2);
+	Sprite Add(getSkinSpriteSheet("AttributeIcons"), 2);
+	Sprite Plus(getSkinSpriteSheet("AttributeIcons"), 2);
+	Sprite Minus(getSkinMaterial("Minus"));
+	Sprite Exclaim(getSkinSpriteSheet("MenuIcons"), 5);
+	Sprite Info(getSkinSpriteSheet("MenuIcons"), 3);
+	Sprite Details(getSkinSpriteSheet("MenuIcons"), 10);
+	Sprite Chat(getSkinSpriteSheet("MenuIcons"), 6);
+	Sprite Go(getSkinSpriteSheet("MenuIcons"), 9);
+	Sprite Refresh(getSkinSpriteSheet("MenuIcons"), 12);
+	Sprite Repeat(getSkinSpriteSheet("MenuIcons"), 12);
+	Sprite Reset(getSkinSpriteSheet("MenuIcons"), 12, activeSkin.Red);
+	Sprite Import(getSkinSpriteSheet("MenuIcons"), 13);
+	Sprite Export(getSkinSpriteSheet("MenuIcons"), 13);
+	Sprite Forward(getSkinSpriteSheet("MenuIcons"), 10);
+	Sprite Load(getSkinSpriteSheet("MenuIcons"), 1);
+	Sprite Save(getSkinSpriteSheet("MenuIcons"), 2);
+	Sprite Edit(getSkinMaterial("TabDesigns"));
+	Sprite Action(getSkinSpriteSheet("CardCategoryIcons"), 0);
 
-	const Sprite Undo(spritesheet::EditIcons, 0);
-	const Sprite Redo(spritesheet::EditIcons, 2);
-	const Sprite UndoDisabled(spritesheet::EditIcons, 1);
-	const Sprite RedoDisabled(spritesheet::EditIcons, 3);
-	const Sprite Clear(spritesheet::EditIcons, 8);
+	Sprite Undo(getSkinSpriteSheet("EditIcons"), 0);
+	Sprite Redo(getSkinSpriteSheet("EditIcons"), 2);
+	Sprite UndoDisabled(getSkinSpriteSheet("EditIcons"), 1);
+	Sprite RedoDisabled(getSkinSpriteSheet("EditIcons"), 3);
+	Sprite Clear(getSkinSpriteSheet("EditIcons"), 8);
 
-	const Sprite Paint(spritesheet::EditIcons, 4);
-	const Sprite Move(spritesheet::EditIcons, 5);
-	const Sprite Eyedrop(spritesheet::EditIcons, 6);
-	const Sprite Zoom(spritesheet::EditIcons, 6);
-	const Sprite Search(spritesheet::EditIcons, 6);
+	Sprite Paint(getSkinSpriteSheet("EditIcons"), 4);
+	Sprite Move(getSkinSpriteSheet("EditIcons"), 5);
+	Sprite Eyedrop(getSkinSpriteSheet("EditIcons"), 6);
+	Sprite Search(getSkinSpriteSheet("EditIcons"), 6);
 
-	const Sprite Donate(spritesheet::ActionBarIcons, 4, colors::Green);
-	const Sprite Upvote(material::ThumbsUp);
-	const Sprite Next(spritesheet::MenuIcons, 9);
-	const Sprite Previous(spritesheet::MenuIcons, 11);
+	Sprite Donate(getSkinSpriteSheet("ActionBarIcons"), 4, colors::Green);
+	Sprite Upvote(getSkinMaterial("ThumbsUp"));
+	Sprite Next(getSkinSpriteSheet("MenuIcons"), 9);
+	Sprite Previous(getSkinSpriteSheet("MenuIcons"), 11);
+
+	Sprite Replace(getSkinSpriteSheet("EditIcons"), 7);
+	Sprite Satellite(getSkinSpriteSheet("GuiOrbitalIcons"), 14, Color(0xe759ffff));
 };
 
-namespace colors {
-	const Color Money(0xd1cb6aff);
-	const Color Influence(0x0087c7ff);
-	const Color Energy(0x42b4bdff);
-	const Color Defense(0xaf7926ff);
-	const Color Labor(0xb1b4b6ff);
-	const Color Research(0x8c4ec9ff);
-	const Color FTL(0x00c0ffff);
-	const Color FTLResource(0x9bd29cff);
-
-	const Color Planet(0x8cc94eff);
-	const Color Artifact(0xfe82ffff);
-};
+void init() {
+	@iconWrapper = IconWrapper();
+}

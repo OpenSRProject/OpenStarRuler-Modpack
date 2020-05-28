@@ -1,3 +1,4 @@
+import skins;
 import tabs.Tab;
 import elements.GuiButton;
 import elements.GuiProgressbar;
@@ -120,16 +121,16 @@ class AttitudeBox : BaseGuiElement {
 
 		@title = GuiMarkupText(this, Alignment(Left+12, Top+8, Right-12, Top+40));
 		title.defaultFont = FT_Medium;
-		title.defaultStroke = colors::Black;
+		title.defaultStroke = activeSkin.Black;
 
 		@progressText = GuiMarkupText(this, Alignment(Left+20, Top+36, Right-12, Top+65));
 		progressText.defaultColor = Color(0x888888ff);
-		progressText.defaultStroke = colors::Black;
+		progressText.defaultStroke = activeSkin.Black;
 
 		@bar = GuiProgressbar(this, Alignment(Left+12, Top+65, Right-220, Top+110));
 
 		@discardButton = GuiButton(this, Alignment(Right-140, Top+3, Right-4, Top+36));
-		discardButton.color = colors::Red;
+		discardButton.color = activeSkin.Red;
 		@discardText = GuiMarkupText(discardButton, Alignment(Left, Top+6, Right, Bottom));
 	}
 
@@ -281,7 +282,7 @@ class AttitudesTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabAttitude);
+		return Sprite(getSkinMaterial("TabAttitude"));
 	}
 
 	void tick(double time) override {
@@ -389,11 +390,11 @@ class GuiFlatButton : GuiButton {
 			vec2i tl = AbsolutePosition.topLeft + vec2i(2,2);
 			vec2i br = AbsolutePosition.botRight - vec2i(2,2);
 
-			drawLine(vec2i(tl.x,tl.y), vec2i(br.x,tl.y), color.interpolate(colors::White, 0.2), 3);
-			drawLine(vec2i(tl.x,tl.y), vec2i(tl.x,br.y), color.interpolate(colors::White, 0.2), 3);
+			drawLine(vec2i(tl.x,tl.y), vec2i(br.x,tl.y), color.interpolate(activeSkin.White, 0.2), 3);
+			drawLine(vec2i(tl.x,tl.y), vec2i(tl.x,br.y), color.interpolate(activeSkin.White, 0.2), 3);
 
-			drawLine(vec2i(br.x,tl.y), vec2i(br.x,br.y), color.interpolate(colors::White, 0.2), 3);
-			drawLine(vec2i(tl.x,br.y), vec2i(br.x,br.y), color.interpolate(colors::White, 0.2), 3);
+			drawLine(vec2i(br.x,tl.y), vec2i(br.x,br.y), color.interpolate(activeSkin.White, 0.2), 3);
+			drawLine(vec2i(tl.x,br.y), vec2i(br.x,br.y), color.interpolate(activeSkin.White, 0.2), 3);
 
 
 			Color acolor = color;
@@ -455,12 +456,12 @@ class TakeAttitudeOverlay : GuiOverlay {
 			btn.toggleButton = true;
 			btn.pressed = (i == 0);
 			btn.text = att.name;
-			btn.color = att.color.interpolate(colors::Black, 0.75);
+			btn.color = att.color.interpolate(activeSkin.Black, 0.75);
 
 			if(playerEmpire.hasAttitude(att.id)) {
 				btn.taken = true;
 				btn.available = true;
-				btn.textColor = colors::White;
+				btn.textColor = activeSkin.White;
 			}
 			else if(!att.canTake(playerEmpire)) {
 				btn.taken = false;
@@ -470,7 +471,7 @@ class TakeAttitudeOverlay : GuiOverlay {
 			else {
 				btn.taken = false;
 				btn.available = true;
-				btn.textColor = colors::White;
+				btn.textColor = activeSkin.White;
 
 				if(sel == uint(-1))
 					sel = i;
@@ -495,7 +496,7 @@ class TakeAttitudeOverlay : GuiOverlay {
 		@selected = type;
 
 		string desc = format("[font=Medium][color=$1][stroke=#000]$2[/stroke][/color][/font]\n[vspace=6/]",
-				toString(type.color.interpolate(colors::White, 0.1)), type.name);
+				toString(type.color.interpolate(activeSkin.White, 0.1)), type.name);
 
 		for(uint i = 0, cnt = type.levels.length; i < cnt; ++i) {
 			auto@ lvl = type.levels[i];

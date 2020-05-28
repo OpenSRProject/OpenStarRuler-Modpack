@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import biomes;
 
 void loadBiomes(const string& filename) {
@@ -31,7 +32,7 @@ void loadBiomes(const string& filename) {
 			biome.color = toColor(value);
 		}
 		else if(key == "Sprite") {
-			biome.tile = getSprite(value);
+			biome.tile = getSkinSprite(value);
 		}
 		else if(key == "Frequency") {
 			biome.frequency = toUInt(value);

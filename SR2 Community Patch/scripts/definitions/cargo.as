@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import saving;
 import attributes;
 
@@ -377,10 +378,17 @@ void loadCargo(const string& filename) {
 			type.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			type.icon = getSprite(value);
+			if(activeSkin.cargoIconOverrides.exists(type.ident)) {
+				activeSkin.cargoIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Color")) {
-			type.color = toColor(value);
+			if(activeSkin.cargoColorOverrides.exists(type.ident)) {
+				activeSkin.cargoColorOverrides.get(type.ident, type.color);
+			}
+			else type.color = toColor(value);
 		}
 		else if(key.equals_nocase("Storage Size")) {
 			type.storageSize = toDouble(value);

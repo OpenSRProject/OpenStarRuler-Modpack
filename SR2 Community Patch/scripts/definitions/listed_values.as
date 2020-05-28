@@ -1,3 +1,4 @@
+import skins;
 import hooks;
 import buildings;
 from buildings import IBuildingHook;
@@ -117,7 +118,7 @@ class ShowValue : ListedValue {
 	Argument color(AT_Color, EMPTY_DEFAULT, doc="Color of the value's name.");
 
 	bool getVariable(Object@ obj, Empire@ emp, Sprite& sprt, string& name, string& value, Color& color) const {
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 		value = standardize(this.amount.decimal, true);
 		if(suffix.str.length != 0)
@@ -150,7 +151,7 @@ class ShowAttributeValue : ListedValue {
 		if(v == 0 && hide_zero.boolean)
 			return false;
 
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 		value = standardize(v, true);
 		if(suffix.str.length != 0)
@@ -175,8 +176,8 @@ class ShowEnergyValue : ListedValue {
 		if(owner !is null && apply_penalty.boolean)
 			v *= owner.EnergyEfficiency;
 
-		sprt = icons::Energy;
-		color = colors::Energy;
+		sprt = iconWrapper.Energy;
+		color = activeSkin.Energy;
 		name = this.name.str;
 		value = toString(v, 0);
 		return true;
@@ -189,8 +190,8 @@ class ShowMoneyValue : ListedValue {
 	Argument name(AT_Locale, "#RESOURCE_MONEY", doc="Name of the value.");
 
 	bool getVariable(Object@ obj, Empire@ emp, Sprite& sprt, string& name, string& value, Color& color) const {
-		sprt = icons::Money;
-		color = colors::Money;
+		sprt = iconWrapper.Money;
+		color = activeSkin.Money;
 		name = this.name.str;
 		value = formatMoney(amount.integer);
 		return true;
@@ -203,8 +204,8 @@ class ShowInfluenceValue : ListedValue {
 	Argument name(AT_Locale, "#RESOURCE_INFLUENCE", doc="Name of the value.");
 
 	bool getVariable(Object@ obj, Empire@ emp, Sprite& sprt, string& name, string& value, Color& color) const {
-		sprt = icons::Influence;
-		color = colors::Influence;
+		sprt = iconWrapper.Influence;
+		color = activeSkin.Influence;
 		name = this.name.str;
 		value = toString(amount.integer, 0);
 		return true;
@@ -225,8 +226,8 @@ class ShowResearchValue : ListedValue {
 		if(owner !is null && apply_efficiency.boolean)
 			v *= owner.ResearchEfficiency;
 
-		sprt = icons::Research;
-		color = colors::Research;
+		sprt = iconWrapper.Research;
+		color = activeSkin.Research;
 		name = this.name.str;
 		value = toString(v, 0);
 		return true;
@@ -239,8 +240,8 @@ class ShowLaborValue : ListedValue {
 	Argument name(AT_Locale, "#RESOURCE_LABOR", doc="Name of the value.");
 
 	bool getVariable(Object@ obj, Empire@ emp, Sprite& sprt, string& name, string& value, Color& color) const {
-		sprt = icons::Labor;
-		color = colors::Labor;
+		sprt = iconWrapper.Labor;
+		color = activeSkin.Labor;
 		name = this.name.str;
 		value = toString(amount.decimal, 0);
 		return true;
@@ -257,7 +258,7 @@ class ShowShipSizeValue : ListedValue {
 	Argument color(AT_Color, EMPTY_DEFAULT, doc="Color of the value's name.");
 
 	bool getVariable(Object@ obj, Empire@ emp, Sprite& sprt, string& name, string& value, Color& color) const {
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 
 		double v = this.amount.decimal;
@@ -289,7 +290,7 @@ class ShowTotalPopulation : ListedValue {
 		if(owner !is null)
 			v = owner.TotalPopulation;
 
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 		value = standardize(v, true);
 		if(suffix.str.length != 0)
@@ -314,7 +315,7 @@ class ShowLevelValue : ListedValue {
 		if(obj !is null && obj.hasSurfaceComponent)
 			lv = obj.level;
 
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 		value = format("[levels=$1;$22]", lv, value_color.str);
 		value += values.str;
@@ -337,8 +338,8 @@ class ShowFTLValue : ListedValue {
 		if(obj !is null && owner is null)
 			@owner = obj.owner;
 
-		sprt = icons::FTL;
-		color = colors::FTL;
+		sprt = iconWrapper.FTL;
+		color = activeSkin.FTL;
 		name = this.name.str;
 		value = standardize(v, true);
 		if(suffix.str.length != 0)

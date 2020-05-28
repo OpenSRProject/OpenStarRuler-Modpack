@@ -16,6 +16,7 @@ from overlays.ArtifactPopup import ArtifactPopup;
 from overlays.StarPopup import StarPopup;
 from overlays.AnomalyOverlay import AnomalyOverlay;
 from overlays.Quickbar import Quickbar;
+import skins;
 
 from overlays.ContextMenu import openContextMenu;
 from navigation.smart_pan import showSmartPan, hideSmartPan;
@@ -280,15 +281,15 @@ class GalaxyTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0xfcb44eff);
+		return activeSkin.GalaxyTabActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xff9600ff);
+		return activeSkin.GalaxyTabInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x8c642bff);
+		return activeSkin.GalaxyTabSeparator;
 	}
 
 	TabCategory get_category() {
@@ -296,7 +297,7 @@ class GalaxyTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabGalaxy);
+		return Sprite(getSkinMaterial("TabGalaxy"));
 	}
 
 	bool isPinned(Object@ obj) {
@@ -349,7 +350,7 @@ class GalaxyTab : Tab {
 							POPUP_DELAY - POPUP_PROGRESS_DELAY))
 					/ float(POPUP_DELAY - POPUP_PROGRESS_DELAY);
 				vec2i pos = mousePos;
-				material::RadialProgress.draw(recti_area(
+				getSkinMaterial("RadialProgress").draw(recti_area(
 					pos - vec2i(RADIAL_SIZE / 2, RADIAL_SIZE / 2),
 					vec2i(RADIAL_SIZE, RADIAL_SIZE)), Color(0x3986a0aa));
 			}

@@ -12,6 +12,7 @@ import resources;
 import research;
 import icons;
 #include "include/resource_constants.as"
+import skins;
 
 import tabs.tabbar;
 from tabs.ResearchTab import createResearchTab;
@@ -109,7 +110,7 @@ class ResourceDisplay : BaseGuiElement {
 		topColor.a = 0x30;
 
 		Color botColor = color;
-		botColor.a = 0x10;
+		botColor.a = activeSkin.ResourceDisplayBottomAlpha;
 
 		drawRectangle(AbsolutePosition, topColor, topColor, botColor, botColor);
 
@@ -121,8 +122,8 @@ class InfluenceResource : ResourceDisplay {
 	InfluenceResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::Influence;
-		addIcon(icons::Influence);
+		color = activeSkin.Influence;
+		addIcon(iconWrapper.Influence);
 		addTexts();
 	}
 
@@ -142,7 +143,7 @@ class InfluenceResource : ResourceDisplay {
 		double efficiency = playerEmpire.InfluenceEfficiency;
 		int cap = playerEmpire.InfluenceCap;
 
-		Color storedColor = colors::White;
+		Color storedColor = activeSkin.White;
 		if(efficiency < 1.0 - 0.01)
 			storedColor = Color(0xff0000ff).interpolate(storedColor, efficiency);
 
@@ -161,8 +162,8 @@ class EnergyResource : ResourceDisplay {
 	EnergyResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::Energy;
-		addIcon(icons::Energy);
+		color = activeSkin.Energy;
+		addIcon(iconWrapper.Energy);
 		addTexts();
 	}
 
@@ -196,8 +197,8 @@ class FTLResource : ResourceDisplay {
 	FTLResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::FTLResource;
-		addIcon(icons::FTL);
+		color = activeSkin.FTLResource;
+		addIcon(iconWrapper.FTL);
 		addTexts();
 	}
 
@@ -231,12 +232,12 @@ class ResearchResource : ResourceDisplay {
 	ResearchResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::Research;
-		addIcon(icons::Research);
+		color = activeSkin.Research;
+		addIcon(iconWrapper.Research);
 		addTexts();
 
 		@techBar = GuiProgressbar(value, Alignment(Left, Bottom-0.5f+3, Left+100, Bottom-4));
-		techBar.strokeColor = colors::Black;
+		techBar.strokeColor = activeSkin.Black;
 		techBar.textHorizAlign = 0.9;
 		@techIcon = GuiSprite(techBar, Alignment(Left+2, Top+0.5f-12, Left+2+24, Top+0.5f+12));
 		techIcon.noClip = true;
@@ -278,7 +279,7 @@ class ResearchResource : ResourceDisplay {
 			techBar.text = formatTime(activeTech.timer);
 			techIcon.desc = activeTech.type.icon;
 			techBar.frontColor = activeTech.type.color;
-			techBar.textColor = activeTech.type.color.interpolate(colors::White, 0.75f);
+			techBar.textColor = activeTech.type.color.interpolate(activeSkin.White, 0.75f);
 			techBar.progress = 1.0 - (activeTech.timer / activeTech.getTimeCost(playerEmpire));
 		}
 		else {
@@ -294,7 +295,7 @@ class ChangeWelfare : GuiContextOption {
 	ChangeWelfare(const string& text, uint index) {
 		value = int(index);
 		this.text = text;
-		icon = Sprite(spritesheet::ConvertIcon, index);
+		icon = Sprite(getSkinSpriteSheet("ConvertIcon"), index);
 	}
 
 	void call(GuiContextMenu@ menu) override {
@@ -315,8 +316,8 @@ class BudgetResource : ResourceDisplay {
 	BudgetResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::Money;
-		addIcon(icons::Money);
+		color = activeSkin.Money;
+		addIcon(iconWrapper.Money);
 		addTexts();
 
 		@cycleBar = GuiProgressbar(value, Alignment(Left, Bottom-0.5f+3, Left+120, Bottom-4));
@@ -327,7 +328,7 @@ class BudgetResource : ResourceDisplay {
 
 		@welfareButton = GuiButton(value, Alignment(Right-84+40-25, Top, Width=50, Height=24));
 		@welfareIcon = GuiSprite(welfareButton, Alignment(Left+8, Top-5, Right-8, Bottom+5),
-				Sprite(spritesheet::ConvertIcon, 0));
+				Sprite(getSkinSpriteSheet("ConvertIcon"), 0));
 
 		setMarkupTooltip(welfareButton, locale::WELFARE_TT, hoverStyle=false);
 	}
@@ -396,16 +397,16 @@ class BudgetResource : ResourceDisplay {
 
 		Color color(0xffffffff);
 		if(curBudget < 0)
-			color = Color(0xff0000ff);
+			color = activeSkin.GlobalBarDeficit;
 		else if(curBudget - bonusBudget < 0)
-			color = Color(0xff8000ff);
+			color = activeSkin.GlobalBarSemiDeficit;
 		else
 			color = Color(0xffffffff);
 
 		upperText.defaultColor = color;
 		upperText.text = formatMoney(curBudget, roundUp=false);
 
-		welfareIcon.desc = Sprite(spritesheet::ConvertIcon, playerEmpire.WelfareMode);
+		welfareIcon.desc = Sprite(getSkinSpriteSheet("ConvertIcon"), playerEmpire.WelfareMode);
 
 		//Cycle timer
 		double cycle = playerEmpire.BudgetCycle;
@@ -418,16 +419,16 @@ class BudgetResource : ResourceDisplay {
 			cycleBar.progress = timer / cycle;
 
 		if(cycleBar.progress < (1.0 / 3.0))
-			cycleBar.frontColor = colors::Money;
+			cycleBar.frontColor = activeSkin.Money;
 		else if(cycleBar.progress < (2.0 / 3.0))
-			cycleBar.frontColor = colors::Money.interpolate(colors::Red, 0.3);
+			cycleBar.frontColor = activeSkin.GlobalBarBudgetCycleEarly;
 		else
-			cycleBar.frontColor = colors::Money.interpolate(colors::Red, 0.6);
+			cycleBar.frontColor = activeSkin.GlobalBarBudgetCycleLate;
 
 		//Next budget
 		int upcoming = playerEmpire.EstNextBudget;
 		if(upcoming < 0)
-			nextBudget.color = Color(0xbb0000ff);
+			nextBudget.color = activeSkin.GlobalBarUpcomingDeficit;
 		else
 			nextBudget.color = Color(0xbbbbbbff);
 		nextBudget.text = formatMoney(upcoming);
@@ -438,7 +439,7 @@ class BudgetResource : ResourceDisplay {
 
 class DeployTarget : ObjectTargeting {
 	DeployTarget() {
-		icon = icons::Defense;
+		icon = iconWrapper.Defense;
 	}
 
 	void call(Object@ target) {
@@ -463,17 +464,18 @@ class DefenseResource : ResourceDisplay {
 	DefenseResource(IGuiElement@ parent, Alignment@ align) {
 		super(parent, align);
 
-		color = colors::Defense;
-		addIcon(icons::Defense);
+		color = activeSkin.Defense;
+		addIcon(iconWrapper.Defense);
 		addTexts();
 
 		@bar = GuiProgressbar(value, Alignment(Left, Bottom-0.5f+3, Left+100, Bottom-4));
-		bar.frontColor = colors::Defense;
+		bar.frontColor = activeSkin.Defense;
 		bar.font = FT_Small;
 		bar.visible = false;
 
 		@button = GuiButton(value, Alignment(Left+70, Top+2, Left+100, Top+28));
-		GuiSprite(button, Alignment().padded(-2), icons::Strength);
+		button.color = activeSkin.GlobalBarDefenseButton;
+		GuiSprite(button, Alignment().padded(-2), iconWrapper.Strength);
 		button.visible = false;
 		setMarkupTooltip(button, locale::TT_DEPLOY);
 	}

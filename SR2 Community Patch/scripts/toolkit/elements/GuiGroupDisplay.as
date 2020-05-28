@@ -1,5 +1,6 @@
 #section disable menu
 #section client
+import skins;
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
 import elements.GuiIconGrid;
@@ -99,7 +100,7 @@ class GuiGroupDisplay : GuiIconGrid {
 
 	void drawLeader(const recti& pos) {
 		if(obj is leader)
-			spritesheet::ShipIconMods.draw(0, pos.padded(2, -2, 2, -2));
+			getSkinSpriteSheet("ShipIconMods").draw(0, pos.padded(2, -2, 2, -2));
 
 		Ship@ ship = cast<Ship>(leader);
 		if(ship !is null) {
@@ -113,7 +114,7 @@ class GuiGroupDisplay : GuiIconGrid {
 			type.icon.draw(pos.padded(4, 0, 4, 0));
 		}
 
-		spritesheet::ShipIconMods.draw(1, pos.padded(6, -2, 0, -2));
+		getSkinSpriteSheet("ShipIconMods").draw(1, pos.padded(6, -2, 0, -2));
 	}
 
 	void drawGroup(GroupData@ dat, const recti& pos) {
@@ -142,11 +143,11 @@ class GuiGroupDisplay : GuiIconGrid {
 
 		Ship@ cur = cast<Ship>(obj);
 		if(cur !is null && cur.blueprint.design is dat.dsg)
-			spritesheet::ShipIconMods.draw(0, pos.padded(-2, -2, 6, -2));
+			getSkinSpriteSheet("ShipIconMods").draw(0, pos.padded(-2, -2, 6, -2));
 
 		dat.dsg.icon.draw(pos.padded(0, 0, 8, 0), dat.dsg.color);
 		ft.draw(pos=pos.padded(-1), text=num, ellipsis=locale::SHORT_ELLIPSIS,
-				color=tcol, horizAlign=0.9, vertAlign=1.0, stroke=colors::Black);
+				color=tcol, horizAlign=0.9, vertAlign=1.0, stroke=activeSkin.Black);
 	}
 
 	void drawElement(uint index, const recti& pos) override {

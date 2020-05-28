@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
 import elements.GuiMarkupText;
@@ -65,7 +66,7 @@ class SettingsPage {
 			@align = nextAlignment();
 		GuiText ele(cur, align, title);
 		ele.font = font;
-		ele.stroke = colors::Black;
+		ele.stroke = activeSkin.Black;
 		return ele;
 	}
 

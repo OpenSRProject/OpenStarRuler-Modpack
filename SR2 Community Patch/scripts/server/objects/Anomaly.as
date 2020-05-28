@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import regions.regions;
 import saving;
@@ -252,17 +253,17 @@ tidy class AnomalyScript {
 		MeshDesc mesh;
 		if(type !is null) {
 			@mesh.model = getModel(type.modelName);
-			@mesh.material = getMaterial(type.matName);
+			@mesh.material = getSkinMaterial(type.matName);
 		}
 		else {
 			@mesh.model = model::Debris;
-			@mesh.material = material::Asteroid;
+			@mesh.material = getSkinMaterial("Asteroid");
 		}
 		mesh.memorable = true;
 		bindMesh(obj, mesh);
 
 		@icon = StrategicIconNode();
-		icon.establish(obj, 0.0225, spritesheet::AnomalyIcons, 0);
+		icon.establish(obj, 0.0225, getSkinSpriteSheet("AnomalyIcons"), 0);
 		icon.memorable = true;
 		
 		if(obj.region !is null) {

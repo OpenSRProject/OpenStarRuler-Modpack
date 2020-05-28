@@ -1,3 +1,4 @@
+import skins;
 import planet_types;
 
 from planets.PlanetSurface import preparePlanetShader;
@@ -18,8 +19,8 @@ final class MoonData {
 
 final class PlanetNodeScript {
 	bool Colonized = false;
-	const Material@ emptyMat = material::ProceduralPlanet;
-	const Material@ colonyMat = material::ProceduralPlanet;
+	const Material@ emptyMat = getSkinMaterial("ProceduralPlanet");
+	const Material@ colonyMat = getSkinMaterial("ProceduralPlanet");
 	const Material@ atmosMat;
 	const Model@ planetModel;
 	PlanetSpecial special = PS_None;
@@ -83,7 +84,7 @@ final class PlanetNodeScript {
 		ringMax = max(1.0 - ((1.0 - ringMin) * double(outer)/1024.0), ringMin + 0.1);
 		ringAngle = pi * (-0.07 + (0.14 * double(angle)/64.0));
 		
-		@ringMat = getMaterial("PlanetRing" + (1 + matIndex));
+		@ringMat = getSkinMaterial("PlanetRing" + (1 + matIndex));
 	}
 
 	void addMoon(Node& node, float size, uint style = 0) {
@@ -122,23 +123,23 @@ final class PlanetNodeScript {
 			double lodDist = node.sortDistance / (node.abs_scale * pixelSizeRatio);
 			node.applyTransform();
 
-			material::GenericPBR_RingworldOuter.switchTo();
+			getSkinMaterial("GenericPBR_RingworldOuter").switchTo();
 			model::RingworldOuter.draw(lodDist);
 
 			//Poor man's opposite direction rotation
 			applyAbsTransform(vec3d(), vec3d(1.0), node.rotation.inverted());
 			applyAbsTransform(vec3d(), vec3d(1.0), node.rotation.inverted());
-			material::GenericPBR_RingworldInner.switchTo();
+			getSkinMaterial("GenericPBR_RingworldInner").switchTo();
 			model::RingworldInner.draw(lodDist);
 			undoTransform();
 			undoTransform();
 
 			preparePlanetShader(obj);
-			getPlanetMaterial(obj, material::RingworldSurface).switchTo();
+			getPlanetMaterial(obj, getSkinMaterial("RingworldSurface")).switchTo();
 
 			model::RingworldLiving.draw(lodDist);
 
-//			material::RingworldAtmo.switchTo();
+//			getSkinMaterial("RingworldAtmo").switchTo();
 //			model::RingworldAtmosphere.draw(lodDist);
 
 			undoTransform();
@@ -171,17 +172,17 @@ final class PlanetNodeScript {
 		}
 		
 		if(special == PS_Asteroids) {
-			material::AsteroidPegmatite.switchTo();			
+			getSkinMaterial("AsteroidPegmatite").switchTo();			
 			applyAbsTransform(vec3d(2.0,2.0,2.0), vec3d(0.01), quaterniond());
 			model::Asteroid1.draw();
 			undoTransform();
 			
-			material::AsteroidMagnetite.switchTo();	
+			getSkinMaterial("AsteroidMagnetite").switchTo();	
 			applyAbsTransform(vec3d(2.3,1.5,1.95), vec3d(0.0125), quaterniond_fromAxisAngle(vec3d(0,0.32,-0.1).normalize(), 1.3));
 			model::Asteroid2.draw();
 			undoTransform();
 			
-			material::AsteroidTonalite.switchTo();
+			getSkinMaterial("AsteroidTonalite").switchTo();
 			applyAbsTransform(vec3d(2.4,2.8,2.1), vec3d(0.008), quaterniond_fromAxisAngle(vec3d(1).normalize(), 0.782));
 			model::Asteroid3.draw();
 			undoTransform();
@@ -225,7 +226,7 @@ final class PlanetNodeScript {
 				vec3d offset = quaterniond_fromAxisAngle(vec3d_up(), angle) * vec3d_front(distance * node.abs_scale);
 
 				applyTransform(node.abs_position + offset, vec3d(dat.size), quaterniond_fromAxisAngle(vec3d_up(), rot));
-				material::ProceduralMoon.switchTo();
+				getSkinMaterial("ProceduralMoon").switchTo();
 				model::Moon_Sphere_max.draw(node.sortDistance / (dat.size * pixelSizeRatio));
 				undoTransform();
 			}

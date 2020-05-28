@@ -21,6 +21,7 @@ import editor.locale;
 from research import getResearchClass;
 from gui import animate_time, navigateInto, animate_speed, animate_remove, animate_snap;
 from tabs.tabbar import newTab, switchToTab, tabs, browseTab;
+import skins;
 
 Tab@ createResearchTab() {
 	return ResearchTab();
@@ -55,9 +56,9 @@ class TechDisplay : BaseGuiElement {
 		super(parent, recti());
 
 		@description = GuiMarkupText(this, Alignment(Left+0.05f, Top+0.17f, Right-0.05f, Bottom-0.05f));
-		description.defaultStroke = colors::Black;
+		description.defaultStroke = activeSkin.Black;
 		@cost = GuiMarkupText(this, Alignment(Left+0.05f, Bottom-0.25f, Right-0.05f, Bottom-0.05f));
-		cost.defaultStroke = colors::Black;
+		cost.defaultStroke = activeSkin.Black;
 		@timer = GuiProgressbar(this, Alignment(Left+0.25f, Bottom-0.25f, Right-0.25f, Bottom-0.05f));
 		timer.visible = false;
 		noClip = true;
@@ -143,12 +144,12 @@ class TechDisplay : BaseGuiElement {
 				if(costText.length != 0)
 					costText = format(" [color=#888]$1[/color] ", locale::RESEARCH_COST_OR)+costText;
 				costText = format("[img=$1;$4/][color=$2][b]$3[/b][/color]",
-					getSpriteDesc(icons::Research), toString(colors::Research),
+					getSpriteDesc(iconWrapper.Research), toString(activeSkin.Research),
 					toString(pointCost, 0), (haveSecondary || node.type.cls < Tech_Unlock)?"20":"26")+costText;
 			}
 
 			if(!haveSecondary && node.type.cls >= Tech_Unlock)
-				cost.defaultFont = FT_Medium;
+				cost.defaultFont = activeSkin.ResearchTabUnlockWithoutStudy;
 			else
 				cost.defaultFont = FT_Normal;
 			cost.text = format("[center]$1[/center]", costText);
@@ -192,7 +193,7 @@ class TechDisplay : BaseGuiElement {
 			relPos.y = double(relPos.y) / zoom;
 			if(HeraldsUI) {
 				if(node.type !is null) {
-					if(!spritesheet::TechBGs.isPixelActive(baseIndex, relPos))
+					if(!getSkinSpriteSheet("TechBGs").isPixelActive(baseIndex, relPos))
 						return null;
 				}
 			}
@@ -215,15 +216,15 @@ class TechDisplay : BaseGuiElement {
 	const SpriteSheet@ get_techBase() {
 		if(node.type !is null) {
 			if(node.type.cls == Tech_Boost)
-				return spritesheet::TechBoost;
+				return getSkinSpriteSheet("TechBoost");
 			if(node.type.cls == Tech_Unlock)
-				return spritesheet::TechUnlock;
+				return getSkinSpriteSheet("TechUnlock");
 			if(node.type.cls == Tech_Secret)
-				return spritesheet::TechSecret;
+				return getSkinSpriteSheet("TechSecret");
 			if(node.type.cls == Tech_Keystone)
-				return spritesheet::TechKeystone;
+				return getSkinSpriteSheet("TechKeystone");
 		}
-		return spritesheet::TechBase;
+		return getSkinSpriteSheet("TechBase");
 	}
 
 	void cacheGrid(TechnologyGrid& grid) {
@@ -248,10 +249,10 @@ class TechDisplay : BaseGuiElement {
 				auto@ other = tab.getAdjacent(this, i);
 				if(other !is null && other.visible) {
 					Color beamColor = Color(0xffffffff);
-					const Material@ mat = material::LockedResearchBeam;
+					const Material@ mat = getSkinMaterial("LockedResearchBeam");
 					if((other.node.available && node.bought) || (node.available && other.node.bought)) {
-						@mat = material::ResearchBeam;
-						beamColor = Color(0xadccc9ff);
+						@mat = getSkinMaterial("ResearchBeam");
+						beamColor = activeSkin.ResearchTabBeam;
 					}
 					else {
 						beamColor = Color(0xccc5c2ff);
@@ -279,15 +280,15 @@ class TechDisplay : BaseGuiElement {
 
 
 		if(HeraldsUI) {
-			Sprite base(spritesheet::TechBGs, baseIndex);
-			Sprite overlay(spritesheet::TechOverlays, baseIndex);
+			Sprite base(getSkinSpriteSheet("TechBGs"), baseIndex);
+			Sprite overlay(getSkinSpriteSheet("TechOverlays"), baseIndex);
 
 			vec2i size = AbsolutePosition.size;
 			double progress = 1.0;
 
 			//Draw the base icon
-			Color baseColor = node.type.color;
-			Color iconColor = colors::White;
+			Color baseColor = activeSkin.ResearchTabHeraldsBase(node.type.color);
+			Color iconColor = activeSkin.White;
 
 			if(node.type.cls == Tech_Special) {
 				iconColor = Color(0xffffffff);
@@ -295,22 +296,22 @@ class TechDisplay : BaseGuiElement {
 			}
 			else if(node.unlocked) {
 				iconColor = Color(0x888888ff);
-				baseColor = Color(0x000000ff);
+				baseColor = activeSkin.ResearchTabHeraldsBaseUnlocked;
 			}
 			else if(node.bought || node.queued) {
 				iconColor = Color(0xffffffff);
-				baseColor = baseColor.interpolate(Color(0xffffffff), 0.75);
+				baseColor = baseColor.interpolate(Color(0xffffffff), activeSkin.ResearchTabHeraldsBaseBoughtInterpolator);
 			}
 			else if(canUnlock || highlight) {
 				iconColor = Color(0xffffffff);
-				baseColor = baseColor.interpolate(Color(0xaaaaaaff), 0.35);
+				baseColor = baseColor.interpolate(activeSkin.ResearchTabHeraldsBaseHighlight, activeSkin.ResearchTabHeraldsBaseHighlightInterpolator);
 			}
 			else {
 				if(hovered || selected)
 					iconColor = Color(0xffffffff);
 				else
-					iconColor = Color(0x555555ff);
-				baseColor = baseColor.interpolate(Color(0x333333ff), 0.95);
+					iconColor = activeSkin.ResearchTabHeraldsBaseLockedIcon;
+				baseColor = activeSkin.ResearchTabHeraldsBaseLocked(baseColor);
 			}
 
 			if(highlight) {
@@ -327,12 +328,12 @@ class TechDisplay : BaseGuiElement {
 
 			if(selected) {
 				shader::FACTOR = 0.5;
-				overlay.draw(AbsolutePosition.padded(floor(-0.08*size.x), floor(-0.08*size.y)), Color(0xffffffff));
+				overlay.draw(AbsolutePosition.padded(floor(activeSkin.ResearchTabSelectedPadding*size.x), floor(activeSkin.ResearchTabSelectedPadding*size.y)), Color(0xffffffff));
 			}
 			base.draw(AbsolutePosition, baseColor);
 			if(hovered) {
 				shader::FACTOR = 1.0;
-				overlay.draw(AbsolutePosition, node.type.color * Color(0xffffff28));
+				overlay.draw(AbsolutePosition, activeSkin.ResearchTabHoveredColor(baseColor, node.type.color) * Color(0xffffff28));
 			}
 
 			//Draw the technology icon
@@ -396,17 +397,17 @@ class TechDisplay : BaseGuiElement {
 					shader::SATURATION_LEVEL = 0.f;
 					Sprite bg = icon;
 					bg.color = Color(0xffffffff);
-					bg.draw(iconPos, colors::White, shader::Desaturate);
+					bg.draw(iconPos, activeSkin.White, shader::Desaturate);
 
 					shader::PROGRESS = timer.progress;
 					shader::DIM_FACTOR = 0.f;
-					icon.draw(iconPos, colors::White, shader::RadialDimmed);
+					icon.draw(iconPos, activeSkin.White, shader::RadialDimmed);
 				}
 				else if(node.unlocked && node.type.cls != Tech_Special) {
 					shader::SATURATION_LEVEL = 0.f;
 					Sprite bg = icon;
 					bg.color = Color(0xffffffff);
-					bg.draw(iconPos, colors::White, shader::Desaturate);
+					bg.draw(iconPos, activeSkin.White, shader::Desaturate);
 				}
 				else if(canUnlock || hovered) {
 					icon.draw(iconPos);
@@ -422,7 +423,7 @@ class TechDisplay : BaseGuiElement {
 					}
 					if(zoom < 0.6)
 						shader::SATURATION_LEVEL += 0.3f;
-					icon.draw(iconPos, colors::White, shader::Desaturate);
+					icon.draw(iconPos, activeSkin.White, shader::Desaturate);
 				}
 			}
 		}
@@ -432,7 +433,7 @@ class TechDisplay : BaseGuiElement {
 			if(!canUnlock)
 				titleColor = titleColor.interpolate(Color(0x808080ff), 0.9f);
 
-			const Font@ ft = skin.getFont(FT_Subtitle);
+			const Font@ ft = skin.getFont(FT_Medium);
 			bool enough = ft.getDimension(node.type.name).x < size.width-20;
 
 			//if(!enough || node.type.cls < Tech_Unlock) {
@@ -449,7 +450,7 @@ class TechDisplay : BaseGuiElement {
 			ft.draw(
 				pos=recti_area(10,T_OFF, size.width-20,30)+absolutePosition.topLeft,
 				text=node.type.name,
-				stroke=colors::Black,
+				stroke=activeSkin.Black,
 				color=titleColor,
 				horizAlign=0.5,
 				vertAlign=0.0);
@@ -475,7 +476,7 @@ class TechTooltip : BaseGuiElement {
 		@description = GuiMarkupText(this, recti_area(12,12,TT_WIDTH-24,300));
 
 		@researchButton = GuiButton(this, Alignment(Left+0.5f-110, Bottom-52, Width=220, Height=40));
-		researchButton.color = colors::Research;
+		researchButton.color = activeSkin.Research;
 		@researchText = GuiMarkupText(researchButton, Alignment().padded(-1,8,0,4));
 		researchText.defaultFont = FT_Bold;
 
@@ -547,32 +548,32 @@ class TechTooltip : BaseGuiElement {
 			if(tied.node.queued) {
 				researchButton.visible = true;
 				researchButton.disabled = false;
-				researchButton.color = colors::Research;
+				researchButton.color = activeSkin.Research;
 				researchText.text = format("[center]$1[/center]",
 						locale::UNQUEUE_RESEARCH, toString(cost, 0),
-						getSpriteDesc(icons::Research), toString(colors::Research));
+						getSpriteDesc(iconWrapper.Research), toString(activeSkin.Research));
 			}
 			else if(tied.node.available && canUnlock && playerEmpire.ResearchPoints >= cost && cost > 0) {
 				researchButton.visible = true;
 				researchButton.disabled = false;
-				researchButton.color = colors::Research;
+				researchButton.color = activeSkin.Research;
 				researchText.text = format("[center]$1: [img=$3;20/][color=$4]$2[/color][/center]",
 						locale::RESOURCE_RESEARCH, toString(cost, 0),
-						getSpriteDesc(icons::Research), toString(colors::Research));
+						getSpriteDesc(iconWrapper.Research), toString(activeSkin.Research));
 			}
 			else if((tied.haveAdjQueued || tied.node.available) && tied.node.hasRequirements(playerEmpire)) {
 				researchButton.visible = true;
 				researchButton.disabled = false;
-				researchButton.color = colors::Research;
+				researchButton.color = activeSkin.Research;
 				if(cost > 0) {
 					researchText.text = format("[center]$1: [img=$3;20/][color=$4]$2[/color][/center]",
 							locale::QUEUE_RESEARCH, toString(cost, 0),
-							getSpriteDesc(icons::Research), toString(colors::Research));
+							getSpriteDesc(iconWrapper.Research), toString(activeSkin.Research));
 				}
 				else {
 					researchText.text = format("[center]$1[/center]",
 							locale::QUEUE_RESEARCH, toString(cost, 0),
-							getSpriteDesc(icons::Research), toString(colors::Research));
+							getSpriteDesc(iconWrapper.Research), toString(activeSkin.Research));
 				}
 			}
 			else {
@@ -613,7 +614,7 @@ class TechTooltip : BaseGuiElement {
 		auto cost = tied.node.getPointCost(playerEmpire);
 		if(cost > 0) {
 			desc += format("\n\n[img=$1;20/] [b]$2[/b]: [offset=200]$3[/offset]",
-					getSpriteDesc(icons::Research), locale::RESEARCH_COST, toString(cost,0));
+					getSpriteDesc(iconWrapper.Research), locale::RESEARCH_COST, toString(cost,0));
 		}
 
 		auto time = tied.node.getTimeCost(playerEmpire) / playerEmpire.ResearchUnlockSpeed;
@@ -621,7 +622,7 @@ class TechTooltip : BaseGuiElement {
 			if(cost <= 0)
 				desc += "\n";
 			desc += format("\n[img=$1;20/] [b]$2[/b]: [offset=200]$3[/offset]",
-					getSpriteDesc(icons::Duration), locale::RESEARCH_TIME, formatTime(time));
+					getSpriteDesc(iconWrapper.Duration), locale::RESEARCH_TIME, formatTime(time));
 		}
 
 		description.text = format(
@@ -671,15 +672,15 @@ class ResearchTab : Tab {
 	}
 	
 	Color get_activeColor() {
-		return Color(0xd482ffff);
+		return activeSkin.ResearchTabActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xa800ffff);
+		return activeSkin.ResearchTabInactive;
 	}
 
 	Color get_seperatorColor() {
-		return Color(0x75488dff);
+		return activeSkin.ResearchTabSeparator;
 	}	
 
 	TabCategory get_category() {
@@ -687,7 +688,7 @@ class ResearchTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabResearch);
+		return Sprite(getSkinMaterial("TabResearch"));
 	}
 
 	TechDisplay@ getAdjacent(TechDisplay@ from, uint adj) {
@@ -1081,7 +1082,7 @@ class ResearchEditor : ResearchTab {
 				pos.x += T_SIZE.x / 2;
 			pos -= T_SIZE / 2;
 
-			(spritesheet::TechBase+4).draw(recti_area(pos + panel.AbsolutePosition.topLeft, T_SIZE));
+			(Sprite(getSkinSpriteSheet("TechBase"), 4)).draw(recti_area(pos + panel.AbsolutePosition.topLeft, T_SIZE));
 		}
 	}
 

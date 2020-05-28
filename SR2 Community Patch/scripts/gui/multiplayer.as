@@ -1,3 +1,4 @@
+import skins;
 import dialogs.MessageDialog;
 import dialogs.InputDialog;
 import dialogs.Dialog;
@@ -171,7 +172,7 @@ class MPChatWindow : GuiDraggable {
 		bg.titleColor = Color(0xb3fe00ff);
 
 		@closeButton = GuiButton(bg, Alignment(Right-31, Top+3, Right-5, Top+28), "X");
-		closeButton.color = colors::Red;
+		closeButton.color = activeSkin.Red;
 
 		@handle = GuiResizeHandle(this, Alignment(Right-12, Bottom-12, Right, Bottom));
 		handle.minSize = vec2i(200, 100);

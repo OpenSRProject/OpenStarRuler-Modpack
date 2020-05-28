@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
 
@@ -214,7 +215,7 @@ class GuiSpriteGrid : GuiIconGrid {
 		colors.length = 0;
 	}
 
-	void add(const Sprite& sprite, const string& tooltip = "", const Color& color = colors::White) {
+	void add(const Sprite& sprite, const string& tooltip = "", const Color& color = activeSkin.White) {
 		sprites.insertLast(sprite);
 		tooltips.insertLast(tooltip);
 		colors.insertLast(color);

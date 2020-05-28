@@ -15,6 +15,7 @@ import util.formatting;
 from obj_selection import selectObject;
 import overlays.Popup;
 from overlays.PlanetPopup import PlanetPopup;
+import skins;
 
 from overlays.ContextMenu import openContextMenu;
 from tabs.tabbar import get_ActiveTab, browseTab, popTab;
@@ -109,15 +110,15 @@ class SystemTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0xfcb44eff);
+		return activeSkin.SystemTabActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xff9600ff);
+		return activeSkin.SystemTabInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x8c642bff);
+		return activeSkin.SystemTabSeparator;
 	}
 
 	TabCategory get_category() {

@@ -17,6 +17,7 @@ from tabs.WikiTab import LinkableMarkupText;
 from community.DesignList import createCommunityDesignList;
 from community.DesignPage import createCommunityDesignPage;
 import icons;
+import skins;
 
 class CommunityHome : Tab {
 	WebData query;
@@ -51,7 +52,7 @@ class CommunityHome : Tab {
 
 		@designBG = GuiBackgroundPanel(container, Alignment(Left+29, Top+35, Left+35+600+48, Bottom-80));
 		designBG.title = locale::FEATURED_DESIGNS;
-		designBG.titleColor = colors::FTL;
+		designBG.titleColor = activeSkin.CommunityDesignBG;
 		designBG.titleHeight = 42;
 		designBG.titleFont = FT_Big;
 
@@ -59,7 +60,7 @@ class CommunityHome : Tab {
 
 		@uploadButton = GuiButton(container, Alignment(Left+34+600+48-200, Bottom-72, Width=200, Height=52), locale::UPLOAD_DESIGN);
 		uploadButton.font = FT_Bold;
-		uploadButton.setIcon(icons::Export);
+		uploadButton.setIcon(iconWrapper.Export);
 
 		@recentDesigns = GuiButton(container, Alignment(Left+30+600+48-424, Bottom-75, Width=200, Height=30), locale::RECENT_DESIGNS);
 
@@ -70,7 +71,7 @@ class CommunityHome : Tab {
 
 		@wikiBG = GuiBackgroundPanel(container, Alignment(Left+30+600+48+30, Top+30, Right-30, Bottom-30));
 		wikiBG.title = locale::COMMUNITY_WIKI;
-		wikiBG.titleColor = colors::Research;
+		wikiBG.titleColor = activeSkin.CommunityWikiBG;
 		wikiBG.titleHeight = 42;
 		wikiBG.titleFont = FT_Big;
 
@@ -158,15 +159,15 @@ class CommunityHome : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0xff83bcff);
+		return Color(0x5ce1e6ff);
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xff0077ff);
+		return Color(0x66c9ccff);
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x8d4969ff);
+		return Color(0x66c9ccff);
 	}		
 
 	TabCategory get_category() {
@@ -174,7 +175,7 @@ class CommunityHome : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabWiki);
+		return Sprite(getSkinMaterial("TabWiki"));
 	}
 
 	bool onGuiEvent(const GuiEvent& evt) {
@@ -233,13 +234,13 @@ class UploadDialog : Dialog {
 		accept.tabIndex = 100;
 		accept.disabled = true;
 		@accept.callback = this;
-		accept.color = colors::Green;
+		accept.color = activeSkin.QuestionDialogYes;
 
 		@cancel = GuiButton(bg, recti());
 		cancel.text = locale::CANCEL;
 		cancel.tabIndex = 101;
 		@cancel.callback = this;
-		cancel.color = colors::Red;
+		cancel.color = activeSkin.QuestionDialogNo;
 
 		@design = GuiDropdown(bg, Alignment(Left+12, Top+40, Right-12, Top+76));
 
@@ -260,7 +261,7 @@ class UploadDialog : Dialog {
 		description.multiLine = true;
 		description.emptyText = locale::DESIGN_DESCRIPTION_PROMPT;
 
-		addTitle(locale::UPLOAD_DESIGN, color=colors::FTL);
+		addTitle(locale::UPLOAD_DESIGN, color=activeSkin.UploadDesignTitle);
 
 		alignAcceptButtons(accept, cancel);
 		updatePosition();

@@ -1,4 +1,5 @@
 #priority init 5500
+import skins;
 
 #section game
 import saving;
@@ -264,10 +265,17 @@ void loadTraits(const string& filename) {
 			@trait.category = getTraitCategory(value, create=true);
 		}
 		else if(key.equals_nocase("Icon")) {
-			trait.icon = getSprite(value);
+			if(activeSkin.traitIconOverrides.exists(trait.ident)) {
+				activeSkin.traitIconOverrides.get(trait.ident, value);
+				trait.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else trait.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Color")) {
-			trait.color = toColor(value);
+			if(activeSkin.traitColorOverrides.exists(trait.ident)) {
+				activeSkin.traitColorOverrides.get(trait.ident, trait.color);
+			}
+			else trait.color = toColor(value);
 		}
 		else if(key.equals_nocase("Order")) {
 			trait.order = toInt(value);

@@ -1,3 +1,4 @@
+import skins;
 import systems;
 import navigation.SmartCamera;
 from navigation.elevation import getElevationIntersect, getElevation;
@@ -771,7 +772,7 @@ class BEAMS {
 	double bldCacheTime = -INFINITY;
 
 	BeamNode@ makeBeam(const Color& color) {
-		BeamNode@ beam = BeamNode(material::MoveBeam, 0.001f, vec3d(), vec3d(), true);
+		BeamNode@ beam = BeamNode(getSkinMaterial("MoveBeam"), 0.001f, vec3d(), vec3d(), true);
 		beam.visible = false;
 		beam.color = color;
 		return beam;
@@ -800,7 +801,7 @@ class BEAMS {
 		}
 	}
 
-	PlaneNode@ makePlane(const Color& color, const Material@ mat = material::RangeCircle) {
+	PlaneNode@ makePlane(const Color& color, const Material@ mat = getSkinMaterial("RangeCircle")) {
 		PlaneNode@ plane = PlaneNode(mat, 0.0);
 		plane.visible = false;
 		plane.color = color;
@@ -808,7 +809,7 @@ class BEAMS {
 	}
 
 	void updatePlane(PlaneNode@& node, const vec3d& pos, double size,
-			const Color& color, const Material@ mat = material::RangeCircle) {
+			const Color& color, const Material@ mat = getSkinMaterial("RangeCircle")) {
 		PlaneNode@ check = node;
 		if(check is null) {
 			@check = makePlane(color, mat);
@@ -888,7 +889,7 @@ class BEAMS {
 	}
 
 	PlaneNode@ addPlane(array<PlaneNode@>& planes, uint& index, const vec3d& pos, double size,
-				const Color& color, const Material@ mat = material::RangeCircle) {
+				const Color& color, const Material@ mat = getSkinMaterial("RangeCircle")) {
 		if(planes.length <= index) {
 			PlaneNode@ node;
 			updatePlane(node, pos, size, color, mat);
@@ -1306,9 +1307,9 @@ void render(double time) {
 		vec3d mpos;
 		if(getElevationIntersect(activeCamera.screenToRay(mousePos), mpos)) {
 			double size = activeCamera.distance / 80.0;
-			renderBillboard(material::PlanetImage, mpos, size);
+			renderBillboard(getSkinMaterial("PlanetImage"), mpos, size);
 			mpos.y = getElevation(mpos.x, mpos.z);
-			renderBillboard(material::SmallLogo, mpos, size);
+			renderBillboard(getSkinMaterial("SmallLogo"), mpos, size);
 		}
 	}
 }

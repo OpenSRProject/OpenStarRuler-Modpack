@@ -1,3 +1,4 @@
+import skins;
 #section server
 import void addDialogue(Dialogue@ diag) from "scenario";
 #section all
@@ -111,7 +112,7 @@ class Dialogue : Serializable {
 		msg >> title >> text >> proceedText;
 		string desc;
 		msg >> desc;
-		icon = getSprite(desc);
+		icon = getSkinSprite(desc);
 		uint cnt = msg.readSmall();
 		objectives.length = cnt;
 		for(uint i = 0, cnt = objectives.length; i < cnt; ++i) {
@@ -248,7 +249,7 @@ class Objective : Serializable {
 		msg >> title >> text;
 		string desc;
 		msg >> desc;
-		icon = getSprite(desc);
+		icon = getSkinSprite(desc);
 		msg >> skippable;
 	}
 };

@@ -1,5 +1,6 @@
 #priority init 100
 #priority draw 100
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiButton;
 import elements.GuiListbox;
@@ -647,13 +648,13 @@ void draw() {
 
 		auto@ ft = gui_root.skin.getFont(FT_Big);
 		ft.draw(pos=recti_area(vec2i(),screenSize), horizAlign=0.5, vertAlign=0.5,
-			stroke=colors::Black, color=colors::Green, text=txt);
+			stroke=activeSkin.Black, color=colors::Green, text=txt);
 	}
 	else if(inGalaxyCreation && !mpClient) {
 		gui_root.visible = false;
 		auto@ ft = gui_root.skin.getFont(FT_Big);
 		ft.draw(pos=recti_area(vec2i(),screenSize), horizAlign=0.5, vertAlign=0.5,
-			stroke=colors::Black, color=colors::Green, text=locale::MENU_LOADING);
+			stroke=activeSkin.Black, color=colors::Green, text=locale::MENU_LOADING);
 	}
 	else {
 		gui_root.visible = true;
@@ -665,7 +666,7 @@ void draw() {
 			area += menu_container.absolutePosition.topLeft;
 
 			area = area.aspectAligned(float(size.x) / float(size.y), 0.5, 0.5);
-			logo.draw(area, colors::White);
+			logo.draw(area, activeSkin.White);
 		}
 	}
 }

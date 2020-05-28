@@ -1,3 +1,4 @@
+#priority init 9990
 import elements.BaseGuiElement;
 import elements.GuiDraggable;
 import elements.GuiSkinElement;
@@ -5,13 +6,13 @@ import elements.GuiText;
 import elements.GuiButton;
 import dialogs.IDialog;
 from gui import navigateInto;
-
+import skins;
 from dialog import addDialog, closeDialog, closeDialogs;
 
 const int DIALOG_BUTTON_HEIGHT = 32;
 const int DIALOG_PADDING = 7;
 const int DIALOG_BUTTON_ROW = DIALOG_BUTTON_HEIGHT + DIALOG_PADDING;
-const Color DIALOG_TITLE_COLOR(0x00bffeff);
+Color DIALOG_TITLE_COLOR;
 
 class Dialog : IDialog, IGuiCallback {
 	bool Closed;
@@ -41,11 +42,11 @@ class Dialog : IDialog, IGuiCallback {
 		updatePosition();
 	}
 
-	void addTitle(const string& title, FontType font = FT_Bold, bool closeButton = true, const Color& color = Color(0x00bffeff)) {
+	void addTitle(const string& title, FontType font = FT_Bold, bool closeButton = true, const Color& color = activeSkin.DialogDefaultTitleColor) {
 		if(titleBox is null)
-			@titleBox = GuiSkinElement(window, recti_area(vec2i(1, 1), vec2i(width-3, 26)), SS_WindowTitle);
+			@titleBox = GuiSkinElement(window, recti_area(vec2i(1, 1), activeSkin.DialogTitleBoxSize(width)), SS_WindowTitle);
 		else
-			titleBox.size = vec2i(width-3, 26);
+			titleBox.size = activeSkin.DialogTitleBoxSize(width);
 		if(titleText is null) {
 			@titleText = GuiText(window, recti_area(vec2i(8, 4), vec2i(width-16, 22)));
 			titleText.font = font;
@@ -117,7 +118,7 @@ class Dialog : IDialog, IGuiCallback {
 		pos = recti_centered(pos, vec2i(width, height));
 
 		if(titleBox !is null)
-			titleBox.size = vec2i(width-3, 26);
+			titleBox.size = activeSkin.DialogTitleBoxSize(width);
 		window.position = pos.topLeft;
 		window.size = pos.size;
 		window.updateAbsolutePosition();
@@ -163,4 +164,8 @@ void alignAcceptButtons(BaseGuiElement@ accept, BaseGuiElement@ cancel) {
 
 		@cancel.alignment = Alignment(Right-0.6f, Bottom-0.0f-DIALOG_BUTTON_ROW, Right-0.3f-DIALOG_PADDING, Bottom-0.0f-DIALOG_PADDING);
 	}
+}
+
+void init() {
+	DIALOG_TITLE_COLOR = activeSkin.DialogTitleColor;
 }

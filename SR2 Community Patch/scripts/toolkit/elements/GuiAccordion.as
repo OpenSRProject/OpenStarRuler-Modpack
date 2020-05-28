@@ -2,6 +2,7 @@ import elements.BaseGuiElement;
 import elements.GuiButton;
 import elements.GuiPanel;
 import elements.GuiText;
+import skins;
 
 export GuiAccordion;
 
@@ -41,14 +42,13 @@ class GuiAccordion : BaseGuiElement {
 	}
 
 	uint addSection(const string& header, IGuiElement@ item) {
-		GuiButton btn(this, recti(0, 0, 100, 29), header);
+		GuiButton btn(this, activeSkin.AccordionButtonSize, header);
 		btn.font = FT_Medium;
 		btn.style = SS_AccordionHeader;
-		btn.horizAlign = 0.0;
-
+		btn.horizAlign = activeSkin.AccordionButtonAlign;
 		if(!clickableHeaders) {
 			btn.disabled = true;
-			btn.textColor = colors::White;
+			btn.textColor = activeSkin.White;
 		}
 
 		return addSection(btn, item);

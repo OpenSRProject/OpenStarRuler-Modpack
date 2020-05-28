@@ -1,3 +1,4 @@
+import skins;
 import overlays.Popup;
 import elements.GuiText;
 import elements.GuiButton;
@@ -43,19 +44,19 @@ class OrbitalPopup : Popup {
 		@health = GuiProgressbar(this, Alignment(Left+3, Bottom-56, Right-4, Bottom-30));
 		health.tooltip = locale::HEALTH;
 
-		GuiSprite healthIcon(health, Alignment(Left+2, Top+1, Width=24, Height=24), icons::Health);
+		GuiSprite healthIcon(health, Alignment(Left+2, Top+1, Width=24, Height=24), iconWrapper.Health);
 
 		@strength = GuiProgressbar(this, Alignment(Left+3, Bottom-30, Right-4, Bottom-4));
 		strength.tooltip = locale::FLEET_STRENGTH;
 
-		GuiSprite strIcon(strength, Alignment(Left+2, Top+1, Width=24, Height=24), icons::Strength);
+		GuiSprite strIcon(strength, Alignment(Left+2, Top+1, Width=24, Height=24), iconWrapper.Strength);
 
 		@objView = Gui3DObject(this, recti(34, 24, 156, 98));
 
 		@cargo = GuiCargoDisplay(objView, Alignment(Left, Top, Right, Top+25));
 
 		@defIcon = GuiSprite(this, Alignment(Right-44, Top+25, Width=40, Height=40));
-		defIcon.desc = icons::Defense;
+		defIcon.desc = iconWrapper.Defense;
 		setMarkupTooltip(defIcon, locale::TT_IS_DEFENDING);
 		defIcon.visible = false;
 
@@ -201,9 +202,9 @@ class OrbitalPopup : Popup {
 		else
 			name.font = FT_Normal;
 		if(obj.isDisabled)
-			name.color = colors::Red;
+			name.color = activeSkin.Red;
 		else
-			name.color = colors::White;
+			name.color = activeSkin.White;
 
 		//Update hp display
 		double curHP = obj.health + obj.armor;

@@ -1,4 +1,5 @@
 #priority init 6000
+import skins;
 import settings.game_settings;
 import traits;
 
@@ -92,7 +93,7 @@ uint getEmpireFlagCount() {
 }
 
 export EmpireWeaponSkin, getEmpireWeaponSkin, getEmpireWeaponSkinCount;
-array<EmpireWeaponSkin@> skins;
+array<EmpireWeaponSkin@> weaponSkins;
 
 final class EmpireWeaponSkin {
 	uint id;
@@ -101,13 +102,13 @@ final class EmpireWeaponSkin {
 };
 
 EmpireWeaponSkin@ getEmpireWeaponSkin(uint id) {
-	if(id >= skins.length)
+	if(id >= weaponSkins.length)
 		return null;
-	return skins[id];
+	return weaponSkins[id];
 }
 
 uint getEmpireWeaponSkinCount() {
-	return skins.length;
+	return weaponSkins.length;
 }
 
 export RacePreset, getRacePreset, getRacePresetCount;
@@ -242,7 +243,7 @@ class EmpirePortraitCreation {
 	}
 
 	void randomize(EmpireSettings& settings, bool fillOnly = false) {
-		if(settings.color.color == colors::White.color || !fillOnly) {
+		if(settings.color.color == activeSkin.White.color || !fillOnly) {
 			if(availColors.length == 0)
 				availColors = colors;
 
@@ -301,132 +302,139 @@ void load(const string& filename) {
 	EmpireColor@ prevColor;
 	EmpireWeaponSkin@ skin;
 	RacePreset@ prevPreset;
+	string key, value;
 	
 	while(file++) {
-		if(file.key.equals_nocase("Color")) {
+		key = file.key;
+		value = file.value;
+		if(key.equals_nocase("Color")) {
 			EmpireColor col;
 			col.id = colors.length;
-			col.color = toColor(file.value);
+			col.color = toColor(value);
 
 			@prevColor = col;
 			colors.insertLast(col);
 		}
-		else if(file.key.equals_nocase("WeaponSkin")) {
+		else if(key.equals_nocase("WeaponSkin")) {
 			if(file.indent > 0 && prevPreset !is null) {
-				prevPreset.weaponSkin = file.value;
+				prevPreset.weaponSkin = value;
 			}
 			else {
 				@skin = EmpireWeaponSkin();
-				skin.id = skins.length;
-				skin.ident = file.value;
+				skin.id = weaponSkins.length;
+				skin.ident = value;
 
-				skins.insertLast(skin);
+				weaponSkins.insertLast(skin);
 			}
 		}
-		else if(file.key.equals_nocase("Preset")) {
+		else if(key.equals_nocase("Preset")) {
 			RacePreset preset;
 			preset.id = presets.length;
-			preset.ident = file.value;
+			preset.ident = value;
 
 			@prevPreset = preset;
 			presets.insertLast(preset);
 		}
-		else if(file.key.equals_nocase("Name")) {
+		else if(key.equals_nocase("Name")) {
 			if(prevPreset !is null) {
-				prevPreset.name = localize(file.value);
+				prevPreset.name = localize(value);
 			}
 			else {
 				file.error("Name outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("Description")) {
+		else if(key.equals_nocase("Description")) {
 			if(prevPreset !is null) {
-				prevPreset.description = localize(file.value);
+				prevPreset.description = localize(value);
 			}
 			else {
 				file.error("Description outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("Tagline")) {
+		else if(key.equals_nocase("Tagline")) {
 			if(prevPreset !is null) {
-				prevPreset.tagline = localize(file.value);
+				prevPreset.tagline = localize(value);
 			}
 			else {
 				file.error("Tagline outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("Hard")) {
+		else if(key.equals_nocase("Hard")) {
 			if(prevPreset !is null) {
-				prevPreset.isHard = toBool(file.value);
+				prevPreset.isHard = toBool(value);
 			}
 			else {
 				file.error("Hard outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("DLC")) {
+		else if(key.equals_nocase("DLC")) {
 			if(prevPreset !is null) {
-				prevPreset.dlc = file.value;
+				prevPreset.dlc = value;
 			}
 			else {
 				file.error("DLC outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("AI Support")) {
+		else if(key.equals_nocase("AI Support")) {
 			if(prevPreset !is null) {
-				prevPreset.aiSupport = toBool(file.value);
+				prevPreset.aiSupport = toBool(value);
 			}
 			else {
 				file.error("AI Support outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("Lore")) {
+		else if(key.equals_nocase("Lore")) {
 			if(prevPreset !is null) {
-				prevPreset.lore = localize(file.value);
+				prevPreset.lore = localize(value);
 			}
 			else {
-				file.error("TaLore outside Preset block.");
+				file.error("Lore outside Preset block.");
 			}
 		}
-		else if(file.key.equals_nocase("Icon")) {
+		else if(key.equals_nocase("Icon")) {
 			if(skin !is null) {
-				skin.icon = getSprite(file.value);
+				if(activeSkin.weaponSkinIconOverrides.exists(skin.ident)) {
+					activeSkin.weaponSkinIconOverrides.get(skin.ident, value);
+					skin.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+				}
+				else skin.icon = getSkinSprite(value);
 			}
 			else {
 				file.error("Icon outside WeaponSkin block.");
 			}
 		}
-		else if(file.key.equals_nocase("Portrait")) {
+		else if(key.equals_nocase("Portrait")) {
 			if(file.indent > 0 && prevPreset !is null) {
-				prevPreset.portrait = file.value;
+				prevPreset.portrait = value;
 			}
 		}
-		else if(file.key.equals_nocase("Background")) {
+		else if(key.equals_nocase("Background")) {
 			if(prevColor !is null) {
-				prevColor.backgroundDef = file.value;
-				@prevColor.background = getMaterial(file.value);
+				prevColor.backgroundDef = value;
+				@prevColor.background = getSkinMaterial(value);
 			}
 			else {
 				file.error("Background outside Color block.");
 			}
 		}
-		else if(file.key.equals_nocase("Shipset")) {
+		else if(key.equals_nocase("Shipset")) {
 			if(prevPreset is null) {
 				file.error("Shipset outside Preset block.");
 			}
 			else {
-				prevPreset.shipset = file.value;
+				prevPreset.shipset = value;
 			}
 		}
-		else if(file.key.equals_nocase("Trait")) {
+		else if(key.equals_nocase("Trait")) {
 			if(prevPreset is null) {
 				file.error("Trait outside Preset block.");
 			}
 			else {
-				auto@ trait = getTrait(file.value);
+				auto@ trait = getTrait(value);
 				if(trait !is null)
 					prevPreset.traits.insertLast(trait);
 				else
-					file.error("Could not find trait: "+file.value);
+					file.error("Could not find trait: "+value);
 			}
 		}
 	}

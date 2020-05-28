@@ -16,6 +16,7 @@ from targeting.Hyperdrive import targetHyperdrive;
 from targeting.Jumpdrive import targetJumpdrive;
 from targeting.Fling import targetFling;
 from targeting.Slipstream import targetSlipstream;
+import skins;
 
 import InfoBar@ makeOrbitalInfoBar(IGuiElement@ parent, Object@ obj) from "overlays.OrbitalInfoBar";
 import InfoBar@ makePlanetInfoBar(IGuiElement@ parent, Object@ obj) from "overlays.PlanetInfoBar";
@@ -191,12 +192,12 @@ class AbilityAction : BarAction {
 
 		if(expanded || independent) {
 			if(disabled)
-				color = colors::Red;
+				color = activeSkin.Red;
 			else
-				color = colors::Energy;
+				color = activeSkin.Energy;
 		}
 		else
-			color = colors::White;
+			color = activeSkin.White;
 	}
 
 	void call() override {
@@ -245,8 +246,8 @@ class AbilityAction : BarAction {
 				else
 					shader::PROGRESS = 0.f;
 				shader::DIM_FACTOR = 0.2f;
-				abl.type.icon.draw(pos.aspectAligned(abl.type.icon.aspect), color=colors::White, shader=shader::RadialDimmed);
-				ft.draw(pos=pos, text=formatShortTime(abl.cooldown), color=colors::Red, horizAlign=0.5, vertAlign=1.0);
+				abl.type.icon.draw(pos.aspectAligned(abl.type.icon.aspect), color=activeSkin.White, shader=shader::RadialDimmed);
+				ft.draw(pos=pos, text=formatShortTime(abl.cooldown), color=activeSkin.Red, horizAlign=0.5, vertAlign=1.0);
 			}
 			else if(abl.type.cooldown > 0) {
 				abl.type.icon.draw(pos.aspectAligned(abl.type.icon.aspect));
@@ -269,7 +270,7 @@ class AbilityAction : BarAction {
 				ft.draw(pos=pos, horizAlign=0.0, vertAlign=0.1, text=locale::ACTIVATE);
 
 				string txt = format("$1 $2", toString(cost, 0), locale::RESOURCE_ENERGY);
-				ft.draw(pos=pos, horizAlign=0.5, vertAlign=0.85, text=txt, color=colors::Energy);
+				ft.draw(pos=pos, horizAlign=0.5, vertAlign=0.85, text=txt, color=activeSkin.Energy);
 			}
 		}
 		else if(independent) {
@@ -284,7 +285,7 @@ class AbilityAction : BarAction {
 
 class SupportsAction : BarAction {
 	void init() override {
-		icon = icons::ManageSupports;
+		icon = iconWrapper.ManageSupports;
 		tooltip = locale::TT_MANAGE_PLANET_SUPPORTS;
 	}
 
@@ -296,7 +297,7 @@ class SupportsAction : BarAction {
 
 class ConstructionAction : BarAction {
 	void init() override {
-		icon = icons::Labor;
+		icon = iconWrapper.Labor;
 		tooltip = locale::TT_OPEN_CONSTRUCTION;
 	}
 
@@ -315,11 +316,11 @@ class ScoutAction : BarAction {
 
 	void init() override {
 		if(useFTL) {
-			icon = icons::HyperExplore;
+			icon = iconWrapper.HyperExplore;
 			tooltip = locale::TT_EXPLORE_FTL;
 		}
 		else {
-			icon = icons::Explore;
+			icon = iconWrapper.Explore;
 			tooltip = locale::TT_EXPLORE;
 		}
 	}
@@ -406,19 +407,19 @@ class AutoModeAction : ModeAction {
 	AutoModeAction() {
 		names.insertLast(locale::HOLD_POSITION);
 		descriptions.insertLast(locale::HOLD_POSITION_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+12);
+		icons.insertLast(activeSkin.InfoBarHoldPosition);
 
 		names.insertLast(locale::AREA_BOUND);
 		descriptions.insertLast(locale::AREA_BOUND_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+13);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 13));
 
 		names.insertLast(locale::REGION_BOUND);
 		descriptions.insertLast(locale::REGION_BOUND_DESC);
-		icons.insertLast((spritesheet::ActionBarIcons+13)*Color(0xff8080ff));
+		icons.insertLast(activeSkin.InfoBarRegionBound);
 
 		names.insertLast(locale::HOLD_FIRE);
 		descriptions.insertLast(locale::HOLD_FIRE_DESC);
-		icons.insertLast(Sprite(material::Minus));
+		icons.insertLast(activeSkin.InfoBarHoldFire);
 	}
 
 	uint get() override {
@@ -447,11 +448,11 @@ class EngageBehaveAction : ModeAction {
 	EngageBehaveAction() {
 		names.insertLast(locale::BEH_CLOSE_IN);
 		descriptions.insertLast(locale::BEH_CLOSE_IN_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+16);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 16));
 
 		names.insertLast(locale::BEH_KEEP_DISTANCE);
 		descriptions.insertLast(locale::BEH_KEEP_DISTANCE_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+17);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 17));
 	}
 
 	uint get() override {
@@ -467,19 +468,19 @@ class EngageTypeAction : ModeAction {
 	EngageTypeAction() {
 		names.insertLast(locale::ENG_FLAGSHIP_MIN);
 		descriptions.insertLast(locale::ENG_FLAGSHIP_MIN_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+20);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 20));
 
 		names.insertLast(locale::ENG_FLAGSHIP_MAX);
 		descriptions.insertLast(locale::ENG_FLAGSHIP_MAX_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+21);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 21));
 
 		names.insertLast(locale::ENG_SUPPORT_MIN);
 		descriptions.insertLast(locale::ENG_SUPPORT_MIN_DESC);
-		icons.insertLast(spritesheet::ActionBarIcons+22);
+		icons.insertLast(Sprite(getSkinSpriteSheet("ActionBarIcons"), 22));
 
 		names.insertLast(locale::ENG_RAIDING_ONLY);
 		descriptions.insertLast(locale::ENG_RAIDING_ONLY_DESC);
-		icons.insertLast(Sprite(spritesheet::ActionBarIcons, 22, Color(0xff0000ff)));
+		icons.insertLast(activeSkin.InfoBarRaidingOnly);
 	}
 
 	uint get() override {
@@ -618,13 +619,13 @@ class ActionBar : BaseGuiElement {
 
 	void addFTL(Object@ obj) {
 		if(canHyperdrive(obj))
-			add(TrivialAction(targetHyperdrive, locale::TT_HYPERDRIVE, icons::Hyperdrive));
+			add(TrivialAction(targetHyperdrive, locale::TT_HYPERDRIVE, iconWrapper.Hyperdrive));
 		if(canJumpdrive(obj))
-			add(TrivialAction(targetJumpdrive, locale::TT_JUMPDRIVE, icons::Hyperdrive));
+			add(TrivialAction(targetJumpdrive, locale::TT_JUMPDRIVE, iconWrapper.Hyperdrive));
 		if(canFling(obj) && obj.owner.getFlingBeacon(obj.position) !is null)
-			add(TrivialAction(targetFling, locale::TT_FLING, icons::Fling));
+			add(TrivialAction(targetFling, locale::TT_FLING, iconWrapper.Fling));
 		if(canSlipstream(obj))
-			add(TrivialAction(targetSlipstream, locale::TT_SLIPSTREAM, icons::Slipstream));
+			add(TrivialAction(targetSlipstream, locale::TT_SLIPSTREAM, iconWrapper.Slipstream));
 	}
 
 	void updateAbsolutePosition() override {

@@ -1,7 +1,2 @@
-namespace icons {
-	const Sprite Replace(spritesheet::EditIcons, 7);
-	const Sprite Satellite(spritesheet::GuiOrbitalIcons, 14, Color(0xe759ffff));
-};
-
-namespace colors {
-};
+// Migrated to icons::IconWrapper.
+// Not that any scripts seemed to use this file in the first place...

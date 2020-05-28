@@ -1,3 +1,4 @@
+import skins;
 import menus;
 import saving;
 import dialogs.MessageDialog;
@@ -40,7 +41,7 @@ class LoadMenu : MenuBox {
 	void buildMenu() {
 		title.text = locale::LOAD_GAME;
 
-		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 11), locale::MENU_BACK, 0));
+		items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 11), locale::MENU_BACK, 0));
 
 		string dir = baseProfile["saves"];
 		FileList files(dir, "*.sr2");
@@ -75,7 +76,7 @@ class LoadMenu : MenuBox {
 			uint version = getSaveVersion(path);
 			if(!isSaveCompatible(version)) {
 				auto@ dialog = message(locale::SAVE_NO_COMPAT);
-				dialog.titleColor = colors::Red;
+				dialog.titleColor = activeSkin.Red;
 				return;
 			}
 

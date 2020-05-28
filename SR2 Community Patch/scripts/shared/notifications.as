@@ -15,6 +15,7 @@ export GenericNotification;
 export TreatyEventNotification, TreatyEventType;
 export DonationNotification;
 
+import skins;
 import influence;
 from influence import ICardNotification, TreatyEventType;
 import saving;
@@ -143,7 +144,7 @@ class VoteNotification : Notification {
 	}
 
 	Sprite get_icon() const override {
-		return Sprite(spritesheet::Notifications, 0);
+		return Sprite(getSkinSpriteSheet("Notifications"), 0);
 	}
 
 	string formatClass() const override {
@@ -341,7 +342,7 @@ class WarStatusNotification : Notification {
 	}
 
 	Sprite get_icon() const override {
-		return Sprite(spritesheet::Notifications, 1);
+		return Sprite(getSkinSpriteSheet("Notifications"), 1);
 	}
 
 	string formatClass() const override {
@@ -424,9 +425,9 @@ class WarEventNotification : Notification {
 	Sprite get_icon() const override {
 		switch(eventType) {
 		case WET_LostPlanet:
-			return Sprite(spritesheet::Notifications, 2);
+			return Sprite(getSkinSpriteSheet("Notifications"), 2);
 	  }
-	  return Sprite(material::SystemUnderAttack);
+	  return Sprite(getSkinMaterial("SystemUnderAttack"));
 	}	
 
 	string formatClass() const override {
@@ -512,8 +513,8 @@ class TreatyEventNotification : Notification {
 
 	Sprite get_icon() const override {
 		if(eventType == TET_Subjugate)
-			return Sprite(material::LoyaltyIcon);
-		return Sprite(material::Propositions);
+			return Sprite(getSkinMaterial("LoyaltyIcon"));
+		return Sprite(getSkinMaterial("Propositions"));
 	}	
 
 	string formatClass() const override {
@@ -765,7 +766,7 @@ class GenericNotification : Notification {
 	}
 
 	Sprite get_icon() const override {
-		return getSprite(iconDesc);
+		return getSkinSprite(iconDesc);
 	}
 
 	Object@ get_relatedObject() const override {
@@ -982,7 +983,7 @@ class DonationNotification : Notification {
 	}
 
 	Sprite get_icon() const override {
-		return icons::Donate;
+		return iconWrapper.Donate;
 	}
 
 	string formatClass() const override {

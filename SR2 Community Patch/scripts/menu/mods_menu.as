@@ -1,3 +1,4 @@
+import skins;
 import menus;
 import saving;
 import dialogs.MessageDialog;
@@ -26,7 +27,7 @@ class ModAction : MenuAction {
 		else if(!mod.enabled)
 			color = Color(0x888888ff);
 		else
-			color = colors::White;
+			color = activeSkin.White;
 		MenuAction::draw(ele, flags, absPos);
 
 		int h = absPos.height;
@@ -34,20 +35,20 @@ class ModAction : MenuAction {
 		recti tPos = recti_area(vec2i(absPos.botRight.x-80, absPos.topLeft.y+2), vec2i(78, h-2));
 		const Font@ ft = ele.skin.getFont(FT_Bold);
 		if(mod.enabled) {
-			icons::Plus.draw(iPos);
-			ft.draw(pos=tPos, text=locale::ENABLED, stroke=colors::Black, color=colors::Green);
+			iconWrapper.Plus.draw(iPos);
+			ft.draw(pos=tPos, text=locale::ENABLED, stroke=activeSkin.Black, color=colors::Green);
 		}
 		else {
-			icons::Minus.draw(iPos);
-			ft.draw(pos=tPos, text=locale::DISABLED, stroke=colors::Black, color=colors::Red);
+			iconWrapper.Minus.draw(iPos);
+			ft.draw(pos=tPos, text=locale::DISABLED, stroke=activeSkin.Black, color=activeSkin.Red);
 		}
 
 		if(mod.isNew && mod.forCurrentVersion) {
 			recti iPos = recti_area(vec2i(absPos.botRight.x-h-80*2+4, absPos.topLeft.y+6), vec2i(h-10, h-10));
 			recti tPos = recti_area(vec2i(absPos.botRight.x-80*2, absPos.topLeft.y+2), vec2i(78, h-2));
 			const Font@ ft = ele.skin.getFont(FT_Bold);
-			spritesheet::CardCategoryIcons.draw(5, iPos);
-			ft.draw(pos=tPos, text=locale::NEW, stroke=colors::Black, color=Color(0xffff00ff));
+			getSkinSpriteSheet("CardCategoryIcons").draw(5, iPos);
+			ft.draw(pos=tPos, text=locale::NEW, stroke=activeSkin.Black, color=Color(0xffff00ff));
 		}
 	}
 
@@ -88,9 +89,9 @@ class ModsMenu : MenuBox, IInputDialogCallback {
 		items.required = true;
 
 		if(inOpenPage)
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 10), locale::MENU_CONTINUE_MAIN, 0));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 10), locale::MENU_CONTINUE_MAIN, 0));
 		else
-			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 11), locale::MENU_BACK, 0));
+			items.addItem(MenuAction(Sprite(getSkinSpriteSheet("MenuIcons"), 11), locale::MENU_BACK, 0));
 
 		string sel = "";
 		if(prevSelected >= 1 && uint(prevSelected-1) < actions.length)
@@ -274,13 +275,13 @@ class ModBox : DescBox {
 		toggleButton.disabled = false;
 
 		if(mod.enabled) {
-			toggleButton.color = colors::Red;
-			toggleButton.buttonIcon = icons::Minus;
+			toggleButton.color = activeSkin.Red;
+			toggleButton.buttonIcon = iconWrapper.Minus;
 			toggleButton.text = locale::DISABLE_MOD;
 		}
 		else {
 			toggleButton.color = colors::Green;
-			toggleButton.buttonIcon = icons::Plus;
+			toggleButton.buttonIcon = iconWrapper.Plus;
 			toggleButton.text = locale::ENABLE_MOD;
 		}
 

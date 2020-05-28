@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.Gui3DObject;
 import elements.GuiOverlay;
@@ -181,7 +182,7 @@ class OrbitalOverlay : GuiOverlay, ConstructionParent {
 
 	void draw() {
 		if(!settings::bGalaxyBG && objView.Alignment !is null)
-			material::Skybox.draw(AbsolutePosition);
+			getSkinMaterial("Skybox").draw(AbsolutePosition);
 		GuiOverlay::draw();
 	}
 };
@@ -316,7 +317,7 @@ class ModuleElement : BaseGuiElement {
 		@data = GuiMarkupText(this, Alignment(Left+68, Top+48, Right-4, Bottom-4));
 		data.defaultFont = FT_Italic;
 		@removeButton = GuiButton(this, Alignment(Right-40, Bottom-26, Right, Bottom), "-");
-		removeButton.color = colors::Red;
+		removeButton.color = activeSkin.Red;
 
 		set(section, obj);
 		updateAbsolutePosition();
@@ -339,12 +340,12 @@ class ModuleElement : BaseGuiElement {
 		blurb.text = section.type.blurb;
 		data.text = section.getData(obj);
 		if(section.enabled) {
-			color = colors::White;
-			name.color = colors::White;
+			color = activeSkin.White;
+			name.color = activeSkin.White;
 		}
 		else {
-			color = colors::Red;
-			name.color = colors::Red;
+			color = activeSkin.Red;
+			name.color = activeSkin.Red;
 		}
 		setMarkupTooltip(this, section.type.getTooltip());
 		removeButton.visible = !section.type.isCore && !obj.isContested;

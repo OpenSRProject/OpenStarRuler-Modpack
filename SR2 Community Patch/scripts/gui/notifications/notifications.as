@@ -1,4 +1,5 @@
 #priority init 100
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiSprite;
 import elements.GuiMarkupText;
@@ -414,11 +415,11 @@ class NotifyClass : BaseGuiElement {
 
 		//Show the icon
 		clearClip();
-		if(icon.sheet is spritesheet::Notifications) {
+		if(icon.sheet is getSkinSpriteSheet("Notifications")) {
 			icon.draw(iconPos);
 		}
 		else {
-			spritesheet::Notifications.draw(0, iconPos);
+			getSkinSpriteSheet("Notifications").draw(0, iconPos);
 
 			if(icon.valid) {
 				vec2i iSize = icon.size;
@@ -434,7 +435,7 @@ class NotifyClass : BaseGuiElement {
 				if(related.owner !is null)
 					NODE_COLOR = related.owner.color;
 				else
-					NODE_COLOR = colors::White;
+					NODE_COLOR = activeSkin.White;
 				drawObject.preRender(related);
 				drawObject.draw(pos, quaterniond_fromAxisAngle(vec3d_front(), 0.5*pi));
 			}
@@ -453,7 +454,7 @@ class NotifyClass : BaseGuiElement {
 
 			Color col(0xffffffff);
 			col.a = alpha * 255;
-			spritesheet::Notifications.draw(7, iconPos, col);
+			getSkinSpriteSheet("Notifications").draw(7, iconPos, col);
 			flashTime -= frameLength;
 		}
 		else {
@@ -512,7 +513,7 @@ class PulseCard : PulseIcon {
 		if(from !is null) {
 			Color color = from.color;
 			color.a = 0x80;
-			material::CardBorder.draw(AbsolutePosition, color);
+			getSkinMaterial("CardBorder").draw(AbsolutePosition, color);
 		}
 	}
 };
@@ -687,7 +688,7 @@ class VoteDisplay : ClassDisplay {
 			//Show starter of proposition as glow color
 			Color col = vote.startedBy.color;
 			col.a = 0x80;
-			spritesheet::Notifications.draw(8, iconPos, col);
+			getSkinSpriteSheet("Notifications").draw(8, iconPos, col);
 
 			//Timer
 			Color timerColor;
@@ -783,7 +784,7 @@ class ContestDisplay : ClassDisplay {
 		if(loyaltyState != CM_None) {
 			Color col = ContestedColors[loyaltyState];
 			col.a = 0x80;
-			spritesheet::Notifications.draw(8, iconPos, col);
+			getSkinSpriteSheet("Notifications").draw(8, iconPos, col);
 		}
 	}
 };

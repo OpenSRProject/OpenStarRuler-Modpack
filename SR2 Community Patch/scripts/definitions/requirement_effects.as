@@ -1,3 +1,4 @@
+import skins;
 import hooks;
 import orbitals;
 from orbitals import IOrbitalEffect;
@@ -70,10 +71,10 @@ class Requirement : Hook, IOrbitalEffect, IBuildingHook, IConstructionHook {
 	bool canProgress(Object& obj) const { return true; }
 	bool getVariable(Object@ obj, Sprite& sprt, string& name, string& value, Color& color, bool isOption) const {
 		if(obj !is null && !meets(obj) && isOption) {
-			sprt = icons::Remove;
+			sprt = iconWrapper.Remove;
 			name = getFailError(obj);
 			value = "";
-			color = colors::Red;
+			color = activeSkin.Red;
 			return true;
 		}
 		return false;

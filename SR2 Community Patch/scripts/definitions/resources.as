@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import tile_resources;
 import util.formatting;
 import hooks;
@@ -1522,10 +1523,18 @@ void loadResources(const string& filename) {
 			r.terraformLabor = toDouble(value);
 		}
 		else if(key == "Icon") {
-			r.icon = getSprite(value);
+			if(activeSkin.resourceIconOverrides.exists(r.ident)) {
+				activeSkin.resourceIconOverrides.get(r.ident, value);
+				r.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else r.icon = getSkinSprite(value);
 		}
 		else if(key == "Small Icon") {
-			r.smallIcon = getSprite(value);
+			if(activeSkin.resourceSmallIconOverrides.exists(r.ident)) {
+				activeSkin.resourceSmallIconOverrides.get(r.ident, value);
+				r.smallIcon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else r.smallIcon = getSkinSprite(value);
 		}
 		else if(key == "Distant Icon") {
 			//TODO
@@ -1611,12 +1620,12 @@ tidy final class ResourceSheet {
 		this.sprt = sprt;
 
 		mats.length = 6;
-		mats[0] = material::PlanetLevel0;
-		mats[1] = material::PlanetLevel1;
-		mats[2] = material::PlanetLevel2;
-		mats[3] = material::PlanetLevel3;
-		mats[4] = material::PlanetLevel4;
-		mats[5] = material::PlanetLevel5;
+		mats[0] = getSkinMaterial("PlanetLevel0");
+		mats[1] = getSkinMaterial("PlanetLevel1");
+		mats[2] = getSkinMaterial("PlanetLevel2");
+		mats[3] = getSkinMaterial("PlanetLevel3");
+		mats[4] = getSkinMaterial("PlanetLevel4");
+		mats[5] = getSkinMaterial("PlanetLevel5");
 		for(uint i = 0; i < 6; ++i) {
 			if(sprt.mat !is null)
 				@mats[i].texture2 = sprt.mat.texture0;

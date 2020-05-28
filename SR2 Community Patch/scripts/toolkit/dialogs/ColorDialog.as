@@ -1,3 +1,4 @@
+import skins;
 import dialogs.Dialog;
 import elements.GuiButton;
 import elements.GuiText;
@@ -22,7 +23,7 @@ class ColorPicker : BaseGuiElement {
 		shader::HSV_VALUE = value;
 		shader::HSV_SAT_START = 0.f;
 		shader::HSV_SAT_END = 1.f;
-		drawRectangle(AbsolutePosition, material::HSVPalette, Color());
+		drawRectangle(AbsolutePosition, getSkinMaterial("HSVPalette"), Color());
 		BaseGuiElement::draw();
 	}
 	

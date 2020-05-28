@@ -1,4 +1,5 @@
 #section disable menu
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiText;
 import elements.MarkupTooltip;
@@ -36,11 +37,11 @@ void drawResource(const ResourceType@ type, const recti& pos) {
 
 	//Resource level icon
 	if(type.level > 0 && type.level <= 3)
-		spritesheet::ResourceIconsMods.draw(2+type.level, pos);
+		getSkinSpriteSheet("ResourceIconsMods").draw(2+type.level, pos);
 
 	//Resource class icon
 	else if(type.cls is foodClass)
-		spritesheet::ResourceIconsMods.draw(6, pos);
+		getSkinSpriteSheet("ResourceIconsMods").draw(6, pos);
 }
 
 void drawResource(const Resource@ r, const recti& pos, Object@ drawFrom = null, const Font@ ft = null) {
@@ -48,11 +49,11 @@ void drawResource(const Resource@ r, const recti& pos, Object@ drawFrom = null, 
 
 	//Origin underlay
 	if(r.origin is drawFrom && r.origin !is null) {
-		spritesheet::ResourceIconsMods.draw(0, pos);
+		getSkinSpriteSheet("ResourceIconsMods").draw(0, pos);
 
 		//Rarity
 		if(type.rarity > 0)
-			spritesheet::ResourceIconsMods.draw(6+type.rarity, pos);
+			getSkinSpriteSheet("ResourceIconsMods").draw(6+type.rarity, pos);
 	}
 
 	drawResource(r.type, pos);
@@ -60,12 +61,12 @@ void drawResource(const Resource@ r, const recti& pos, Object@ drawFrom = null, 
 	if(r.origin is null || r.origin.owner is playerEmpire) {
 		//Disabled overlay
 		if(!r.usable)
-			spritesheet::ResourceIconsMods.draw(2, pos);
+			getSkinSpriteSheet("ResourceIconsMods").draw(2, pos);
 	}
 
 	//Export tick
 	if(r.origin is drawFrom && r.exportedTo !is null && r.origin !is null && drawFrom.visible)
-		spritesheet::ResourceIconsMods.draw(1, pos);
+		getSkinSpriteSheet("ResourceIconsMods").draw(1, pos);
 
 	//Vanish timer
 	if(r.type.vanishMode != VM_Never && drawFrom !is null) {
@@ -74,7 +75,7 @@ void drawResource(const Resource@ r, const recti& pos, Object@ drawFrom = null, 
 			timeLeft /= r.exportedTo.resourceVanishRate;
 		else if(r.origin !is null)
 			timeLeft /= r.origin.resourceVanishRate;
-		font::DroidSans_11_Bold.draw(pos.topLeft+vec2i(4, 4),
+		activeSkin.skin.getFont(FT_Bold).draw(pos.topLeft+vec2i(4, 4),
 				formatShortTime(timeLeft),
 				Color(0xffbb00ff));
 	}
@@ -84,11 +85,11 @@ void drawSmallResource(const ResourceType@ type, const Resource@ r, const recti&
 	if(r !is null) {
 		//Origin underlay
 		if(r.origin is drawFrom && r.origin !is null && !onPlanet) {
-			spritesheet::ResourceIconsSmallMods.draw(0, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(0, pos.padded(-2));
 
 			//Rarity
 			if(type.rarity > 0)
-				spritesheet::ResourceIconsSmallMods.draw(10, pos.padded(-2), getResourceRarityColor(type.rarity));
+				getSkinSpriteSheet("ResourceIconsSmallMods").draw(10, pos.padded(-2), getResourceRarityColor(type.rarity));
 		}
 
 		if(drawFrom !is null && !r.usable && r.origin is null) {
@@ -114,23 +115,23 @@ void drawSmallResource(const ResourceType@ type, const Resource@ r, const recti&
 			if(!r.usable) {
 				if(r.origin is null) {
 					//Queued auto-import
-					spritesheet::ResourceIconsSmallMods.draw(13, pos.padded(-2), Color(0xf800ffff));
+					getSkinSpriteSheet("ResourceIconsSmallMods").draw(13, pos.padded(-2), Color(0xf800ffff));
 				}
 				else if(drawFrom.owner is playerEmpire || drawFrom !is r.origin) {
 					if(r.origin.owner !is playerEmpire) {
 						//Queued import
-						spritesheet::ResourceIconsSmallMods.draw(13, pos.padded(-2), Color(0xffe400ff));
+						getSkinSpriteSheet("ResourceIconsSmallMods").draw(13, pos.padded(-2), Color(0xffe400ff));
 					}
 					else {
 						if(r.origin.hasSurfaceComponent && r.origin.resourceLevel >= r.type.level &&
 								r.origin.population < getPlanetLevelRequiredPop(r.origin, r.type.level)) {
 							//Insufficient population
-							spritesheet::ResourceIconsSmallMods.draw(13, pos.padded(-4), Color(0xff6300ff));
+							getSkinSpriteSheet("ResourceIconsSmallMods").draw(13, pos.padded(-4), Color(0xff6300ff));
 							lowPop = true;
 						}
 						else {
 							//Disabled
-							spritesheet::ResourceIconsSmallMods.draw(2, pos.padded(-4));
+							getSkinSpriteSheet("ResourceIconsSmallMods").draw(2, pos.padded(-4));
 						}
 					}
 				}
@@ -139,37 +140,37 @@ void drawSmallResource(const ResourceType@ type, const Resource@ r, const recti&
 				lowPop = r.origin.resourceLevel > r.origin.level;
 				if(lowPop && !r.type.artificial) {
 					//Insufficient population
-					spritesheet::ResourceIconsSmallMods.draw(13, pos.padded(-4), Color(0xff6300ff));
+					getSkinSpriteSheet("ResourceIconsSmallMods").draw(13, pos.padded(-4), Color(0xff6300ff));
 				}
 			}
 		}
 
 		//Resource level icon
 		if(type.level > 0 && type.level <= 3)
-			spritesheet::ResourceIconsSmallMods.draw(3+type.level, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(3+type.level, pos.padded(-2));
 
 		//Resource class icon
 		else if(type.cls is foodClass)
-			spritesheet::ResourceIconsSmallMods.draw(7, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(7, pos.padded(-2));
 		else if(type.cls is scalableClass)
-			spritesheet::ResourceIconsSmallMods.draw(16, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(16, pos.padded(-2));
 
 		//Export tick
 		if(r.origin !is null && r.origin is drawFrom && r.exportedTo !is null && drawFrom.visible)
-			spritesheet::ResourceIconsSmallMods.draw(1, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(1, pos.padded(-2));
 
 		//Excess tick
 		if(r.exportedTo is null && r.origin !is null && r.usable && !lowPop) {
 			if(r.origin.owner is playerEmpire && r.origin.hasSurfaceComponent && !r.type.isMaterial(r.origin.level) && r.origin.exportEnabled)
-				spritesheet::ResourceIconsSmallMods.draw(3, pos.padded(-2));
+				getSkinSpriteSheet("ResourceIconsSmallMods").draw(3, pos.padded(-2));
 		}
 
 		//Lock icon
 		if(drawFrom is null || r.origin is drawFrom) {
 			if(r.locked)
-				spritesheet::ResourceIconsSmallMods.draw(15, pos.padded(-2));
+				getSkinSpriteSheet("ResourceIconsSmallMods").draw(15, pos.padded(-2));
 			else if(type.willLock)
-				spritesheet::ResourceIconsSmallMods.draw(14, pos.padded(-2));
+				getSkinSpriteSheet("ResourceIconsSmallMods").draw(14, pos.padded(-2));
 		}
 	}
 	else {
@@ -177,17 +178,17 @@ void drawSmallResource(const ResourceType@ type, const Resource@ r, const recti&
 
 		//Resource level icon
 		if(type.level > 0 && type.level <= 3)
-			spritesheet::ResourceIconsSmallMods.draw(3+type.level, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(3+type.level, pos.padded(-2));
 
 		//Resource class icon
 		else if(type.cls is foodClass)
-			spritesheet::ResourceIconsSmallMods.draw(7, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(7, pos.padded(-2));
 		else if(type.cls is scalableClass)
-			spritesheet::ResourceIconsSmallMods.draw(16, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(16, pos.padded(-2));
 
 		//Lock icon
 		if(type.willLock)
-			spritesheet::ResourceIconsSmallMods.draw(14, pos.padded(-2));
+			getSkinSpriteSheet("ResourceIconsSmallMods").draw(14, pos.padded(-2));
 	}
 }
 
@@ -635,10 +636,10 @@ class GuiResourceGrid : GuiIconGrid {
 				if(!typeMode && !r.usable && r.origin.owner is playerEmpire) {
 					if(r.exportedTo !is null) {
 						float pct = abs((frameTime % 1.0) - 0.5f) * 2.f;
-						textColor = colors::Red.interpolate(colors::Orange, pct);
+						textColor = activeSkin.Red.interpolate(activeSkin.Orange, pct);
 					}
 					else {
-						textColor = colors::Red;
+						textColor = activeSkin.Red;
 					}
 				}
 
@@ -658,14 +659,14 @@ class GuiResourceGrid : GuiIconGrid {
 	}
 };
 
-const Sprite FOOD_REQ(spritesheet::ResourceClassIcons, 3);
-const Sprite WATER_REQ(spritesheet::ResourceClassIcons, 4);
-const Sprite UNKNOWN_REQ(spritesheet::ResourceClassIcons, 5);
+const Sprite FOOD_REQ(getSkinSpriteSheet("ResourceClassIcons"), 3);
+const Sprite WATER_REQ(getSkinSpriteSheet("ResourceClassIcons"), 4);
+const Sprite UNKNOWN_REQ(getSkinSpriteSheet("ResourceClassIcons"), 5);
 const Sprite[] LEVEL_REQ = {
 	Sprite(),
-	Sprite(spritesheet::ResourceClassIcons, 0),
-	Sprite(spritesheet::ResourceClassIcons, 1),
-	Sprite(spritesheet::ResourceClassIcons, 2)
+	Sprite(getSkinSpriteSheet("ResourceClassIcons"), 0),
+	Sprite(getSkinSpriteSheet("ResourceClassIcons"), 1),
+	Sprite(getSkinSpriteSheet("ResourceClassIcons"), 2)
 };
 
 Sprite getAutoImportIcon(const AutoImportDesc& desc) {

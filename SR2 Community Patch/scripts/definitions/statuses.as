@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import hooks;
 import saving;
 import planet_types;
@@ -111,7 +112,7 @@ tidy final class Status : Serializable, Savable {
 			if(type.hooks[i].getVariable(valueObject, vicon, vname, vvalue, color)) {
 				tt += format("[nl/]\n[img=$1;22][b][color=$4]$2[/color][/b] [offset=120]$3[/offset][/img]",
 					getSpriteDesc(vicon), vname, vvalue, toString(color));
-				color = colors::White;
+				color = activeSkin.White;
 			}
 		}
 		return tt;
@@ -390,10 +391,17 @@ void loadStatus(const string& filename) {
 			status.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			status.icon = getSprite(value);
+			if(activeSkin.statusIconOverrides.exists(status.ident)) {
+				activeSkin.statusIconOverrides.get(status.ident, value);
+				status.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else status.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Color")) {
-			status.color = toColor(value);
+			if(activeSkin.statusColorOverrides.exists(status.ident)) {
+				activeSkin.statusColorOverrides.get(status.ident, status.color);
+			}
+			else status.color = toColor(value);
 		}
 		else if(key.equals_nocase("Condition Frequency")) {
 			status.conditionFrequency = toDouble(value);

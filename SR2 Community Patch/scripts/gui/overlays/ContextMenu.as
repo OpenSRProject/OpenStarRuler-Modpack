@@ -1,3 +1,4 @@
+import skins;
 import elements.GuiContextMenu;
 import tabs.Tab;
 from tabs.tabbar import ActiveTab;
@@ -19,9 +20,9 @@ import void openSupportOverlay(Object@ obj, Object@ to) from "tabs.GalaxyTab";
 import void openSupportOverlay(Object@ obj) from "tabs.GalaxyTab";
 import bool switchToTab(TabCategory cat) from "tabs.tabbar";
 
-const Sprite EXPORT_ARROW(spritesheet::ContextIcons, 0);
-const Sprite COLONIZE_ICON(spritesheet::ContextIcons, 1);
-const Sprite IMPORT_ARROW(spritesheet::ContextIcons, 2);
+const Sprite EXPORT_ARROW(getSkinSpriteSheet("ContextIcons"), 0);
+const Sprite COLONIZE_ICON(getSkinSpriteSheet("ContextIcons"), 1);
+const Sprite IMPORT_ARROW(getSkinSpriteSheet("ContextIcons"), 2);
 TradePath pathCheck;
 
 #include "include/resource_constants.as"
@@ -833,10 +834,10 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 	
 	if(selected !is null && selOwner is playerEmpire && selected.hasLeaderAI && selected.isShip) {
 		if(clicked.isAnomaly && cast<Anomaly>(clicked).progress < 1.f)
-			addOption(menu, selected, clicked, locale::SCAN_ANOMALY, ScanAnomaly(), icons::Anomaly);
+			addOption(menu, selected, clicked, locale::SCAN_ANOMALY, ScanAnomaly(), iconWrapper.Anomaly);
 	}
 	else if(clicked.isAnomaly) {
-		addOption(menu, selected, clicked, locale::INVESTIGATE_ANOMALY, InvestigateAnomaly(), icons::Anomaly);
+		addOption(menu, selected, clicked, locale::INVESTIGATE_ANOMALY, InvestigateAnomaly(), iconWrapper.Anomaly);
 	}
 
 	//Resource exporting
@@ -963,7 +964,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 			if(assignLevel != 0 && assignLevel > clickedLevel && assignLevel < uint(clicked.maxLevel)) {
 				Sprite icon;
 				if(assignLevel <= 3)
-					icon = Sprite(spritesheet::ResourceClassIcons, clamp(assignLevel-1, 0, 2));
+					icon = Sprite(getSkinSpriteSheet("ResourceClassIcons"), clamp(assignLevel-1, 0, 2));
 
 				addOption(menu, selected, clicked, format(locale::AUTO_IMPORT_LEVEL, toString(assignLevel)),
 						AutoAssignLevel(assignLevel), icon);
@@ -1030,7 +1031,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 						addOption(menu, selected, clicked,
 								format(locale::AUTO_COLONIZE_LEVEL, resType.level),
 								AutoColonizeLevel(),
-								Sprite(spritesheet::ResourceClassIcons, clamp(resType.level-1, 0, 2)));
+								Sprite(getSkinSpriteSheet("ResourceClassIcons"), clamp(resType.level-1, 0, 2)));
 					}
 				}
 			}
@@ -1056,10 +1057,10 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 		if(clicked !is null && clicked.owner is selected.owner) {
 			if(selected.hasLeaderAI && selected.SupplyCapacity > 0) {
 				if(selected is clicked) {
-					addOption(menu, selected, clicked, locale::MANAGE_SUPPORTS, TransferSupport(), icons::ManageSupports);
+					addOption(menu, selected, clicked, locale::MANAGE_SUPPORTS, TransferSupport(), iconWrapper.ManageSupports);
 				}
 				else if(clicked.hasLeaderAI && clicked.SupplyCapacity > 0) {
-					addOption(menu, selected, clicked, locale::TRANSFER_SUPPORT_SHIPS, TransferSupport(), icons::ManageSupports);
+					addOption(menu, selected, clicked, locale::TRANSFER_SUPPORT_SHIPS, TransferSupport(), iconWrapper.ManageSupports);
 				}
 			}
 		}
@@ -1085,7 +1086,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 					bool hasWeapons = dsg.hasTag(ST_Weapon);
 					bool hasSupportAttack = ship.supportCount > 0 && ship.getFleetDPS() > 0;
 					if((hasWeapons && ship.blueprint.canTarget(ship, clicked)) || (hasSupportAttack && (clicked.isShip || clicked.isOrbital)))
-						addOption(menu, selected, clicked, locale::ATTACK, Attack(), icons::Strength);
+						addOption(menu, selected, clicked, locale::ATTACK, Attack(), iconWrapper.Strength);
 				}
 			}
 		}
@@ -1094,7 +1095,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 				&& clickedOwner !is null && clickedOwner.valid && clickedOwner !is playerEmpire) {
 			if(playerEmpire.isHostile(clickedOwner) && !selected.hasOrbit) {
 				if(clicked.isProtected(playerEmpire)) {
-					addOption(menu, selected, clicked, locale::PROTECTED_OPTION, ProtectedOption(), icons::Strength * Color(0xff0000ff));
+					addOption(menu, selected, clicked, locale::PROTECTED_OPTION, ProtectedOption(), iconWrapper.Strength * Color(0xff0000ff));
 				}
 				else {
 					double base = clicked.baseLoyalty;
@@ -1105,7 +1106,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 					double cost = config::SIEGE_LOYALTY_SUPPLY_COST * loy;
 					cost *= selected.owner.CaptureSupplyFactor;
 					cost *= clicked.owner.CaptureSupplyDifficulty;
-					addOption(menu, selected, clicked, format(locale::CAPTURE_OPTION, standardize(cost), formatTime(timer)), CaptureOption(), icons::Strength * Color(0xff8000ff));
+					addOption(menu, selected, clicked, format(locale::CAPTURE_OPTION, standardize(cost), formatTime(timer)), CaptureOption(), iconWrapper.Strength * Color(0xff8000ff));
 				}
 			}
 		}
@@ -1117,7 +1118,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 
 			Object@ nameObj = clickedRegion is null ? @clicked : @clickedRegion;
 			addOption(menu, selected, clicked, format(locale::MOVE_TO_OBJ, formatObjectName(nameObj)), MoveTo(),
-					Sprite(spritesheet::ContextIcons, 0, Color(0xffcd00ff)));
+					Sprite(getSkinSpriteSheet("ContextIcons"), 0, Color(0xffcd00ff)));
 		}
 	}
 
@@ -1127,15 +1128,16 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 		if(clicked !is null && selected.isShip && selected.hasLeaderAI) {
 			if(clicked.isStar && clicked.region.AvailSupportMask & playerEmpire.mask != 0) {
 				addOption(menu, selected, clicked.region, format(locale::REFRESH_SUPPORTS, clicked.region.name), RefreshOption(),
-						icons::ManageSupports);
+						iconWrapper.ManageSupports);
 			}
 			else if((clicked.isPlanet || (clicked.isOrbital && clicked.hasLeaderAI)) && clickedOwner is playerEmpire && clicked.supportCount > 0) {
 				addOption(menu, selected, clicked, format(locale::REFRESH_SUPPORTS, clicked.name), RefreshOption(),
-						icons::ManageSupports);
+						iconWrapper.ManageSupports);
 			}
 		}
 
-		//Asteroid base construction
+		//Asteroid base construction
+
 		if(clicked !is null && constructObj !is null && constructObj.hasConstruction
 			&& constructObj.canBuildAsteroids && clicked.isAsteroid &&
 			cast<Asteroid>(clicked).canDevelop(playerEmpire)
@@ -1185,7 +1187,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 		if(selected is clicked && selected.isPlanet) {
 			//Abandon planet
 			if(!selected.isContested)
-				addOption(menu, selected, clicked, locale::ABANDON, Abandon(), icons::UnderSiege * colors::Red);
+				addOption(menu, selected, clicked, locale::ABANDON, Abandon(), iconWrapper.UnderSiege * activeSkin.Red);
 		}
 
 		//Retrofit options
@@ -1263,14 +1265,14 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 		Object@ obj = clickedRegion is null ? @clicked : @clickedRegion;
 		bool isDefending = playerEmpire.isDefending(obj);
 		if(isDefending) {
-			Sprite sprt = icons::Defense;
-			sprt.color = colors::Red;
+			Sprite sprt = iconWrapper.Defense;
+			sprt.color = activeSkin.Red;
 			addOption(menu, selected, obj, format(locale::DEFENSE_OFF_OPTION, obj.name),
 					SetDefending(obj, false), sprt);
 		}
 		else {
 			addOption(menu, selected, clicked, format(locale::DEFENSE_ON_OPTION, obj.name),
-					SetDefending(obj, true), icons::Defense);
+					SetDefending(obj, true), iconWrapper.Defense);
 		}
 	}
 	
@@ -1290,7 +1292,7 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 	if(selected !is null && selected.owner is playerEmpire && clickedOwner is playerEmpire
 		&& selected.hasConstruction && selected.canExportLabor && clicked.hasConstruction && clicked.canImportLabor
 		&& selected.laborIncome > 0) {
-		addOption(menu, selected, clicked, format(locale::EXPORT_LABOR, clicked.name), ExportLabor(), icons::Labor);
+		addOption(menu, selected, clicked, format(locale::EXPORT_LABOR, clicked.name), ExportLabor(), iconWrapper.Labor);
 	}
 	
 	//Rallying

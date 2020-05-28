@@ -16,6 +16,7 @@ import icons;
 from gui import animate_time;
 from targeting.targeting import cancelTargeting;
 from targeting.MoveTarget import isExtendedMoveTarget;
+import skins;
 
 const int GROUP_WIDTH = 256;
 const int GROUP_SPACING = 32;
@@ -379,7 +380,7 @@ class GroupDisplay : BaseGuiElement {
 
 		super(overlay, recti());
 
-		@capBG = GuiSkinElement(this, Alignment(Left, Top, Right-22, Top+50), SS_FullTitle);
+		@capBG = GuiSkinElement(this, activeSkin.SupportGroupLeaderBGAlignment, SS_FullTitle);
 
 		@capText = GuiText(this, Alignment(Left+12, Top+8, Right-12, Top+24), locale::SUPPORT_CAPACITY);
 		capText.font = FT_Bold;
@@ -391,15 +392,15 @@ class GroupDisplay : BaseGuiElement {
 
 		@addButton = GuiButton(this, recti(0, 0, 180, 32), locale::ADD_SUPPORTS);
 		addButton.tooltip = locale::CREATE_SUPPORT_SHIPS;
-		addButton.buttonIcon = icons::Add;
+		addButton.buttonIcon = iconWrapper.Add;
 
 		@rebuyButton = GuiButton(this, Alignment(Left+4, Bottom-offset-60, Left+0.5f-15, Bottom-offset-30), locale::REBUY_GHOSTS);
 		setMarkupTooltip(rebuyButton, locale::TT_REBUY_GHOSTS);
-		rebuyButton.color = colors::Money;
-		rebuyButton.setIcon(icons::Money);
+		rebuyButton.color = activeSkin.Money;
+		rebuyButton.setIcon(iconWrapper.Money);
 		@clearButton = GuiButton(this, Alignment(Left+0.5f-6, Bottom-offset-60, Right-25, Bottom-offset-30), locale::CLEAR_GHOSTS);
-		clearButton.color = colors::Red;
-		clearButton.setIcon(icons::Remove);
+		clearButton.color = activeSkin.SupportClearGhosts;
+		clearButton.setIcon(iconWrapper.Remove);
 		setMarkupTooltip(clearButton, locale::TT_CLEAR_GHOSTS);
 
 		@autoFill = GuiCheckbox(this, Alignment(Left+8, Bottom-offset-29, Left+0.5f-15, Bottom-offset-3), locale::AUTO_FILL_SUPPORTS);
@@ -473,11 +474,11 @@ class GroupDisplay : BaseGuiElement {
 		groupSize.text = toString(supUsed) + " / "
 							+ toString(supCap);
 		if(supUsed >= supCap)
-			capBG.color = colors::Red;
+			capBG.color = activeSkin.SupportOverflow;
 		else if(float(supUsed) >= float(supCap) * 0.9f)
-			capBG.color = Color(0xff8000ff);
+			capBG.color = activeSkin.SupportNearCap;
 		else
-			capBG.color = colors::White;
+			capBG.color = activeSkin.SupportCount;
 		addButton.disabled = supUsed >= supCap;
 
 		//Update controls
@@ -618,14 +619,14 @@ class SupportClass : BaseGuiElement {
 
 		@addButton = GuiButton(this, Alignment(Right-40, Top, Right, Top+0.5f));
 		addButton.tooltip = locale::CREATE_SUPPORT_SHIPS;
-		addButton.color = colors::Green;
+		addButton.color = activeSkin.SupportAddShips;
 		addButton.visible = false;
-		addButton.setIcon(icons::Add);
+		addButton.setIcon(iconWrapper.Add);
 
 		@removeButton = GuiButton(this, Alignment(Right-40, Top+0.5f, Right, Bottom));
 		removeButton.tooltip = locale::SCUTTLE_SUPPORT_SHIPS;
-		removeButton.color = colors::Red;
-		removeButton.setIcon(icons::Minus);
+		removeButton.color = activeSkin.SupportRemoveShips;
+		removeButton.setIcon(iconWrapper.Minus);
 		removeButton.visible = false;
 	}
 
@@ -697,15 +698,15 @@ class SupportClass : BaseGuiElement {
 		dat.dsg.icon.draw(recti_area(pos.topLeft+vec2i(4,0), vec2i(pos.height, pos.height)), col);
 
 		const Font@ normal = skin.getFont(FT_Normal);
-		normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+6, 6), vec2i(pos.width-pos.height-12, 22)), text=formatShipName(dat.dsg), stroke=colors::Black);
+		normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+6, 6), vec2i(pos.width-pos.height-12, 22)), text=formatShipName(dat.dsg), stroke=activeSkin.Black);
 
 		const Font@ bold = skin.getFont(FT_Bold);
-		bold.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+12, 28), vec2i(60, 22)), text=toString(amount)+"x", stroke=colors::Black);
+		bold.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+12, 28), vec2i(60, 22)), text=toString(amount)+"x", stroke=activeSkin.Black);
 
 		if(ordered > 0)
-			normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+82, 28), vec2i(60, 22)), text="(+"+toString(ordered)+"x)", stroke=colors::Black, color=Color(0x80ff80ff));
+			normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+82, 28), vec2i(60, 22)), text="(+"+toString(ordered)+"x)", stroke=activeSkin.Black, color=Color(0x80ff80ff));
 		if(ghost > 0)
-			normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+132, 28), vec2i(60, 22)), text="(-"+toString(ghost)+"x)", stroke=colors::Black, color=Color(0xff8080ff));
+			normal.draw(pos=recti_area(pos.topLeft + vec2i(pos.height+132, 28), vec2i(60, 22)), text="(-"+toString(ghost)+"x)", stroke=activeSkin.Black, color=Color(0xff8080ff));
 	}
 
 	bool onGuiEvent(const GuiEvent& evt) {

@@ -1,0 +1,47 @@
+POP_REQ: [img=ResourceIcon::8;20/] [color=&PopReq][b]$1[/b]+ population[/color]
+
+EXPBLOCK_USE: [color=&WarningRed][b]Cannot Use Resource:[/b][/color]\n$1
+EXPBLOCK_EXPORT: [color=&WarningRed][b]Cannot Export Resource:[/b][/color]\n$1
+EXPBLOCK_IMPORT: [color=&WarningRed][b]Cannot Import Resource:[/b][/color]\n$1
+
+STATUS_HAPPY: [color=&LocaleBuff]Happy[/color]
+
+NATIVE_FISH_DESC: <<
+	Increases lifetime of consumed temporary resources by 30%.
+
+	[color=&NoteRed][b]Cannot be exported.[/b][/color]
+>>
+
+COND_EXTRA_MONEY: [color=&LocaleTitle]Precious Metal Deposits[/color]
+COND_EXTRA_MONEY_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::0;20;&MoneyIcon/] [color=&Money]Money[/color] pressure[/b].
+>>
+
+COND_EXTRA_RESEARCH: [color=&LocaleTitle]Exotic Atmosphere[/color]
+COND_EXTRA_RESEARCH_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::4;20;&ResearchIcon /] [color=&Research]Research[/color] pressure[/b].
+>>
+
+COND_EXTRA_INFLUENCE: [color=&LocaleTitle]Tropical Paradise[/color]
+COND_EXTRA_INFLUENCE_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::1;20;&InfluenceIcon /] [color=&Influence]Influence[/color] pressure[/b].
+>>
+
+COND_EXTRA_LABOR: [color=&LocaleTitle]Low Gravity[/color]
+COND_EXTRA_LABOR_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::6;20;&LaborIcon/] [color=&Labor]Labor[/color] pressure[/b].
+>>
+
+COND_EXTRA_DEFENSE: [color=&LocaleTitle]Volatile Minerals[/color]
+COND_EXTRA_DEFENSE_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::5;20;&DefenseIcon/] [color=&Defense]Defense[/color] pressure[/b].
+>>
+
+COND_EXTRA_ENERGY: [color=&LocaleTitle]Geothermal Vents[/color]
+COND_EXTRA_ENERGY_DESC: <<|
+	This planet's resource gives [b]1 bonus [img=ResourceIcon::2;20;&EnergyIcon/] [color=&Energy]Energy[/color] pressure[/b].
+>>
+
+COND_HIGH_YIELD: [color=&LocaleTitle]High Yield Resource[/color]
+
+COND_NOXIOUS_ATMOSPHERE: [color=&LocaleTitle]Noxious Atmosphere[/color]

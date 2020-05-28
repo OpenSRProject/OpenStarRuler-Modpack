@@ -1,3 +1,4 @@
+import skins;
 import overlays.InfoBar;
 import elements.BaseGuiElement;
 import elements.Gui3DObject;
@@ -85,29 +86,29 @@ class ShipInfoBar : InfoBar {
 		name.horizAlign = 0.0;
 		name.vertAlign = 0.0;
 		name.font = FT_Medium;
-		name.stroke = colors::Black;
+		name.stroke = activeSkin.Black;
 		name.visible = false;
 
 		@subsystem = GuiText(bpdisp, Alignment(Left+12, Top+28, Right-12, Top+60));
 		subsystem.horizAlign = 1.0;
 		subsystem.vertAlign = 0.0;
 		subsystem.font = FT_Subtitle;
-		subsystem.stroke = colors::Black;
+		subsystem.stroke = activeSkin.Black;
 		subsystem.visible = false;
 
-		@expandButton = GuiButton(bpdisp, Alignment(Right+75, Bottom-20, Width=20, Height=20), icons::Add);
+		@expandButton = GuiButton(bpdisp, Alignment(Right+75, Bottom-20, Width=20, Height=20), iconWrapper.Add);
 		expandButton.noClip = true;
 		expandButton.style = SS_IconButton;
 
 		@health = GuiProgressbar(this, Alignment(Left+8, Bottom-68, Left+200, Bottom-38));
 		health.textHorizAlign = 0.9;
 
-		@healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), icons::Health);
+		@healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), iconWrapper.Health);
 		healthIcon.noClip = true;
 		@healthLabel = GuiText(health, Alignment(Left+23, Top, Left+100, Bottom));
 		healthLabel.font = FT_Bold;
 		healthLabel.text = locale::HEALTH;
-		healthLabel.stroke = colors::Black;
+		healthLabel.stroke = activeSkin.Black;
 
 		@shield = GuiProgressbar(this, Alignment(Left+9, Bottom-48, Left+199, Bottom-38));
 		shield.noClip = true;
@@ -117,18 +118,18 @@ class ShipInfoBar : InfoBar {
 		shield.frontColor = Color(0x429cffff);
 		shield.backColor = Color(0x59a8ff20);
 
-		@shieldIcon = GuiSprite(shield, Alignment(Right-25, Bottom-25, Width=30, Height=30), icons::Shield);
+		@shieldIcon = GuiSprite(shield, Alignment(Right-25, Bottom-25, Width=30, Height=30), iconWrapper.Shield);
 		shieldIcon.noClip = true;
 
 		@supply = GuiProgressbar(this, Alignment(Left+206, Bottom-68, Right-22, Bottom-38));
 		supply.textHorizAlign = 0.9;
 
-		@supplyIcon = GuiSprite(supply, Alignment(Left-5, Top-6, Left+24, Bottom-8), icons::Supply);
+		@supplyIcon = GuiSprite(supply, Alignment(Left-5, Top-6, Left+24, Bottom-8), iconWrapper.Supply);
 		supplyIcon.noClip = true;
 		@supplyLabel = GuiText(supply, Alignment(Left+23, Top, Left+100, Bottom));
 		supplyLabel.font = FT_Bold;
 		supplyLabel.text = locale::SUPPLY;
-		supplyLabel.stroke = colors::Black;
+		supplyLabel.stroke = activeSkin.Black;
 
 		@strength = GuiProgressbar(this, Alignment(Left+8, Bottom-34, Left+200, Bottom-4));
 		strength.textHorizAlign = 0.9;
@@ -138,12 +139,12 @@ class ShipInfoBar : InfoBar {
 		exp.backColor = colors::Invisible;
 		exp.visible = false;
 
-		@strengthIcon = GuiSprite(strength, Alignment(Left-5, Top-6, Left+24, Bottom-8), icons::Strength);
+		@strengthIcon = GuiSprite(strength, Alignment(Left-5, Top-6, Left+24, Bottom-8), iconWrapper.Strength);
 		strengthIcon.noClip = true;
 		@strengthLabel = GuiText(strength, Alignment(Left+23, Top, Left+100, Bottom));
 		strengthLabel.font = FT_Bold;
 		strengthLabel.text = locale::STRENGTH;
-		strengthLabel.stroke = colors::Black;
+		strengthLabel.stroke = activeSkin.Black;
 
 		@groupBox = GuiSkinElement(this, Alignment(Left+206, Bottom-34, Right-22, Bottom-5), SS_PlainOverlay);
 		@groupdisp = GuiGroupDisplay(groupBox, Alignment(Left+3, Top+4, Right-3, Bottom));
@@ -173,13 +174,13 @@ class ShipInfoBar : InfoBar {
 			bpdisp.horizAlign = 0.5;
 			bpdisp.vertAlign = 0.5;
 			expandButton.alignment.set(Right-34, Bottom-20, Right-34+28, Bottom-20+28);
-			expandButton.setIcon(icons::Minus);
+			expandButton.setIcon(iconWrapper.Minus);
 		}
 		else {
 			bpdisp.horizAlign = 0.25;
 			bpdisp.vertAlign = 1.0;
 			expandButton.alignment.set(Right+75, Bottom-20, Right+75+20, Bottom-20+20);
-			expandButton.setIcon(icons::Add);
+			expandButton.setIcon(iconWrapper.Add);
 		}
 
 		bpdisp.updateAbsolutePosition();
@@ -536,7 +537,7 @@ class ShipInfoBar : InfoBar {
 		IGuiElement@ elem = BaseGuiElement::elementFromPosition(pos);
 		if(!expanded && (elem is this || elem is bpdisp)) {
 			vec2i relPos = pos - AbsolutePosition.topLeft;
-			bool active = material::ShipInfoBar.isPixelActive(relPos);
+			bool active = getSkinMaterial("ShipInfoBar").isPixelActive(relPos);
 			if(!active)
 				return null;
 		}
@@ -627,7 +628,7 @@ class ShipInfoBar : InfoBar {
 			col = owner.color;
 
 		if(!expanded)
-			material::ShipInfoBar.draw(AbsolutePosition.padded(0,0,0,35), col);
+			getSkinMaterial("ShipInfoBar").draw(AbsolutePosition.padded(0,0,0,35), col);
 		else {
 			skin.draw(SS_Panel, SF_Normal, bpdisp.absolutePosition.padded(-20,0,0,-100), col);
 			skin.draw(SS_BG3D, SF_Normal, bpdisp.absolutePosition.padded(0,4,4,-12), col);

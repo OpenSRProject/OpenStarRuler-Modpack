@@ -1,3 +1,4 @@
+import skins;
 import overlays.Popup;
 import elements.GuiText;
 import elements.GuiMarkupText;
@@ -115,7 +116,7 @@ class PickupPopup : Popup {
 			mouseOffset = objOffset;
 
 			title.text = locale::PICKUP_PROTECTING;
-			title.color = colors::Artifact;
+			title.color = activeSkin.Artifact;
 		}
 		else {
 			ship.visible = false;

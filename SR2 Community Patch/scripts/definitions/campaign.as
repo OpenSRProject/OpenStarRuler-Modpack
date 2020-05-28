@@ -1,3 +1,4 @@
+import skins;
 export CampaignScenario;
 export getCampaignScenarioCount, getCampaignScenario;
 export completeCampaignScenario, reloadCampaignCompletion;
@@ -73,13 +74,24 @@ void loadScenarios(const string& filename) {
 			scen.description = localize(value);
 		}
 		else if(key == "Icon") {
-			scen.icon = getSprite(value);
+			if(activeSkin.campaignIconOverrides.exists(scen.ident)) {
+				activeSkin.campaignIconOverrides.get(scen.ident, value);
+				scen.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else scen.icon = getSkinSprite(value);
 		}
 		else if(key == "Picture") {
-			scen.picture = getSprite(value);
+			if(activeSkin.campaignPictureOverrides.exists(scen.ident)) {
+				activeSkin.campaignPictureOverrides.get(scen.ident, value);
+				scen.picture = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else scen.picture = getSkinSprite(value);
 		}
 		else if(key == "Color") {
-			scen.color = toColor(value);
+			if(activeSkin.campaignColorOverrides.exists(scen.ident)) {
+				activeSkin.campaignColorOverrides.get(scen.ident, scen.color);
+			}
+			else scen.color = toColor(value);
 		}
 		else if(key == "Map") {
 			scen.mapName = value;

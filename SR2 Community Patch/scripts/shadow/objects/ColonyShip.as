@@ -1,3 +1,4 @@
+import skins;
 import regions.regions;
 
 tidy class ColonyShipScript {
@@ -18,7 +19,7 @@ tidy class ColonyShipScript {
 
 		if(obj.owner.ColonizerModel.length != 0) {
 			@shipMesh.model = getModel(obj.owner.ColonizerModel);
-			@shipMesh.material = getMaterial(obj.owner.ColonizerMaterial);
+			@shipMesh.material = getSkinMaterial(obj.owner.ColonizerMaterial);
 		}
 		else if(skin !is null) {
 			@shipMesh.model = skin.model;
@@ -26,10 +27,10 @@ tidy class ColonyShipScript {
 		}
 		else {
 			@shipMesh.model = model::ColonyShip;
-			@shipMesh.material = material::VolkurGenericPBR;
+			@shipMesh.material = getSkinMaterial("VolkurGenericPBR");
 		}
 
-		@shipMesh.iconSheet = spritesheet::HullIcons;
+		@shipMesh.iconSheet = getSkinSpriteSheet("HullIcons");
 		shipMesh.iconIndex = 0;
 
 		bindMesh(obj, shipMesh);

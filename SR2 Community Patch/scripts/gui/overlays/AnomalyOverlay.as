@@ -12,6 +12,7 @@ import elements.GuiSprite;
 from dialogs.MessageDialog import message;
 import anomalies;
 import targeting.ObjectTarget;
+import skins;
 
 class Option : GuiButton {
 	const AnomalyOption@ option;
@@ -65,17 +66,17 @@ class AnomalyOverlay : GuiOverlay {
 
 		@bg = GuiBackgroundPanel(this, Alignment(Left+0.5f-total/2, Top+0.5f-200, Left+0.5f-total/2+left, Top+0.5f+200));
 		bg.title = obj.name;
-		bg.titleColor = Color(0x00ff00ff);
+		bg.titleColor = activeSkin.AnomalyTitle;
 
 		@choices = GuiBackgroundPanel(this, Alignment(Left+0.5f-total/2+left+12, Top+0.5f-300, Left+0.5f+total/2, Top+0.5f+300));
 		choices.title = locale::ANOMALY_CHOICES;
-		choices.titleColor = Color(0xff8000ff);
+		choices.titleColor = activeSkin.AnomalyChoicesTitle;
 		
 		@progressLabel = GuiText(choices, Alignment(Left+8, Top+0.4f-30, Right-8, Top+0.4f-3), locale::SCAN_PROGRESS);
 		progressLabel.horizAlign = 0.5;
 		progressLabel.vertAlign = 1.0;
 		@bar = GuiProgressbar(choices, Alignment(Left+12, Top+0.4f+3, Right-12, Top+0.4f+30));
-		bar.frontColor = Color(0x6aadcbff);
+		bar.frontColor = activeSkin.AnomalyProgressBar;
 
 		@descPanel = GuiPanel(bg, Alignment(Left+4, Top+36, Left+left-4, Bottom-8));
 

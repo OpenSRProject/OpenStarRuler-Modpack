@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiCheckbox;
 import elements.GuiText;
@@ -28,7 +29,7 @@ class GuiToggleOption : BaseGuiElement {
 		if(event.caller is check && event.type == GUI_Changed) {
 			emitChanged();
 			if(check.checked)
-				check.textColor = colors::White;
+				check.textColor = activeSkin.White;
 			else
 				check.textColor = Color(0x888888ff);
 			return true;
@@ -43,7 +44,7 @@ class GuiToggleOption : BaseGuiElement {
 	void set(bool value) {
 		check.checked = value;
 		if(check.checked)
-			check.textColor = colors::White;
+			check.textColor = activeSkin.White;
 		else
 			check.textColor = Color(0x888888ff);
 	}
@@ -172,7 +173,7 @@ class GuiOccuranceOption : BaseGuiElement {
 			}
 			else if(v < defaultValue*0.9) {
 				font = FT_Bold;
-				color = colors::Red;
+				color = activeSkin.Red;
 			}
 
 			label.textColor = color;
@@ -239,7 +240,7 @@ class GuiFrequencyOption : GuiSliderOption {
 			}
 			else if(v < defaultValue*0.9) {
 				font = FT_Bold;
-				color = colors::Red;
+				color = activeSkin.Red;
 			}
 
 			label.color = color;

@@ -1,4 +1,5 @@
 #section disable menu
+import skins;
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
 import planets.PlanetSurface;
@@ -15,7 +16,7 @@ class GuiPlanetSurface : BaseGuiElement {
 	bool showTooltip = true;
 	bool showHoverBiome = true;
 	DynamicTexture@ surfTex;
-	const Material@ developedMat = material::DevelopedTile;
+	const Material@ developedMat = getSkinMaterial("DevelopedTile");
 	double horizAlign = 0.5;
 	double vertAlign = 0.5;
 
@@ -112,8 +113,8 @@ class GuiPlanetSurface : BaseGuiElement {
 		renderSurfaceData(obj, surface, img);
 		
 		@surfTex.image[0] = img;
-		@surfTex.material.texture1 = material::GuiPlanetSurface.texture0;
-		@surfTex.material.texture2 = material::GuiPlanetSurface.texture1;
+		@surfTex.material.texture1 = getSkinMaterial("GuiPlanetSurface").texture0;
+		@surfTex.material.texture2 = getSkinMaterial("GuiPlanetSurface").texture1;
 		@surfTex.material.shader = shader::PlanetSurfaceGeneric;
 	}
 
@@ -201,9 +202,9 @@ class GuiPlanetSurface : BaseGuiElement {
 		/*surfTex.draw(surfArea, Color());*/
 
 		if(obj !is null && obj.owner.hasTrait(verdantTrait))
-			@developedMat = material::GrownTile;
+			@developedMat = getSkinMaterial("GrownTile");
 		else
-			@developedMat = material::DevelopedTile;
+			@developedMat = getSkinMaterial("DevelopedTile");
 		bool hasDevelopment = obj is null || obj.owner is null || obj.owner.HasPopulation != 0;
 		
 		recti pos = recti_area(area.topLeft, vec2i(space, space));
@@ -300,10 +301,10 @@ class GuiPlanetSurface : BaseGuiElement {
 						txt = format(locale::TILE_BIOME_UNDEVELOPED, biome.name);
 				}
 
-				material::DevelopedTile.draw(tilePos, Color(0x000000ff));
+				getSkinMaterial("DevelopedTile").draw(tilePos, Color(0x000000ff));
 				ft.draw(pos=surfArea.padded(4),
 						text=txt, horizAlign=1.0, vertAlign=1.0,
-						stroke=colors::Black, color=biome.color.interpolate(colors::White, 0.5));
+						stroke=activeSkin.Black, color=biome.color.interpolate(activeSkin.White, 0.5));
 			}
 		}
 
@@ -409,7 +410,7 @@ void drawHoverBuilding(Planet& pl, const Skin@ skin, const BuildingType@ type, c
 		
 		vec2i corner = pos-vec2i(center.x*gridSize.x, center.y*gridSize.y);
 		small.draw(pos=recti_area(corner-vec2i(300,0), vec2i(600+bldSize.x,bldSize.y)),
-			text=cost, color=Color(0xffffffff), stroke=colors::Black, horizAlign=0.5, vertAlign=0.5);
+			text=cost, color=Color(0xffffffff), stroke=activeSkin.Black, horizAlign=0.5, vertAlign=0.5);
 	}
 }
 

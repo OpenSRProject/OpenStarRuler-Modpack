@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import hooks;
 import saving;
 import attributes;
@@ -837,7 +838,7 @@ void parseLine(string& line, TechnologyType@ type, ReadFile@ file) {
 		type.hooks.insertLast(hook);
 }
 
-void loadTech(TechnologyType@ type, ReadFile@ file, const string& key, const string& value) {
+void loadTech(TechnologyType@ type, ReadFile@ file, string& key, string& value) {
 	if(key.equals_nocase("Name")) {
 		type.name = localize(value);
 	}
@@ -848,13 +849,24 @@ void loadTech(TechnologyType@ type, ReadFile@ file, const string& key, const str
 		type.blurb = localize(value);
 	}
 	else if(key.equals_nocase("Icon")) {
-		type.icon = getSprite(value);
+		if(activeSkin.techIconOverrides.exists(type.ident)) {
+			activeSkin.techIconOverrides.get(type.ident, value);
+			type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+		}
+		else type.icon = getSkinSprite(value);
 	}
 	else if(key.equals_nocase("Symbol")) {
-		type.symbol = getSprite(value);
+		if(activeSkin.techSymbolOverrides.exists(type.ident)) {
+			activeSkin.techSymbolOverrides.get(type.ident, value);
+			type.symbol = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+		}
+		else type.symbol = getSkinSprite(value);
 	}
 	else if(key.equals_nocase("Color")) {
-		type.color = toColor(value);
+		if(activeSkin.techColorOverrides.exists(type.ident)) {
+			activeSkin.techColorOverrides.get(type.ident, type.color);
+		}
+		else type.color = toColor(value);
 	}
 	else if(key.equals_nocase("Point Cost")) {
 		type.pointCost = toDouble(value);
@@ -943,30 +955,32 @@ void loadResearch(const string& filename) {
 
 	uint index = 0;
 	while(file++) {
+		key = file.key;
+		value = file.value;
 		if(file.fullLine) {
 			if(tech !is null)
 				parseLine(file.line, tech, file);
 		}
-		else if(file.key.equals_nocase("Technology")) {
+		else if(key.equals_nocase("Technology")) {
 			@tech = TechnologyType();
 			@grid = null;
-			tech.ident = file.value;
+			tech.ident = value;
 			addTechnology(tech);
 		}
-		else if(file.key.equals_nocase("Grid")) {
+		else if(key.equals_nocase("Grid")) {
 			@tech = null;
 			@grid = null;
-			if(!gridIdents.get(file.value, @grid)) {
+			if(!gridIdents.get(value, @grid)) {
 				@grid = TechnologyGridSpec();
-				grid.ident = file.value;
+				grid.ident = value;
 				addTechnologyGridSpec(grid);
 			}
 		}
-		else if(file.key.equals_nocase("DLC") && tech is null) {
-			if(!hasDLC(file.value))
+		else if(key.equals_nocase("DLC") && tech is null) {
+			if(!hasDLC(value))
 				@grid = null;
 		}
-		else if(file.key.equals_nocase("Vanilla Only")) {
+		else if(key.equals_nocase("Vanilla Only")) {
 			if(toBool(value)) {
 				if(isModdedGame && !path_inside("data", resolve("data/research/base_grid.txt")))
 					@grid = null;
@@ -974,9 +988,9 @@ void loadResearch(const string& filename) {
 		}
 		else {
 			if(grid !is null)
-				loadGrid(grid, file, file.key, file.value);
+				loadGrid(grid, file, key, value);
 			else if(tech !is null)
-				loadTech(tech, file, file.key, file.value);
+				loadTech(tech, file, key, value);
 		}
 	}
 }

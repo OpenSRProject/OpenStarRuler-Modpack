@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiPanel;
 import util.formatting;
@@ -520,6 +521,10 @@ void markupParse(BBTag@ tag, MarkupState@ state){
 			tag.type = TT_Color;
 			tag.value = getGlobalColor("icons", "colors::"+tag.argument.substr(1)).color;
 		}
+		else if(tag.argument.length > 0 && tag.argument[0] == '&') {
+			tag.type = TT_Color;
+			tag.value = getSkinValue(tag.argument.substr(1)).color;
+		}
 		else {
 			tag.type = TT_SkinColor;
 			tag.value = getColorType(tag.argument);
@@ -533,6 +538,10 @@ void markupParse(BBTag@ tag, MarkupState@ state){
 		else if(tag.argument.length > 0 && tag.argument[0] == '$') {
 			tag.type = TT_Stroke;
 			tag.value = getGlobalColor("icons", "colors::"+tag.argument.substr(1)).color;
+		}
+		else if(tag.argument.length > 0 && tag.argument[0] == '&') {
+			tag.type = TT_Color;
+			tag.value = getSkinValue(tag.argument.substr(1)).color;
 		}
 	}
 	else if(tag.name == "hspace") {
@@ -609,7 +618,7 @@ void markupParse(BBTag@ tag, MarkupState@ state){
 		if(args.length != 0) {
 			uint argi = 0;
 			if(tag.name == "sprite") {
-				@img.spr.sheet = getSpriteSheet(args[argi]);
+				@img.spr.sheet = getSkinSpriteSheet(args[argi]);
 				++argi;
 
 				if(args.length > argi) {
@@ -620,12 +629,12 @@ void markupParse(BBTag@ tag, MarkupState@ state){
 			}
 			else {
 				if(args[argi].length != 0 && args[argi][0] == '$') {
-					img.spr = getGlobalSprite("icons", "icons::"+args[argi].substr(1));
+					img.spr = getGlobalSprite("icons", "iconWrapper."+args[argi].substr(1));
 					img.size = img.spr.size;
 					++argi;
 				}
 				else {
-					img.spr = getSprite(args[argi]);
+					img.spr = getSkinSprite(args[argi]);
 					img.size = img.spr.size;
 					++argi;
 				}

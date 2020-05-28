@@ -1,4 +1,5 @@
 #priority init 2500
+import skins;
 from resources import ResourceRequirements;
 import saving;
 
@@ -229,7 +230,7 @@ bool readLevel(ReadFile& file, PlanetLevel& lvl) {
 				lvl.name = localize(value);
 		}
 		else if(key == "Icon") {
-			lvl.icon = getSprite(value);
+			lvl.icon = getSkinSprite(value);
 		}
 		else if(key == "Points") {
 			lvl.points = toInt(value);

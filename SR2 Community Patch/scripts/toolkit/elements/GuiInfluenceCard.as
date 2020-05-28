@@ -1,4 +1,5 @@
 #section disable menu
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiPanel;
 import elements.GuiText;
@@ -43,7 +44,7 @@ class GuiInfluenceCard : BaseGuiElement {
 	bool disabled = false;
 	Color disabledColor;
 
-	Color cardColor = colors::White;
+	Color cardColor = activeSkin.White;
 	GuiMarkupText@ title;
 
 	GuiSprite@ qualityIcon;
@@ -65,17 +66,17 @@ class GuiInfluenceCard : BaseGuiElement {
 		@title = GuiMarkupText(this, recti(10, 5, GUI_CARD_WIDTH - 10, 30));
 
 		@leaderIcon = GuiSprite(this, recti_area(8, 34, 34, 34));
-		leaderIcon.desc = Sprite(material::LeaderIcon);
+		leaderIcon.desc = Sprite(getSkinMaterial("LeaderIcon"));
 		setMarkupTooltip(leaderIcon, locale::TT_LEADER_CARD, false);
 		leaderIcon.visible = false;
 
 		@purchaseIcon = GuiSprite(this, recti_area(GUI_CARD_WIDTH - 50, GUI_CARD_HEIGHT - 50, 44, 44));
-		purchaseIcon.desc = icons::InfluencePurchaseCost;
+		purchaseIcon.desc = activeSkin.InfluencePurchaseCost;
 		@purchaseCost = GuiText(this, recti_area(GUI_CARD_WIDTH - 120, GUI_CARD_HEIGHT - 45, 70, 44));
 		purchaseCost.vertAlign = 0.5;
 		purchaseCost.horizAlign = 1.0;
 		purchaseCost.font = FT_Big;
-		purchaseCost.stroke = colors::Black;
+		purchaseCost.stroke = activeSkin.Black;
 
 		@typeIcon = GuiSprite(this, recti_area(GUI_CARD_WIDTH - 42, 34, 34, 34));
 
@@ -180,7 +181,7 @@ class GuiInfluenceCard : BaseGuiElement {
 				qlev = floor(double(qlev) / double(qdist) * 4) + 1;
 
 			if(qlev > 0) {
-				qualityIcon.desc = Sprite(spritesheet::PlanetLevelIcons, qlev-1);
+				qualityIcon.desc = Sprite(getSkinSpriteSheet("PlanetLevelIcons"), qlev-1);
 				qualityIcon.visible = true;
 			}
 			else {
@@ -245,7 +246,7 @@ class GuiInfluenceCard : BaseGuiElement {
 		auto@ txt = varTexts[index];
 		if(txt is null) {
 			@txt = GuiText(this, recti_area(vec2i(38, GUI_CARD_HEIGHT - 29 - 26*index), vec2i(40, 24)));
-			txt.stroke = colors::Black;
+			txt.stroke = activeSkin.Black;
 			@varTexts[index] = txt;
 		}
 
@@ -258,7 +259,7 @@ class GuiInfluenceCard : BaseGuiElement {
 		}
 		else {
 			txt.font = FT_Normal;
-			txt.color = colors::White;
+			txt.color = activeSkin.White;
 		}
 
 		index += 1;
@@ -350,14 +351,14 @@ class GuiInfluenceCard : BaseGuiElement {
 			index = 1;
 
 		if(card.uses > 1)
-			spritesheet::ActionCard.draw(index, AbsolutePosition+vec2i(3,3), cardColor);
+			getSkinSpriteSheet("ActionCard").draw(index, AbsolutePosition+vec2i(3,3), cardColor);
 		recti ipos = recti_area(AbsolutePosition.topLeft+CARD_ART_OFFSET, CARD_ART_SIZE);
 		drawRectangle(ipos, Color(0x202020ff));
 		if(card.type.icon.valid)
 			card.type.icon.draw(ipos.aspectAligned(card.type.icon.aspect));
-		spritesheet::ActionCard.draw(index, AbsolutePosition, cardColor);
+		getSkinSpriteSheet("ActionCard").draw(index, AbsolutePosition, cardColor);
 		if(disabled)
-			spritesheet::ActionCard.draw(4, AbsolutePosition, disabledColor);
+			getSkinSpriteSheet("ActionCard").draw(4, AbsolutePosition, disabledColor);
 		skin.draw(SS_FullTitle, SF_Normal, recti_area(
 			AbsolutePosition.topLeft + vec2i(2, 2),
 			vec2i(GUI_CARD_WIDTH - 6, 30)), card.type.color);
@@ -558,7 +559,7 @@ class GuiInfluenceCardPopup : BaseGuiElement {
 				qlev = floor(double(qlev) / double(qdist) * 4) + 1;
 
 			if(qlev > 0) {
-				qualityIcon.desc = Sprite(spritesheet::PlanetLevelIcons, qlev-1);
+				qualityIcon.desc = Sprite(getSkinSpriteSheet("PlanetLevelIcons"), qlev-1);
 				qualityIcon.visible = true;
 			}
 			else {
@@ -582,7 +583,7 @@ class GuiInfluenceCardPopup : BaseGuiElement {
 
 			if(canPurchase) {
 				@purchaseIcon = GuiSprite(this, Alignment(Right-50, Bottom-50, Width=44, Height=44));
-				purchaseIcon.desc = icons::InfluencePurchaseCost;
+				purchaseIcon.desc = activeSkin.InfluencePurchaseCost;
 
 				@purchaseCost = GuiText(this, Alignment(Right-120, Bottom-45, Width=70, Height=44));
 				purchaseCost.vertAlign = 0.5;
@@ -869,7 +870,7 @@ class GuiInfluenceCardPopup : BaseGuiElement {
 		}
 		else {
 			txt.font = FT_Normal;
-			txt.color = colors::White;
+			txt.color = activeSkin.White;
 		}
 
 		index += 1;
@@ -1065,7 +1066,7 @@ void drawCardIcon(const InfluenceCard@ card, const recti& pos, int uses = 0) {
 
 	//Draw purchaser
 	if(purchaser !is null)
-		spritesheet::ContextIcons.draw(1, iconPos, col);
+		getSkinSpriteSheet("ContextIcons").draw(1, iconPos, col);
 }
 
 #section game

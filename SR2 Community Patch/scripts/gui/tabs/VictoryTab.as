@@ -1,4 +1,5 @@
 #priority init -200
+import skins;
 import tabs.Tab;
 import tabs.tabbar;
 import elements.GuiButton;
@@ -39,7 +40,7 @@ class VictoryTab : Tab {
 		heading.horizAlign = 0.5;
 		heading.font = FT_Big;
 		heading.color = colors::Green;
-		heading.stroke = colors::Black;
+		heading.stroke = activeSkin.Black;
 
 		@victorPanel = GuiSkinElement(this, Alignment(Left+0.1f, Top+90, Right-0.1f, Top+242), SS_Panel);
 
@@ -63,7 +64,7 @@ class VictoryTab : Tab {
 		}
 
 		@rankingsButton = GuiButton(buttonPanel, Alignment(Left, Bottom-40, Width=135, Height=40), locale::V_RANKINGS);
-		rankingsButton.buttonIcon = Sprite(material::PointsIcon);
+		rankingsButton.buttonIcon = Sprite(getSkinMaterial("PointsIcon"));
 		rankingsButton.toggleButton = true;
 		rankingsButton.pressed = true;
 		rankingsButton.font = FT_Bold;
@@ -73,16 +74,16 @@ class VictoryTab : Tab {
 		rankings.vertPadding = 8;
 		rankings.style = SS_Panel;
 
-		addStat(ST_Int, stat::Points, 60, locale::STAT_POINTS, Sprite(material::PointsIcon), 2000);
-		addStat(ST_Float, stat::Military, 60, locale::STAT_STRENGTH, icons::Strength, 5000);
-		addStat(ST_Int, stat::Planets, 15, locale::STAT_PLANETS, icons::Planet, 10);
-		addStat(ST_Int, stat::Ships, 15, locale::STAT_SHIPS, icons::Defense, 10);
-		addStat(ST_Float, stat::Budget, 60, locale::STAT_BUDGET, icons::Money, 2000);
-		addStat(ST_Float, stat::NetBudget, 60, locale::STAT_NET_BUDGET, icons::Money, 2000);
-		addStat(ST_Float, stat::EnergyIncome, 60, locale::STAT_ENERGY_INCOME, icons::Energy, 2);
-		addStat(ST_Float, stat::InfluenceIncome, 60, locale::STAT_INFLUENCE_INCOME, icons::Influence, 3/60.0);
-		addStat(ST_Float, stat::ResearchIncome, 60, locale::STAT_RESEARCH_INCOME, icons::Research, 2);
-		addStat(ST_Float, stat::ResearchTotal, 60, locale::STAT_RESEARCH_TOTAL, icons::Research, 1000);
+		addStat(ST_Int, stat::Points, 60, locale::STAT_POINTS, Sprite(getSkinMaterial("PointsIcon")), 2000);
+		addStat(ST_Float, stat::Military, 60, locale::STAT_STRENGTH, iconWrapper.Strength, 5000);
+		addStat(ST_Int, stat::Planets, 15, locale::STAT_PLANETS, iconWrapper.Planet, 10);
+		addStat(ST_Int, stat::Ships, 15, locale::STAT_SHIPS, iconWrapper.Defense, 10);
+		addStat(ST_Float, stat::Budget, 60, locale::STAT_BUDGET, iconWrapper.Money, 2000);
+		addStat(ST_Float, stat::NetBudget, 60, locale::STAT_NET_BUDGET, iconWrapper.Money, 2000);
+		addStat(ST_Float, stat::EnergyIncome, 60, locale::STAT_ENERGY_INCOME, iconWrapper.Energy, 2);
+		addStat(ST_Float, stat::InfluenceIncome, 60, locale::STAT_INFLUENCE_INCOME, iconWrapper.Influence, 3/60.0);
+		addStat(ST_Float, stat::ResearchIncome, 60, locale::STAT_RESEARCH_INCOME, iconWrapper.Research, 2);
+		addStat(ST_Float, stat::ResearchTotal, 60, locale::STAT_RESEARCH_TOTAL, iconWrapper.Research, 1000);
 
 		updateAbsolutePosition();
 		update();
@@ -158,19 +159,19 @@ class VictoryTab : Tab {
 			heading.text = locale::V_WON_TITLE;
 			heading.color = colors::Green;
 			description.text = format(locale::V_WON_TEXT, formatEmpireName(winner), formatEmpireName(playerEmpire));
-			typeIcon = Sprite(material::PointsIcon);
+			typeIcon = Sprite(getSkinMaterial("PointsIcon"));
 		}
 		else if(myVictory == -2 && playerEmpire.SubjugatedBy.Victory == 1) {
 			heading.text = locale::V_LESSER_TITLE;
 			heading.color = Color(0xfff500ff);
 			description.text = format(locale::V_LESSER_TEXT, formatEmpireName(winner), formatEmpireName(playerEmpire));
-			typeIcon = Sprite(material::PointsIcon);
+			typeIcon = Sprite(getSkinMaterial("PointsIcon"));
 		}
 		else {
 			heading.text = locale::V_LOST_TITLE;
-			heading.color = colors::Red;
+			heading.color = activeSkin.Red;
 			description.text = format(locale::V_LOST_TEXT, formatEmpireName(winner), formatEmpireName(playerEmpire));
-			typeIcon = Sprite(material::SystemUnderAttack);
+			typeIcon = Sprite(getSkinMaterial("SystemUnderAttack"));
 		}
 
 		if(victorPanel.visible)

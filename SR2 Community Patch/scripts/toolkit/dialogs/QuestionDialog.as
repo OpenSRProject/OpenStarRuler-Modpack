@@ -3,6 +3,7 @@ import elements.GuiButton;
 import elements.GuiMarkupText;
 import elements.GuiTextbox;
 import elements.GuiText;
+import skins;
 
 interface QuestionDialogCallback {
 	void questionCallback(QuestionDialog@ dialog, int answer);
@@ -33,7 +34,7 @@ class QuestionDialog : Dialog {
 	}
 
 	//Button management
-	void addButton(const string& str, const Color& color = colors::White) {
+	void addButton(const string& str, const Color& color = activeSkin.White) {
 		if(isWindows) {
 			//Legacy OS support
 			GuiButton@ btn = GuiButton(window, recti(vec2i(), vec2i(130, DIALOG_BUTTON_HEIGHT)), str);
@@ -95,32 +96,32 @@ enum QuestionAnswer {
 
 QuestionDialog@ question(const string& msg, QuestionDialogCallback@ cb = null, IGuiElement@ bind = null) {
 	QuestionDialog@ dlg = QuestionDialog(" ", msg, cb, bind);
-	dlg.addButton(locale::YES, colors::Green);
-	dlg.addButton(locale::NO, colors::Red);
+	dlg.addButton(locale::YES, activeSkin.QuestionDialogYes);
+	dlg.addButton(locale::NO, activeSkin.QuestionDialogNo);
 	addDialog(dlg);
 	return dlg;
 }
 
 QuestionDialog@ question(const string& msg, const string& yes, const string& no, QuestionDialogCallback@ cb = null, IGuiElement@ bind = null) {
 	QuestionDialog@ dlg = QuestionDialog(" ", msg, cb, bind);
-	dlg.addButton(yes, colors::Green);
-	dlg.addButton(no, colors::Red);
+	dlg.addButton(yes, activeSkin.QuestionDialogYes);
+	dlg.addButton(no, activeSkin.QuestionDialogNo);
 	addDialog(dlg);
 	return dlg;
 }
 
 QuestionDialog@ question(const string& title, const string& msg, QuestionDialogCallback@ cb = null, IGuiElement@ bind = null) {
 	QuestionDialog@ dlg = QuestionDialog(title, msg, cb, bind);
-	dlg.addButton(locale::YES, colors::Green);
-	dlg.addButton(locale::NO, colors::Red);
+	dlg.addButton(locale::YES, activeSkin.QuestionDialogYes);
+	dlg.addButton(locale::NO, activeSkin.QuestionDialogNo);
 	addDialog(dlg);
 	return dlg;
 }
 
 QuestionDialog@ question(const string& title, const string& msg, const string& yes, const string& no, QuestionDialogCallback@ cb = null, IGuiElement@ bind = null) {
 	QuestionDialog@ dlg = QuestionDialog(title, msg, cb, bind);
-	dlg.addButton(yes, colors::Green);
-	dlg.addButton(no, colors::Red);
+	dlg.addButton(yes, activeSkin.QuestionDialogYes);
+	dlg.addButton(no, activeSkin.QuestionDialogNo);
 	addDialog(dlg);
 	return dlg;
 }

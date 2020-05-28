@@ -29,13 +29,13 @@ class OverviewTab : Tab, QuestionDialogCallback {
 		@files = FileFolder(filePanel, recti());
 
 		@editButton = GuiButton(this, Alignment(Left+200-154, Bottom-46, Width=150, Height=42), "Edit");
-		editButton.buttonIcon = icons::Paint;
+		editButton.buttonIcon = iconWrapper.Paint;
 		editButton.color = colors::Green;
 		editButton.visible = false;
 
 		@deleteButton = GuiButton(this, Alignment(Left+200+4, Bottom-46, Width=150, Height=42), "Delete");
-		deleteButton.buttonIcon = icons::Delete;
-		deleteButton.color = colors::Red;
+		deleteButton.buttonIcon = iconWrapper.Delete;
+		deleteButton.color = activeSkin.Red;
 		deleteButton.visible = false;
 
 		GuiMarkupText desc(this, Alignment(Left+412, Top+12, Right-12, Top+42));
@@ -77,7 +77,7 @@ class OverviewTab : Tab, QuestionDialogCallback {
 	}		
 
 	Sprite get_icon() {
-		return icons::Edit;
+		return iconWrapper.Edit;
 	}
 
 	void show() override {

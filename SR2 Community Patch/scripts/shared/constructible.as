@@ -1,3 +1,4 @@
+import skins;
 from orbitals import OrbitalModule, getOrbitalModule, OrbitalValues;
 import buildings;
 import ship_groups;
@@ -84,7 +85,7 @@ tidy class Constructible : Serializable {
 			case CT_Orbital:
 				return orbital.icon;
 			case CT_Asteroid:
-				return icons::Asteroid;
+				return iconWrapper.Asteroid;
 			case CT_Building:
 				return building.sprite;
 			case CT_Terraform:
@@ -92,9 +93,9 @@ tidy class Constructible : Serializable {
 			case CT_Retrofit:
 				return Sprite();
 			case CT_DryDock:
-				return Sprite(spritesheet::GuiOrbitalIcons, 3);
+				return Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 3);
 			case CT_Export:
-				return icons::Labor;
+				return iconWrapper.Labor;
 			case CT_Construction:
 				return getConstructionIcon(constructionId);
 		}

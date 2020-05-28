@@ -7,6 +7,7 @@ from input import activeCamera, mouseToGrid;
 import void zoomTabTo(Object@ obj) from "tabs.GalaxyTab";
 import vec3d strategicPosition(Object& obj) from "obj_selection";
 import void openSupportOverlay(Object@ obj, Object@ to) from "tabs.GalaxyTab";
+import skins;
 
 array<Object@>@ get_immediateSelection() {
 	auto@ selected = selectedObjects;
@@ -48,7 +49,7 @@ class ExportResources : ObjectTargeting {
 		if(type !is null)
 			icon = type.smallIcon;
 		drawCrosshair = false;
-		validIconColor = colors::White;
+		validIconColor = activeSkin.White;
 		iconSize = vec2i(32, 32);
 		objs.reserve(sources.length);
 		for(uint i = 0, cnt = sources.length; i < cnt; ++i) {
@@ -70,7 +71,7 @@ class ExportResources : ObjectTargeting {
 
 		beams.length = objs.length;
 		for(uint i = 0, cnt = objs.length; i < cnt; ++i) {
-			auto@ beam = BeamNode(material::MoveBeam, 0.002f, vec3d(), vec3d(), true);
+			auto@ beam = BeamNode(getSkinMaterial("MoveBeam"), 0.002f, vec3d(), vec3d(), true);
 			beam.visible = false;
 			if(isQueued)
 				beam.color = Color(0xffe400ff);
@@ -232,12 +233,12 @@ class TransferSupports : ObjectTargeting {
 	TransferSupports(Object@ source, bool isTemporary = mouseLeft) {
 		@obj = source;
 		this.isTemporary = isTemporary;
-		icon = icons::ManageSupports;
+		icon = iconWrapper.ManageSupports;
 		drawCrosshair = false;
-		validIconColor = colors::White;
+		validIconColor = activeSkin.White;
 		iconSize = vec2i(32, 32);
 
-		@beam = BeamNode(material::MoveBeam, 0.002f, vec3d(), vec3d(), true);
+		@beam = BeamNode(getSkinMaterial("MoveBeam"), 0.002f, vec3d(), vec3d(), true);
 		beam.visible = false;
 		beam.color = Color(0x76e0e0ff);
 	}

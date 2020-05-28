@@ -1,3 +1,4 @@
+import skins;
 import saving;
 import hooks;
 import util.formatting;
@@ -54,7 +55,7 @@ tidy class ConstructionType {
 			if(hooks[i].getVariable(obj, this, vicon, vname, vvalue, color)) {
 				tt += format("[nl/][vspace=6/][img=$1;22][b][color=$4]$2:[/color][/b] [offset=110][hspace=10/]$3[/offset][/img]",
 					getSpriteDesc(vicon), vname, vvalue, toString(color));
-				color = colors::White;
+				color = activeSkin.White;
 			}
 		}
 
@@ -404,7 +405,11 @@ void loadConstructions(const string& filename) {
 			type.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			type.icon = getSprite(value);
+			if(activeSkin.constructionIconOverrides.exists(type.ident)) {
+				activeSkin.constructionIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Target")) {
 			parseTarget(type.targets, value);

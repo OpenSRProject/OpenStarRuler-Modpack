@@ -1,3 +1,4 @@
+import skins;
 import navigation.SmartCamera;
 from input import activeCamera, mouseToGrid;
 from gui import isGuiHovered;
@@ -9,7 +10,7 @@ import Tab@ createGalaxyTab() from "tabs.GalaxyTab";
 
 class PointTargeting {
 	Tab@ returnTo;
-	Sprite icon(spritesheet::ContextIcons, 1);
+	Sprite icon(getSkinSpriteSheet("ContextIcons"), 1);
 	bool allowMultiple = false;
 
 	bool valid(const vec3d& pos) {
@@ -130,11 +131,11 @@ class PointTargetDisplay : TargetVisuals {
 		targ.icon.draw(recti_area(mousePos-vec2i(20,20), vec2i(40,40)), color);
 
 		//Draw the message
-		const Font@ ft = font::DroidSans_11_Bold;
+		const Font@ ft = activeSkin.skin.getFont(FT_Bold);
 		string err = mode.desc;
 		if(err.length != 0) {
 			ft.draw(recti_area(mousePos-vec2i(200,85), vec2i(400, 20)), mode.message, horizAlign=0.5, color=color);
-			@ft = font::OpenSans_11_Italic;
+			@ft = activeSkin.skin.getFont(FT_Italic);
 			ft.draw(recti_area(mousePos-vec2i(200,65), vec2i(400, 20)), err, horizAlign=0.5, color=color);
 		}
 		else {
@@ -224,17 +225,17 @@ class PointDisplay : TargetVisuals {
 	PlaneNode@ plane;
 
 	Color inColor = colors::Green;
-	Color outColor = colors::Red;
+	Color outColor = activeSkin.Red;
 	Color radiusColor = Color(0x00c0ff80);
 
 	PointDisplay() {
-		@node = BeamNode(material::MoveBeam, 0.002f, vec3d(), vec3d(), true);
+		@node = BeamNode(getSkinMaterial("MoveBeam"), 0.002f, vec3d(), vec3d(), true);
 		node.visible = false;
 
-		@node2 = BeamNode(material::MoveBeam, 0.002f, vec3d(), vec3d(), true);
+		@node2 = BeamNode(getSkinMaterial("MoveBeam"), 0.002f, vec3d(), vec3d(), true);
 		node2.visible = false;
 
-		@plane = PlaneNode(material::Circle, 0.0);
+		@plane = PlaneNode(getSkinMaterial("Circle"), 0.0);
 		plane.visible = false;
 		plane.color = radiusColor;
 	}

@@ -19,6 +19,7 @@ from overlays.ContextMenu import openContextMenu;
 from obj_selection import selectObject, selectedObject, selectedObjects;
 import void zoomTo(Object@ obj) from "tabs.GalaxyTab";
 import void openOverlay(Object@ obj) from "tabs.GalaxyTab";
+import skins;
 
 const int ICON_SIZE = 46;
 
@@ -322,7 +323,7 @@ class PlanetElement {
 				bool sourceLine = false;
 				if(child.primary !is null && (!child.primary.usable || child.decaying)) {
 					float pct = abs((frameTime % 1.0) - 0.5f) * 2.f;
-					color = colors::Red.interpolate(colors::Orange, pct);
+					color = activeSkin.PlanetsTabDecayingPrimary.interpolate(activeSkin.PlanetsTabDecayingSecondary, pct);
 					sourceLine = true;
 				}
 
@@ -348,9 +349,9 @@ class PlanetElement {
 		if(hovered)
 			drawRectangle(iconPos, hoverColor);
 		if(focused && isPrimary)
-			material::SelectionCircle.draw(iconPos.padded(-2), Color(0xffc0ff80));
+			getSkinMaterial("SelectionCircle").draw(iconPos.padded(-2), Color(0xffc0ff80));
 		else if(obj.selected && isPrimary)
-			material::SelectionCircle.draw(iconPos);
+			getSkinMaterial("SelectionCircle").draw(iconPos);
 		drawPlanet(iconPos);
 
 		//Draw data
@@ -359,16 +360,16 @@ class PlanetElement {
 				vec2i pos(iconPos.botRight.x-12, iconPos.topLeft.y+4);
 				int count = int(statuses.length);
 				int spacing = min(iconPos.height / count, 22);
-				const Font@ ft = font::DroidSans_11_Bold;
+				const Font@ ft = activeSkin.skin.getFont(FT_Bold);
 				for(uint i = 0, cnt = statuses.length; i < cnt; ++i) {
 					auto@ status = statuses[i];
-					spritesheet::ResourceIconsMods.draw(0, recti_area(pos-vec2i(3), vec2i(26)), status.type.color);
+					getSkinSpriteSheet("ResourceIconsMods").draw(0, recti_area(pos-vec2i(3), vec2i(26)), status.type.color);
 					status.type.icon.draw(recti_area(pos, vec2i(20)));
 					if(!status.type.unique && status.stacks > 1)
 						ft.draw(
 							pos=recti_area(pos-vec2i(3), vec2i(26)),
 							horizAlign=1.0, vertAlign=1.0,
-							stroke=colors::Black,
+							stroke=activeSkin.Black,
 							color=status.type.color,
 							text=toString(status.stacks)+"x");
 					pos.y += spacing;
@@ -394,19 +395,19 @@ class PlanetElement {
 				}
 			}
 			if(mode == PM_MONEY && income != 0) {
-				const Font@ ft = font::DroidSans_11_Bold;
+				const Font@ ft = activeSkin.skin.getFont(FT_Bold);
 				if(income == -100)
 					@ft = font::DroidSans_10;
 				recti area = recti_area(vec2i(startPos.x, iconPos.topLeft.y - 8), vec2i(width, 20));
-				Color color = colors::Red;
+				Color color = activeSkin.PlanetsTabDeficit;
 				if(income > 0)
-					color = colors::Green;
+					color = activeSkin.PlanetsTabProfit;
 				else if(income == 0)
 					color = Color(0xaaaaaaff);
-				ft.draw(pos=area+vec2i(-1,-1), text=moneyText, color=colors::Black, horizAlign=0.5);
-				ft.draw(pos=area+vec2i(1,-1), text=moneyText, color=colors::Black, horizAlign=0.5);
-				ft.draw(pos=area+vec2i(-1,1), text=moneyText, color=colors::Black, horizAlign=0.5);
-				ft.draw(pos=area+vec2i(1,1), text=moneyText, color=colors::Black, horizAlign=0.5);
+				ft.draw(pos=area+vec2i(-1,-1), text=moneyText, color=activeSkin.Black, horizAlign=0.5);
+				ft.draw(pos=area+vec2i(1,-1), text=moneyText, color=activeSkin.Black, horizAlign=0.5);
+				ft.draw(pos=area+vec2i(-1,1), text=moneyText, color=activeSkin.Black, horizAlign=0.5);
+				ft.draw(pos=area+vec2i(1,1), text=moneyText, color=activeSkin.Black, horizAlign=0.5);
 				ft.draw(pos=area, text=moneyText, color=color, horizAlign=0.5);
 			}
 			if(production !is null) {
@@ -416,24 +417,24 @@ class PlanetElement {
 						tot += 1;
 				}
 				if(tot > 0) {
-					int tw = min(width, tot * 40);
+					int tw = activeSkin.PlanetsTabProdTotalWidth(width, tot);
 					int step = tw / tot;
 
-					vec2i pos(iconPos.center.x - tw/2, iconPos.topLeft.y - 16);
+					vec2i pos(iconPos.center.x - tw/2, iconPos.topLeft.y - activeSkin.PlanetsTabProdIconHeight);
 					for(uint i = 0; i < TR_COUNT; ++i) {
 						double amt = production[i];
 						if(amt > 0) {
 							Sprite sprt = getTileResourceSprite(i);
 							sprt.draw(recti_area(pos, vec2i(20)));
 							string text = standardize(amt, true);
-							const Font@ ft = font::DroidSans_11_Bold;
-							recti area = recti_area(pos+vec2i(18,-1), vec2i(24));
+							const Font@ ft = activeSkin.skin.getFont(FT_Bold);
+							recti area = recti_area(pos+activeSkin.PlanetsTabProdItemX, activeSkin.PlanetsTabProdItemY);
 							Color color = getTileResourceColor(i);
-							ft.draw(pos=area+vec2i(-1,-1), text=text, color=colors::Black, horizAlign=0.5);
-							ft.draw(pos=area+vec2i(1,-1), text=text, color=colors::Black, horizAlign=0.5);
-							ft.draw(pos=area+vec2i(-1,1), text=text, color=colors::Black, horizAlign=0.5);
-							ft.draw(pos=area+vec2i(1,1), text=text, color=colors::Black, horizAlign=0.5);
-							ft.draw(pos=area, text=text, color=color, horizAlign=0.5);
+							ft.draw(pos=area+vec2i(-1,-1), text=text, color=activeSkin.Black, horizAlign=activeSkin.PlanetsTabProdItemAlign);
+							ft.draw(pos=area+vec2i(1,-1), text=text, color=activeSkin.Black, horizAlign=activeSkin.PlanetsTabProdItemAlign);
+							ft.draw(pos=area+vec2i(-1,1), text=text, color=activeSkin.Black, horizAlign=activeSkin.PlanetsTabProdItemAlign);
+							ft.draw(pos=area+vec2i(1,1), text=text, color=activeSkin.Black, horizAlign=activeSkin.PlanetsTabProdItemAlign);
+							ft.draw(pos=area, text=text, color=color, horizAlign=activeSkin.PlanetsTabProdItemAlign);
 
 							pos.x += step;
 						}
@@ -444,27 +445,27 @@ class PlanetElement {
 				recti area = recti_area(vec2i(startPos.x - 20, iconPos.topLeft.y - 8), vec2i(width+40, 20));
 				string txt = format("$1/$2", toString(numUsed), toString(numTotal));
 				Color baseColor(0xaaaaaaff);
-				const Font@ ft = font::DroidSans_11_Bold;
+				const Font@ ft = activeSkin.skin.getFont(FT_Bold);
 				if(mode == PM_TILES) {
 					if(numTotal < 50)
-						@ft = font::DroidSans_8;
+						@ft = activeSkin.skin.getFont(FT_Small);
 					else if(numTotal < 90)
 						@ft = font::DroidSans_10;
 					else if(numTotal < 150)
-						@ft = font::DroidSans_11;
+						@ft = activeSkin.skin.getFont(FT_Normal);
 					else
-						baseColor = colors::Green;
+						baseColor = activeSkin.PlanetsTabTilesGreat;
 				}
 				else {
 					if(numUsed < numTotal)
-						baseColor = colors::Green;
+						baseColor = activeSkin.PlanetsTabTotalGood;
 					else
-						baseColor = colors::Red;
+						baseColor = activeSkin.PlanetsTabTotalBad;
 				}
 				Color color;
 				if(numTotal != 0)
-					color = baseColor.interpolate(colors::Orange, float(numUsed) / float(numTotal));
-				ft.draw(pos=area, text=txt, color=color, horizAlign=0.5, stroke=colors::Black);
+					color = baseColor.interpolate(activeSkin.PlanetsTabTotalSecondary, float(numUsed) / float(numTotal));
+				ft.draw(pos=area, text=txt, color=color, horizAlign=0.5, stroke=activeSkin.Black);
 			}
 		}
 	}
@@ -1076,44 +1077,44 @@ class PlanetsTab : Tab {
 		int c = 6;
 		int off = (c * w) / 2;
 		@normalMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_NORMAL);
-		normalMode.buttonIcon = Sprite(spritesheet::MenuIcons, 0);
+		normalMode.buttonIcon = Sprite(getSkinSpriteSheet("MenuIcons"), 0);
 		normalMode.toggleButton = true;
 		normalMode.pressed = true;
 		off -= w;
 
 		@moneyMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_MONEY);
-		moneyMode.buttonIcon = icons::Money;
+		moneyMode.buttonIcon = iconWrapper.Money;
 		moneyMode.toggleButton = true;
 		moneyMode.pressed = false;
 		off -= w;
 
 		@productionMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_PRODUCTION);
-		productionMode.buttonIcon = icons::Add;
+		productionMode.buttonIcon = iconWrapper.Add;
 		productionMode.toggleButton = true;
 		productionMode.pressed = false;
 		off -= w;
 
 		@reqsMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_REQS);
-		reqsMode.buttonIcon = Sprite(spritesheet::ResourceClassIcons, 0);
+		reqsMode.buttonIcon = Sprite(getSkinSpriteSheet("ResourceClassIcons"), 0);
 		reqsMode.toggleButton = true;
 		reqsMode.pressed = false;
 		off -= w;
 
 		@pressureMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_PRESSURE);
-		pressureMode.buttonIcon = icons::Pressure;
+		pressureMode.buttonIcon = iconWrapper.Pressure;
 		pressureMode.toggleButton = true;
 		pressureMode.pressed = false;
 		pressureMode.disabled = playerEmpire.HasPopulation == 0;
 		off -= w;
 
 		@tilesMode = GuiButton(bar, Alignment(Left+0.5f-off, Top+4, Width=w, Height=34), locale::PLANETS_MODE_TILES);
-		tilesMode.buttonIcon = Sprite(spritesheet::PlanetType, 0);
+		tilesMode.buttonIcon = activeSkin.PlanetsTabTiles;
 		tilesMode.toggleButton = true;
 		tilesMode.pressed = false;
 		off -= w;
 
 		@bgButton = GuiButton(bar, Alignment(Right-38, Top+4, Width=34, Height=34));
-		GuiSprite sprt(bgButton, Alignment().padded(4), Sprite(spritesheet::PlanetType, 2));
+		GuiSprite sprt(bgButton, Alignment().padded(4), activeSkin.PlanetsTabBg);
 		bgButton.toggleButton = true;
 		bgButton.pressed = true;
 	}
@@ -1130,19 +1131,19 @@ class PlanetsTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0xdafc4eff);
+		return activeSkin.PlanetsTabActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xccff00ff);
+		return activeSkin.PlanetsTabInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x798c2bff);
+		return activeSkin.PlanetsTabSeparator;
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabPlanets);
+		return Sprite(getSkinMaterial("TabPlanets"));
 	}
 
 	TabCategory get_category() {

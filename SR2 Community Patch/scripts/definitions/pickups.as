@@ -1,4 +1,5 @@
 #priority init 1000
+import skins;
 import hooks;
 from saving import SaveIdentifier;
 
@@ -18,11 +19,11 @@ tidy final class PickupType {
 	array<IPickupHook@> hooks;
 	double physicalSize = 5.0;
 	const Model@ model = model::Research_Station;
-	const Material@ material = material::GenericPBR_Research_Station;
+	const Material@ material = getSkinMaterial("GenericPBR_Research_Station");
 
 	double frequency = 1.0;
 
-	const SpriteSheet@ iconSheet = spritesheet::OrbitalIcons;
+	const SpriteSheet@ iconSheet = getSkinSpriteSheet("OrbitalIcons");
 	uint iconIndex = 12;
 
 	double get_totalRarity() {

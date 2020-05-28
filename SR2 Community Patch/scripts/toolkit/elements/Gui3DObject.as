@@ -1,4 +1,5 @@
 #section disable menu
+import skins;
 import elements.BaseGuiElement;
 import planet_types;
 import orbitals;
@@ -93,7 +94,7 @@ class DrawPlanet : Draw3D {
 			quaterniond atmosRot;
 			if(settings::bRotateUIObjects)
 				atmosRot = quaterniond_fromAxisAngle(vec3d_up(), fraction(gameTime / 120.0) * twopi);
-			drawLitModel(model::Sphere_max, material::FlatAtmosphere, pos, rotation * atmosRot);
+			drawLitModel(model::Sphere_max, getSkinMaterial("FlatAtmosphere"), pos, rotation * atmosRot);
 		}
 		@renderingNode = null;
 #section all
@@ -111,16 +112,16 @@ class DrawRingworld : Draw3D {
 		quaterniond outerRot;
 		outerRot *= quaterniond_fromAxisAngle(vec3d_front(), -0.25 * pi);
 		outerRot *= rotation;
-		drawLitModel(model::RingworldOuter, material::GenericPBR_RingworldOuter, pos, outerRot);
+		drawLitModel(model::RingworldOuter, getSkinMaterial("GenericPBR_RingworldOuter"), pos, outerRot);
 
 		quaterniond innerRot;
 		innerRot *= quaterniond_fromAxisAngle(vec3d_front(), -0.25 * pi);
 		innerRot *= rotation.inverted();
-		drawLitModel(model::RingworldInner, material::GenericPBR_RingworldInner, pos, innerRot);
+		drawLitModel(model::RingworldInner, getSkinMaterial("GenericPBR_RingworldInner"), pos, innerRot);
 
-		drawLitModel(model::RingworldLiving, material::RingworldSurface, pos, outerRot);
+		drawLitModel(model::RingworldLiving, getSkinMaterial("RingworldSurface"), pos, outerRot);
 		
-//		drawLitModel(model::RingworldAtmosphere, material::RingworldAtmo, pos, outerRot);
+//		drawLitModel(model::RingworldAtmosphere, getSkinMaterial("RingworldAtmo"), pos, outerRot);
 	}
 };
 
@@ -140,7 +141,7 @@ class DrawBlackhole : Draw3D {
 		recti square = pos.aspectAligned(1.0);
 		square = square.padded(-square.width*0.2, -square.height*0.2);
 
-		model::Sphere_max.draw(material::Blackhole, square, rotation, 0.3);
+		model::Sphere_max.draw(getSkinMaterial("Blackhole"), square, rotation, 0.3);
 		@renderingNode = null;
 	}
 };
@@ -164,8 +165,8 @@ class DrawStar : Draw3D {
 		recti square = pos.aspectAligned(1.0);
 		square = square.padded(-square.width*0.2, -square.height*0.2);
 
-		model::Sphere_max.draw(material::PopupStarSurface, square, rotation, 1/1.5);
-		material::Corona.draw(square);
+		model::Sphere_max.draw(getSkinMaterial("PopupStarSurface"), square, rotation, 1/1.5);
+		getSkinMaterial("Corona").draw(square);
 		@renderingNode = null;
 	}
 };
@@ -226,7 +227,7 @@ Draw3D@ makeDrawMode(Object@ obj) {
 
 			if(obj.owner.ColonizerModel.length != 0) {
 				@model = getModel(obj.owner.ColonizerModel);
-				@material = getMaterial(obj.owner.ColonizerMaterial);
+				@material = getSkinMaterial(obj.owner.ColonizerMaterial);
 			}
 			else if(skin !is null) {
 				@model = skin.model;
@@ -234,14 +235,14 @@ Draw3D@ makeDrawMode(Object@ obj) {
 			}
 			else {
 				@model = model::ColonyShip;
-				@material = material::VolkurGenericPBR;
+				@material = getSkinMaterial("VolkurGenericPBR");
 			}
 
 			return DrawModel(model, material);
 		}
 		case OT_Freighter: {
 			const Model@ model = model::Fighter;
-			const Material@ material = material::Ship10;
+			const Material@ material = getSkinMaterial("Ship10");
 
 			const Shipset@ ss = obj.owner.shipset;
 			if(ss !is null) {
@@ -268,11 +269,11 @@ Draw3D@ makeDrawMode(Object@ obj) {
 			}
 			switch(obj.id % 3) {
 				case 0:
-					@material = material::AsteroidPegmatite; break;
+					@material = getSkinMaterial("AsteroidPegmatite"); break;
 				case 1:
-					@material = material::AsteroidMagnetite; break;
+					@material = getSkinMaterial("AsteroidMagnetite"); break;
 				case 2:
-					@material = material::AsteroidTonalite; break;
+					@material = getSkinMaterial("AsteroidTonalite"); break;
 			}
 			return DrawModel(model, material);
 		}

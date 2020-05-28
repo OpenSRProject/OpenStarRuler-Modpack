@@ -1,3 +1,4 @@
+import skins;
 import tabs.tabbar;
 import elements.GuiBlueprint;
 import elements.GuiMarkupText;
@@ -49,24 +50,24 @@ class CommunityDesign : Tab, QuestionDialogCallback {
 		bp.bp.hoverArcs = true;
 
 		@backButton = GuiButton(this, Alignment(Left+8, Top+8, Left+144, Height=50), locale::BACK);
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 
 		@downloadEmpire = GuiButton(this, Alignment(Right-208-260, Top+8, Right-264, Height=38), locale::DOWNLOAD_TO_EMPIRE);
-		downloadEmpire.setIcon(icons::Add);
+		downloadEmpire.setIcon(iconWrapper.Add);
 		setMarkupTooltip(downloadEmpire, locale::TT_DOWNLOAD_TO_EMPIRE, width=400);
 
 		@downloadProfile = GuiButton(this, Alignment(Right-208-260, Top+8+40, Right-264, Height=38), locale::DOWNLOAD_TO_PROFILE);
-		downloadProfile.setIcon(icons::Import);
+		downloadProfile.setIcon(iconWrapper.Import);
 		setMarkupTooltip(downloadProfile, locale::TT_DOWNLOAD_TO_PROFILE, width=400);
 
 		@editButton = GuiButton(this, Alignment(Right-208-260, Top+8+40+40, Right-264, Height=38), locale::DOWNLOAD_EDIT);
-		editButton.setIcon(icons::Edit);
+		editButton.setIcon(iconWrapper.Edit);
 		editButton.allowOtherButtons = true;
 		setMarkupTooltip(editButton, locale::TT_DOWNLOAD_EDIT, width=400);
 
 		@deleteButton = GuiButton(this, Alignment(Left+8, Top+8+40+40, Left+144, Height=38), locale::DELETE);
-		deleteButton.color = colors::Red;
-		deleteButton.setIcon(icons::Delete);
+		deleteButton.color = activeSkin.Red;
+		deleteButton.setIcon(iconWrapper.Delete);
 		deleteButton.visible = false;
 
 		@headerPanel = GuiPanel(this, Alignment(Left+154, Top+8, Right-264-208-208, Top+135));
@@ -74,7 +75,7 @@ class CommunityDesign : Tab, QuestionDialogCallback {
 
 		@titleBox = GuiText(headerPanel, Alignment(Left, Top, Right, Top+38));
 		titleBox.font = FT_Big;
-		titleBox.stroke = colors::Black;
+		titleBox.stroke = activeSkin.Black;
 		titleBox.vertAlign = 0.15;
 
 		@header = LinkableMarkupText(headerPanel, recti());
@@ -85,7 +86,7 @@ class CommunityDesign : Tab, QuestionDialogCallback {
 		@votesButton = GuiButton(this, Alignment(Right-208-260-208+50, Top+20, Width=100, Height=50), locale::VOTES_BUTTON);
 		votesButton.font = FT_Medium;
 		votesButton.textColor = colors::Green;
-		votesButton.setIcon(icons::Upvote);
+		votesButton.setIcon(iconWrapper.Upvote);
 		setMarkupTooltip(votesButton, locale::TT_VOTES_BUTTON);
 
 		@commentsBox = GuiSkinElement(this, Alignment(Right-250-500, Top+136, Right-250, Bottom), SS_PlainBox);
@@ -100,13 +101,13 @@ class CommunityDesign : Tab, QuestionDialogCallback {
 		commentText.multiLine = true;
 
 		@commentSubmit = GuiButton(commentsBox, Alignment(Right-200, Bottom-38, Right-4, Bottom-4), locale::COMMENT_SUBMIT);
-		commentSubmit.buttonIcon = icons::Chat;
+		commentSubmit.buttonIcon = iconWrapper.Chat;
 
 		@commentsButton = GuiButton(this, Alignment(Right-208-260-208, Top+8+40+40, Width=200, Height=38),
 				locale::COMMENTS_BUTTON);
 		commentsButton.font = FT_Bold;
 		commentsButton.toggleButton = true;
-		commentsButton.setIcon(icons::Chat);
+		commentsButton.setIcon(iconWrapper.Chat);
 
 		updateAbsolutePosition();
 	}
@@ -136,7 +137,7 @@ class CommunityDesign : Tab, QuestionDialogCallback {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabWiki);
+		return Sprite(getSkinMaterial("TabWiki"));
 	}
 
 	void reload() {

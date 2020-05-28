@@ -1,3 +1,4 @@
+import skins;
 import settings.map_lib;
 import settings.game_settings;
 import empire_data;
@@ -153,7 +154,7 @@ void init() {
 		auto@ flag = getEmpireFlag(randomi(0, getEmpireFlagCount()-1));
 		Creeps.flagDef = flag.flagDef;
 		Creeps.flagID = flag.id;
-		@Creeps.flag = getMaterial(Creeps.flagDef);
+		@Creeps.flag = getSkinMaterial(Creeps.flagDef);
 		@Creeps.shipset = getShipset("Tyrant");
 
 		@Pirates = Empire();
@@ -164,7 +165,7 @@ void init() {
 		@flag = getEmpireFlag(randomi(0, getEmpireFlagCount()-1));
 		Pirates.flagDef = flag.flagDef;
 		Pirates.flagID = flag.id;
-		@Pirates.flag = getMaterial(Creeps.flagDef);
+		@Pirates.flag = getSkinMaterial(Creeps.flagDef);
 		@Pirates.shipset = getShipset("Tyrant");
 
 		//Everyone hates creeps and pirates

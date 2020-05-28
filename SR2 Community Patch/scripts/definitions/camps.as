@@ -1,4 +1,5 @@
 #priority init 2001
+import skins;
 import pickups;
 import statuses;
 from pickups import IPickupHook, PickupHook;
@@ -223,7 +224,7 @@ void loadCamps(const string& filename) {
 				continue;
 			}
 
-			@p.material = getMaterial(value);
+			@p.material = getSkinMaterial(value);
 		}
 		else if(key == "Physical Size") {
 			if(p is null) {
@@ -239,7 +240,7 @@ void loadCamps(const string& filename) {
 				continue;
 			}
 
-			@p.iconSheet = getSpriteSheet(value);
+			@p.iconSheet = getSkinSpriteSheet(value);
 		}
 		else if(key == "Icon Index") {
 			if(p is null) {

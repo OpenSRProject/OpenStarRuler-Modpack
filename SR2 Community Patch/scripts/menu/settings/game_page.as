@@ -1,3 +1,4 @@
+import skins;
 import util.settings_page;
 import util.game_options;
 
@@ -9,7 +10,7 @@ class GamePage : GameSettingsPage {
 	void makeSettings() {
 		color = colors::Green;
 		header = locale::NG_GAME_OPTIONS;
-		icon = Sprite(material::TabPlanets);
+		icon = Sprite(getSkinMaterial("TabPlanets"));
 
 		Title(locale::NG_UNIVERSE_GENERATION);
 		Frequency(locale::NG_PLANET_FREQUENCY, "PLANET_FREQUENCY", min = 0.2, max = 3.0);
@@ -68,9 +69,9 @@ class AdvancedGamePage : GameSettingsPage {
 	}	
 
 	void makeSettings() {
-		color = colors::Orange;
+		color = activeSkin.Orange;
 		header = locale::NG_ADVANCED_OPTIONS;
-		icon = Sprite(spritesheet::CardCategoryIcons, 5);
+		icon = Sprite(getSkinSpriteSheet("CardCategoryIcons"), 5);
 
 		Description(locale::NG_ADVANCED_OPTIONS_DESC, 4);
 	
@@ -96,9 +97,9 @@ class AdvancedGamePage : GameSettingsPage {
 
 class CrazyGamePage : GameSettingsPage {
 	void makeSettings() {
-		color = colors::Red;
+		color = activeSkin.Red;
 		header = locale::NG_CRAZY_OPTIONS;
-		icon = Sprite(material::SystemUnderAttack);
+		icon = Sprite(getSkinMaterial("SystemUnderAttack"));
 
 		Description(locale::NG_CRAZY_OPTIONS_DESC, 5);
 

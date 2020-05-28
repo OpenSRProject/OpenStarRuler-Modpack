@@ -1,4 +1,5 @@
 #priority init 1000
+import skins;
 import saving;
 import hooks;
 import system_pathing;
@@ -599,16 +600,28 @@ void loadOrbitalModules(const string& filename) {
 			mod.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			mod.icon = getSprite(value);
+			if(activeSkin.orbitalIconOverrides.exists(mod.ident)) {
+				activeSkin.orbitalIconOverrides.get(mod.ident, value);
+				mod.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else mod.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Icon Size")) {
 			mod.iconSize = toDouble(value);
 		}
 		else if(key.equals_nocase("Distant Icon")) {
-			mod.distantIcon = getSprite(value);
+			if(activeSkin.orbitalDistantIconOverrides.exists(mod.ident)) {
+				activeSkin.orbitalDistantIconOverrides.get(mod.ident, value);
+				mod.distantIcon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else mod.distantIcon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Strategic Icon")) {
-			mod.strategicIcon = getSprite(value);
+			if(activeSkin.orbitalStratIconOverrides.exists(mod.ident)) {
+				activeSkin.orbitalStratIconOverrides.get(mod.ident, value);
+				mod.strategicIcon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else mod.strategicIcon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Spin")) {
 			mod.spin = toDouble(value);
@@ -649,7 +662,7 @@ void loadOrbitalModules(const string& filename) {
 			@mod.model = getModel(value);
 		}
 		else if(key.equals_nocase("Material")) {
-			@mod.material = getMaterial(value);
+			@mod.material = getSkinMaterial(value);
 		}
 		else if(key.equals_nocase("Combat Repair")) {
 			mod.combatRepair = toBool(value);

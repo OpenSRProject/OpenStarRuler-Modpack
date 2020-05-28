@@ -1,3 +1,4 @@
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiListbox;
 import elements.GuiText;
@@ -54,7 +55,7 @@ class FileChooserElement : GuiListElement {
 
 		if(ele.itemStyle == SS_NULL)
 			ele.skin.draw(SS_ListboxItem, flags, absPos);
-		spritesheet::FileIcons.draw(type, recti_area(absPos.topLeft + vec2i(ele.horizPadding, 2), vec2i(20, 20)));
+		getSkinSpriteSheet("FileIcons").draw(type, recti_area(absPos.topLeft + vec2i(ele.horizPadding, 2), vec2i(20, 20)));
 		font.draw(absPos.topLeft + textOffset, path);
 	}
 };

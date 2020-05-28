@@ -1,3 +1,4 @@
+import skins;
 import hooks;
 import abilities;
 import artifacts;
@@ -1711,7 +1712,7 @@ class ShowSubsystemVariable : AbilityHook {
 			@effObj = abl.obj;
 		double v = variable.fromSys(abl.subsystem, effObj) * multiplier.decimal;
 
-		sprt = getSprite(this.icon.str);
+		sprt = getSkinSprite(this.icon.str);
 		name = this.name.str;
 		if(name.length != 0 && name[name.length-1] != ':')
 			name += ":";

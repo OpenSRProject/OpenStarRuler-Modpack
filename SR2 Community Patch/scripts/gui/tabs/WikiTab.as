@@ -6,6 +6,7 @@ import elements.GuiBackgroundPanel;
 import elements.GuiButton;
 import elements.GuiTextbox;
 import icons;
+import skins;
 
 from tabs.tabbar import popTab, newTab, switchToTab, findTab, ActiveTab, browseTab;
 import Tab@ createCommunityDesignPage(int id) from "community.DesignPage";
@@ -82,16 +83,16 @@ class WikiTab : Tab {
 	WikiTab() {
 		super();
 		@backButton = GuiButton(this, Alignment(Left+8, Top+4, Left+108, Top+36), locale::WIKI_BACK);
-		backButton.buttonIcon = icons::Back;
+		backButton.buttonIcon = iconWrapper.Back;
 
 		@homeButton = GuiButton(this, Alignment(Left+112, Top+4, Left+212, Top+36), locale::WIKI_HOME);
 		@navBox = GuiTextbox(this, Alignment(Left+216, Top+4, Right-186, Top+36));
 
 		@goButton = GuiButton(this, Alignment(Right-182, Top+4, Right-8, Top+36), locale::WIKI_BROWSER);
-		goButton.buttonIcon = icons::Go;
+		goButton.buttonIcon = iconWrapper.Go;
 
 		@bg = GuiBackgroundPanel(this, Alignment(Left+8, Top+40, Right-8, Bottom-8));
-		bg.titleColor = Color(0xff83bcff);
+		bg.titleColor = activeSkin.WikiTabTitle;
 		bg.title = title;
 
 		@panel = GuiPanel(bg, Alignment(Left+8, Top+30, Right-4, Bottom-4));
@@ -102,15 +103,15 @@ class WikiTab : Tab {
 	}
 
 	Color get_activeColor() {
-		return Color(0xff83bcff);
+		return activeSkin.WikiTabActive;
 	}
 
 	Color get_inactiveColor() {
-		return Color(0xff0077ff);
+		return activeSkin.WikiTabInactive;
 	}
 	
 	Color get_seperatorColor() {
-		return Color(0x8d4969ff);
+		return activeSkin.WikiTabSeparator;
 	}		
 
 	TabCategory get_category() {
@@ -118,7 +119,7 @@ class WikiTab : Tab {
 	}
 
 	Sprite get_icon() {
-		return Sprite(material::TabWiki);
+		return Sprite(getSkinMaterial("TabWiki"));
 	}
 
 	void updateAbsolutePosition() {

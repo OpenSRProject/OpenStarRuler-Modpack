@@ -1,3 +1,5 @@
+import skins;
+
 enum OddityType {
 	Odd_Slipstream,
 	Odd_Wormhole,
@@ -13,7 +15,7 @@ StrategicIconNode@ makeOddityVisuals(Oddity& obj, uint type, bool fromCreation =
 		gfx.rotate(quaterniond_fromAxisAngle(vec3d_up(), pi * 0.5) * obj.rotation);
 
 		@icon = StrategicIconNode();
-		icon.establish(obj, 0.0325, spritesheet::OrbitalIcons, 4);
+		icon.establish(obj, 0.0325, getSkinSpriteSheet("OrbitalIcons"), 4);
 		icon.memorable = true;
 		icon.setColor(0xffafffff);
 
@@ -36,7 +38,7 @@ StrategicIconNode@ makeOddityVisuals(Oddity& obj, uint type, bool fromCreation =
 		gfx.establish(obj, "Wormhole", 1.0/3.0);
 
 		@icon = StrategicIconNode();
-		icon.establish(obj, 0.0325, spritesheet::OrbitalIcons, 4);
+		icon.establish(obj, 0.0325, getSkinSpriteSheet("OrbitalIcons"), 4);
 		icon.memorable = true;
 		icon.setColor(0x66f4ffff);
 

@@ -1,4 +1,5 @@
 //UI elements for different types of fields.
+import skins;
 import elements.BaseGuiElement;
 import elements.GuiTextbox;
 import elements.GuiText;
@@ -47,7 +48,7 @@ class Field : BaseGuiElement {
 		doc.defaultColor = Color(0xaaaaaaff);
 		doc.visible = false;
 		@resetButton = GuiButton(this, Alignment(Right-34, Top+0.5f-14, Right-6, Top+0.5f+14));
-		resetButton.setIcon(icons::Refresh * Color(0xff8000ff));
+		resetButton.setIcon(iconWrapper.Refresh * Color(0xff8000ff));
 		resetButton.style = SS_IconButton;
 		resetButton.color = Color(0xff8000ff);
 		setMarkupTooltip(resetButton, "Reset the value of this field back to its default.");
@@ -196,11 +197,11 @@ class TextField : Field {
 		box.style = isDefault ? SS_HoverTextbox : SS_Textbox;
 
 		if(isValid) {
-			box.bgColor = colors::White;
+			box.bgColor = activeSkin.White;
 		}
 		else {
-			box.bgColor = colors::Red;
-			label.color = colors::Red;
+			box.bgColor = activeSkin.Red;
+			label.color = activeSkin.Red;
 		}
 	}
 
@@ -225,7 +226,7 @@ class LocaleField : TextField {
 		box.alignment.left.pixels = 550;
 		@editButton = GuiButton(this, Alignment(Left+400, Top+0.5f-14, Left+545, Top+0.5f+14), "Edit");
 		editButton.color = colors::Green;
-		editButton.buttonIcon = icons::Info;
+		editButton.buttonIcon = iconWrapper.Info;
 	}
 
 	void update() {
@@ -369,9 +370,9 @@ class HookField : Field {
 		doc.visible = true;
 
 		@editButton = GuiButton(this, Alignment(Left+18, Top+48, Width=140, Height=30), "Edit");
-		editButton.buttonIcon = icons::Edit;
+		editButton.buttonIcon = iconWrapper.Edit;
 
-		resetButton.setIcon(icons::Remove);
+		resetButton.setIcon(iconWrapper.Remove);
 		setMarkupTooltip(resetButton, "Remove this hook and all its associated effects.");
 	}
 
@@ -421,7 +422,7 @@ class HookField : Field {
 		resetButton.fullIcon.remove();
 		@resetButton.fullIcon = null;
 		resetButton.text = "Change";
-		resetButton.buttonIcon = icons::Paint;
+		resetButton.buttonIcon = iconWrapper.Paint;
 		resetButton.style = SS_Button;
 		setMarkupTooltip(resetButton, "Change which hook is applied.");
 		isStatic = true;
@@ -436,9 +437,9 @@ class HookField : Field {
 			@type = null;
 		resetButton.visible = true;
 		if(type is null) {
-			label.color = colors::Red;
+			label.color = activeSkin.Red;
 			label.text = "<Hook>";
-			box.textColor = colors::White;
+			box.textColor = activeSkin.White;
 			docText = "[color=#ff0000]Invalid hook.[/color]";
 			doc.text = docText;
 		}
@@ -504,7 +505,7 @@ class CompletionField : TextField {
 		@complIcon = GuiSprite(this, Alignment(Left+548, Top+0.5f-14, Width=28, Height=28));
 		@completeButton = GuiButton(this, Alignment(Left+400, Top+0.5f-14, Left+545, Top+0.5f+14), "Choose...");
 		completeButton.color = colors::Green;
-		completeButton.buttonIcon = icons::Exclaim;
+		completeButton.buttonIcon = iconWrapper.Exclaim;
 	}
 
 	void set_active(Completion@ compl) {
@@ -582,16 +583,16 @@ class SpriteField : TextField, MaterialChoiceCallback {
 		@complIcon = GuiSprite(this, Alignment(Left+548, Top+0.5f-14, Width=28, Height=28));
 		@completeButton = GuiButton(this, Alignment(Left+400, Top+0.5f-14, Left+545, Top+0.5f+14), "Choose...");
 		completeButton.color = colors::Green;
-		completeButton.buttonIcon = icons::Exclaim;
+		completeButton.buttonIcon = iconWrapper.Exclaim;
 	}
 
 	bool get_isValid() {
-		return value == defaultValue || getSprite(value).valid;
+		return value == defaultValue || getSkinSprite(value).valid;
 	}
 
 	void update() {
 		TextField::update();
-		complIcon.desc = getSprite(value);
+		complIcon.desc = getSkinSprite(value);
 	}
 
 	bool onGuiEvent(const GuiEvent& evt) {
@@ -623,7 +624,7 @@ class ColorField : TextField, ColorDialogCallback {
 		@complIcon = GuiSprite(this, Alignment(Left+548, Top+0.5f-14, Width=28, Height=28));
 		@completeButton = GuiButton(this, Alignment(Left+400, Top+0.5f-14, Left+545, Top+0.5f+14), "Choose...");
 		completeButton.color = colors::Green;
-		completeButton.buttonIcon = icons::Exclaim;
+		completeButton.buttonIcon = iconWrapper.Exclaim;
 	}
 
 	bool onGuiEvent(const GuiEvent& evt) {

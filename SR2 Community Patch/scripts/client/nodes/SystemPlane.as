@@ -1,3 +1,4 @@
+import skins;
 import planet_loyalty;
 
 vec4f ContestedVec;
@@ -211,6 +212,9 @@ class SystemPlaneNodeScript {
 	
 	void renderDebris() {
 		float curTime = frameGameTime;
+		const Material@ pegmatite = getSkinMaterial("AsteroidPegmatite");
+		const Material@ magnetite = getSkinMaterial("AsteroidMagnetite");
+		const Material@ debrisMat = getSkinMaterial("Debris");
 		for(uint i = 0, cnt = debris.length; i < cnt; ++i) {	
 			auto@ d = debris[i];
 			if(!d.draw)
@@ -220,148 +224,148 @@ class SystemPlaneNodeScript {
 			shader::LIFE = curTime - d.spawnTime;
 			switch(d.type) {
 				case DT_Rock00:	
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid1_lod2.draw(d.dist); break;
 				case DT_Rock01:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid2_lod2.draw(d.dist); break;
 				case DT_Rock02:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid3_lod2.draw(d.dist); break;
 				case DT_Rock03:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid4_lod2.draw(d.dist); break;
 				case DT_Rock04:	
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid1_lod2.draw(d.dist); break;
 				case DT_Rock05:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid2_lod2.draw(d.dist); break;
 				case DT_Rock06:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid3_lod2.draw(d.dist); break;
 				case DT_Rock07:
-					material::AsteroidPegmatite.switchTo();
+					pegmatite.switchTo();
 					model::Asteroid4_lod2.draw(d.dist); break;
 				case DT_Rock08:	
-					material::AsteroidMagnetite.switchTo();
+					magnetite.switchTo();
 					model::Asteroid1_lod2.draw(d.dist); break;
 				case DT_Rock09:
-					material::AsteroidMagnetite.switchTo();
+					magnetite.switchTo();
 					model::Asteroid2_lod2.draw(d.dist); break;
 				case DT_Rock10:
-					material::AsteroidMagnetite.switchTo();
+					magnetite.switchTo();
 					model::Asteroid3_lod2.draw(d.dist); break;
 				case DT_Rock11:
-					material::AsteroidMagnetite.switchTo();
+					magnetite.switchTo();
 					model::Asteroid4_lod2.draw(d.dist); break;
 				case DT_Metal00:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage00.draw(d.dist); break;
 				case DT_Metal01:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage01.draw(d.dist); break;
 				case DT_Metal02:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage02.draw(d.dist); break;
 				case DT_Metal03:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage03.draw(d.dist); break;
 				case DT_Metal04:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage04.draw(d.dist); break;
 				case DT_Metal05:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage05.draw(d.dist); break;
 				case DT_Metal06:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage06.draw(d.dist); break;
 				case DT_Metal07:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage07.draw(d.dist); break;
 				case DT_Metal08:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage08.draw(d.dist); break;
 				case DT_Metal09:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage09.draw(d.dist); break;
 				case DT_Metal10:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage10.draw(d.dist); break;
 				case DT_Metal11:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage11.draw(d.dist); break;
 				case DT_Metal12:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage12.draw(d.dist); break;
 				case DT_Metal13:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage13.draw(d.dist); break;
 				case DT_Metal14:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage14.draw(d.dist); break;
 				case DT_Metal15:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage15.draw(d.dist); break;
 				case DT_Metal16:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage16.draw(d.dist); break;
 				case DT_Metal17:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage17.draw(d.dist); break;
 				case DT_Metal18:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage18.draw(d.dist); break;
 				case DT_Metal19:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage19.draw(d.dist); break;
 				case DT_Metal20:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage20.draw(d.dist); break;
 				case DT_Metal21:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage21.draw(d.dist); break;
 				case DT_Metal22:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage22.draw(d.dist); break;
 				case DT_Metal23:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage23.draw(d.dist); break;
 				case DT_Metal24:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage24.draw(d.dist); break;
 				case DT_Metal25:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage25.draw(d.dist); break;
 				case DT_Metal26:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage26.draw(d.dist); break;
 				case DT_Metal27:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage27.draw(d.dist); break;
 				case DT_Metal28:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage28.draw(d.dist); break;
 				case DT_Metal29:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage29.draw(d.dist); break;
 				case DT_Metal30:	
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage30.draw(d.dist); break;
 				case DT_Metal31:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage31.draw(d.dist); break;
 				case DT_Metal32:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage32.draw(d.dist); break;
 				case DT_Metal33:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage33.draw(d.dist); break;
 				case DT_Metal34:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage34.draw(d.dist); break;
 				case DT_Metal35:
-					material::Debris.switchTo();
+					debrisMat.switchTo();
 					model::Wreckage35.draw(d.dist); break;
 					
 			}
@@ -434,7 +438,7 @@ class SystemPlaneNodeScript {
 			Color c = primaryColor;
 			c.a = uint8(alpha * 255.f);
 			
-			drawPolygonStart(PT_Quads, 1, material::SystemPlane);
+			drawPolygonStart(PT_Quads, 1, getSkinMaterial("SystemPlane"));
 			drawPolygonPoint(origin + vec3d(-outerRadius, 0, -outerRadius), vec2f(0.f, 0.f), c);
 			drawPolygonPoint(origin + vec3d(+outerRadius, 0, -outerRadius), vec2f(1.f, 0.f));
 			drawPolygonPoint(origin + vec3d(+outerRadius, 0, +outerRadius), vec2f(1.f, 1.f));

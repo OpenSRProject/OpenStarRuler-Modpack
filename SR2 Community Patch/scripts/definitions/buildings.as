@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import tile_resources;
 from saving import SaveIdentifier, SaveVersion;
 import util.formatting;
@@ -106,7 +107,7 @@ tidy final class BuildingType {
 			if(hooks[i].getVariable(valueObject, vicon, vname, vvalue, color, isOption)) {
 				tt += format("[nl/]\n[img=$1;22][b][color=$4]$2[/color][/b] [offset=120]$3[/offset][/img]",
 					getSpriteDesc(vicon), vname, vvalue, toString(color));
-				color = colors::White;
+				color = activeSkin.White;
 			}
 		}
 		if(showCost && !civilian) {
@@ -124,18 +125,18 @@ tidy final class BuildingType {
 					if(aff.biome is null)
 						continue;
 					if(aff.factor > 1)
-						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_BUILD_NEG, toString((aff.factor-1.0)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(icons::Minus));
+						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_BUILD_NEG, toString((aff.factor-1.0)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(iconWrapper.Minus));
 					else
-						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_BUILD, toString((1.0-aff.factor)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(icons::Plus));
+						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_BUILD, toString((1.0-aff.factor)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(iconWrapper.Plus));
 				}
 				for(uint n = 0, ncnt = maintainAffinities.length; n < ncnt; ++n) {
 					auto@ aff = maintainAffinities[n];
 					if(aff.biome is null)
 						continue;
 					if(aff.factor > 1)
-						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_MAINT_NEG, toString((aff.factor-1.0)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(icons::Minus));
+						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_MAINT_NEG, toString((aff.factor-1.0)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(iconWrapper.Minus));
 					else
-						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_MAINT, toString((1.0-aff.factor)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(icons::Plus));
+						tt += "[nl/]\n"+format(locale::BLD_TT_AFFINITY_MAINT, toString((1.0-aff.factor)*100,0)+"%", toString(aff.biome.color), aff.biome.name, getSpriteDesc(iconWrapper.Plus));
 				}
 				if(!civilian && (tileBuildCost != 0 || tileMaintainCost != 0))
 					tt += "[nl/]\n"+locale::BLD_TT_DEV;
@@ -485,7 +486,11 @@ void loadBuildings(const string& filename) {
 			bld.description = localize(value);
 		}
 		else if(key == "Sprite") {
-			bld.sprite = getSprite(value);
+			if(activeSkin.buildingSpriteOverrides.exists(bld.ident)) {
+				activeSkin.buildingSpriteOverrides.get(bld.ident, value);
+				bld.sprite = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else bld.sprite = getSkinSprite(value);
 		}
 		else if(key == "Upgrades From") {
 			bld.upgradesFrom = value;

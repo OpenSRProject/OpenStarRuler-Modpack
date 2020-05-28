@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 import abilities;
 import saving;
 import hooks;
@@ -13,8 +14,8 @@ tidy final class ArtifactType {
 	string ident;
 	string name;
 	string description;
-	Sprite icon = Sprite(spritesheet::ArtifactIcon, 0);
-	Sprite strategicIcon = Sprite(spritesheet::ArtifactIcon, 0);
+	Sprite icon = Sprite(getSkinSpriteSheet("ArtifactIcon"), 0);
+	Sprite strategicIcon = Sprite(getSkinSpriteSheet("ArtifactIcon"), 0);
 	double iconSize = 0.02;
 	double frequency = 1.0;
 	double timeFrequency = 0.0;
@@ -30,7 +31,7 @@ tidy final class ArtifactType {
 	double requireContestation = -INFINITY;
 
 	const Model@ model = model::Artifact;
-	const Material@ material = material::VolkurGenericPBR;
+	const Material@ material = getSkinMaterial("VolkurGenericPBR");
 	double physicalSize = 5.0;
 
 	array<string> ability_defs;
@@ -124,7 +125,11 @@ void loadArtifacts(const string& filename) {
 			type.description = localize(value);
 		}
 		else if(key.equals_nocase("Icon")) {
-			type.icon = getSprite(value);
+			if(activeSkin.artifactIconOverrides.exists(type.ident)) {
+				activeSkin.artifactIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Tag")) {
 			type.tags.insertLast(value);
@@ -148,13 +153,17 @@ void loadArtifacts(const string& filename) {
 			type.iconSize = toDouble(value);
 		}
 		else if(key.equals_nocase("Strategic Icon")) {
-			type.strategicIcon = getSprite(value);
+			if(activeSkin.artifactStratIconOverrides.exists(type.ident)) {
+				activeSkin.artifactStratIconOverrides.get(type.ident, value);
+				type.strategicIcon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.strategicIcon = getSkinSprite(value);
 		}
 		else if(key.equals_nocase("Model")) {
 			@type.model = getModel(value);
 		}
 		else if(key.equals_nocase("Material")) {
-			@type.material = getMaterial(value);
+			@type.material = getSkinMaterial(value);
 		}
 		else if(key.equals_nocase("Orbit")) {
 			type.orbit = toBool(value);

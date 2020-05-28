@@ -1,5 +1,6 @@
 Mutex gfxLock;
 array<GfxEffect@> gfxNodes;
+import skins;
 
 class GfxEffect {
 	int64 id;
@@ -15,7 +16,7 @@ class BeamEffect : GfxEffect {
 	Object@ to;
 	Color color;
 	double width;
-	const Material@ mat = material::MoveBeam;
+	const Material@ mat = getSkinMaterial("MoveBeam");
 
 	BeamNode@ node;
 
@@ -74,7 +75,7 @@ void makeBeamEffect(int64 id, Object@ from, Object@ to, uint color, double width
 	eff.width = width;
 
 	if(material.length != 0)
-		@eff.mat = getMaterial(material);
+		@eff.mat = getSkinMaterial(material);
 
 	if(timer > 0)
 		eff.expireTime = gameTime + timer;

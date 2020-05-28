@@ -1,4 +1,5 @@
 #priority init 2000
+import skins;
 from biomes import Biome, getBiome;
 from saving import SaveIdentifier;
 
@@ -8,11 +9,11 @@ tidy final class PlanetType {
 	//Model used to render it
 	const Model@ model = model::Planet_Sphere_max;
 	//Material used for empty planets
-	const Material@ emptyMat = material::ProceduralPlanet;
+	const Material@ emptyMat = getSkinMaterial("ProceduralPlanet");
 	//Material used for colonized planets
-	const Material@ colonyMat = material::ProceduralPlanet;
+	const Material@ colonyMat = getSkinMaterial("ProceduralPlanet");
 	//Material used for planets undergoing imminent death
-	const Material@ dyingMat = material::ProceduralPlanet;
+	const Material@ dyingMat = getSkinMaterial("ProceduralPlanet");
 	//Has an atmosphere?
 	const Material@ atmosMat;
 	//Small icon sprite
@@ -124,28 +125,28 @@ void loadPlanetType(ReadFile& file) {
 			}
 			else {
 				if(key == "EmptyMat") {
-					@type.emptyMat = getMaterial(value);
+					@type.emptyMat = getSkinMaterial(value);
 				}
 				else if(key == "ColonyMat") {
-					@type.colonyMat = getMaterial(value);
+					@type.colonyMat = getSkinMaterial(value);
 				}
 				else if(key == "DyingMat") {
-					@type.dyingMat = getMaterial(value);
+					@type.dyingMat = getSkinMaterial(value);
 				}
 				else if(key == "BiomeWeights") {
 					biomeIndent = file.indent + 1;
 				}
 				else if(key == "Atmosphere") {
-					@type.atmosMat = getMaterial(value);
+					@type.atmosMat = getSkinMaterial(value);
 				}
 				else if(key == "Icon") {
-					type.icon = getSprite(value);
+					type.icon = getSkinSprite(value);
 				}
 				else if(key == "Artificial") {
 					type.artificial = toBool(value);
 				}
 				else if(key == "DistantIcon") {
-					type.distantIcon = getSprite(value);
+					type.distantIcon = getSkinSprite(value);
 				}
 			}
 		}

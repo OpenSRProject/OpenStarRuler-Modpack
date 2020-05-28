@@ -3,6 +3,7 @@ import hooks;
 import saving;
 import icons;
 import util.formatting;
+import skins;
 
 from settings.map_lib import SystemDesc;
 import const SystemDesc@ getClosestSystem(const vec3d& point, Empire& presence, bool trade = false) from "system_pathing";
@@ -338,7 +339,7 @@ tidy class InfluenceCard : Serializable, Savable {
 		if(purchaseEmpire !is null) {
 			int purchaseCost = getPurchaseCost(purchaseEmpire);
 			if(purchaseCost != 0)
-				tt += "\n"+formatVariable(icons::Influence,
+				tt += "\n"+formatVariable(iconWrapper.Influence,
 						locale::CARD_PURCHASE_INFLUENCE, "",
 						format(locale::CARD_COST, toString(purchaseCost)), false);
 		}
@@ -366,7 +367,7 @@ tidy class InfluenceCard : Serializable, Savable {
 		int cost = getPlayCost(vote, null);
 		if(cost == 0)
 			return false;
-		sprt = icons::InfluencePlayCost;
+		sprt = iconWrapper.InfluencePlayCost;
 		name = locale::CARD_DESC_COST;
 		if(cost == INDETERMINATE) {
 			text = "~";
@@ -399,7 +400,7 @@ tidy class InfluenceCard : Serializable, Savable {
 		int weight = getWeight(vote, null);
 		if(weight == 0)
 			return false;
-		sprt = icons::InfluenceWeight;
+		sprt = iconWrapper.InfluenceWeight;
 		name = locale::CARD_DESC_WEIGHT;
 		if(weight == INDETERMINATE) {
 			text = "~";
@@ -1154,12 +1155,12 @@ interface ICardNotification {
 //{{{ Initialization
 Sprite getInfluenceCardClassSprite(InfluenceCardClass cls) {
 	switch(cls) {
-		case ICC_Action: return Sprite(spritesheet::CardCategoryIcons, 0);
-		case ICC_Effect: return Sprite(spritesheet::CardCategoryIcons, 1);
-		case ICC_Instant: return Sprite(spritesheet::CardCategoryIcons, 2);
-		case ICC_Support: return Sprite(spritesheet::CardCategoryIcons, 3);
-		case ICC_Vote: return Sprite(spritesheet::CardCategoryIcons, 4);
-		case ICC_Event: return Sprite(spritesheet::CardCategoryIcons, 5);
+		case ICC_Action: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 0);
+		case ICC_Effect: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 1);
+		case ICC_Instant: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 2);
+		case ICC_Support: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 3);
+		case ICC_Vote: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 4);
+		case ICC_Event: return Sprite(getSkinSpriteSheet("CardCategoryIcons"), 5);
 	}
 	return Sprite();
 }
@@ -1180,9 +1181,9 @@ Color getInfluenceCardRarityColor(uint rarity) {
 	switch(rarity) {
 		case ICR_Basic: case ICR_Common:
 			return Color(0xffffffff);
-		case ICR_Uncommon: return Color(0x80baffff);
-		case ICR_Rare: return Color(0xe580ffff);
-		case ICR_Epic: return Color(0xffe680ff);
+		case ICR_Uncommon: return activeSkin.UncommonCard;
+		case ICR_Rare: return activeSkin.RareCard;
+		case ICR_Epic: return activeSkin.EpicCard;
 	}
 	return Color(0xffffffff);
 }
@@ -1266,155 +1267,165 @@ void readCardLine(const string& line, InfluenceCardType@ type, ReadFile@ file) {
 
 bool readCard(ReadFile@ file) {
 	InfluenceCardType@ type;
+	string key, value;
 	do {
+		key = file.key;
+		value = file.value;
 		if(file.fullLine) {
 			if(type !is null)
 				readCardLine(file.line, type, file);
 			else
 				file.error("Unexpected line: "+escape(file.line));
 		}
-		else if(file.key == "Card") {
+		else if(key == "Card") {
 			if(type !is null)
 				addInfluenceCardType(type);
 			@type = InfluenceCardType();
-			type.ident = file.value;
+			type.ident = value;
 		}
-		else if(file.key == "Name") {
-			type.name = localize(file.value);
+		else if(key == "Name") {
+			type.name = localize(value);
 		}
-		else if(file.key == "Description") {
-			type.description = localize(file.value);
+		else if(key == "Description") {
+			type.description = localize(value);
 		}
-		else if(file.key == "Color") {
-			type.color = toColor(file.value);
+		else if(key == "Color") {
+			if(activeSkin.cardColorOverrides.exists(type.ident)) {
+				activeSkin.cardColorOverrides.get(type.ident, type.color);
+			}
+			else type.color = toColor(value);
 		}
-		else if(file.key == "Icon") {
-			type.icon = getSprite(file.value);
+		else if(key == "Icon") {
+			if(activeSkin.cardIconOverrides.exists(type.ident)) {
+				activeSkin.cardIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
-		else if(file.key == "DLC") {
-			type.dlc = file.value;
+		else if(key == "DLC") {
+			type.dlc = value;
 		}
-		else if(file.key == "Frequency") {
-			type.frequency = toDouble(file.value);
+		else if(key == "Frequency") {
+			type.frequency = toDouble(value);
 		}
-		else if(file.key == "AI") {
-			auto@ hook = parseHook(file.value, "ai.diplomacy::", instantiate=false, file=file);
+		else if(key == "AI") {
+			auto@ hook = parseHook(value, "ai.diplomacy::", instantiate=false, file=file);
 			if(hook !is null)
 				type.ai.insertLast(hook);
 		}
-		else if(file.key == "Collapse Uses") {
-			type.collapseUses = toBool(file.value);
+		else if(key == "Collapse Uses") {
+			type.collapseUses = toBool(value);
 		}
-		else if(file.key == "Points") {
-			type.points = toUInt(file.value);
+		else if(key == "Points") {
+			type.points = toUInt(value);
 		}
-		else if(file.key == "Leader Only") {
-			type.leaderOnly = toBool(file.value);
+		else if(key == "Leader Only") {
+			type.leaderOnly = toBool(value);
 		}
-		else if(file.key == "Class") {
-			if(file.value.equals_nocase("support")) {
+		else if(key == "Class") {
+			if(value.equals_nocase("support")) {
 				type.cls = ICC_Support;
 			}
-			else if(file.value.equals_nocase("vote")) {
+			else if(value.equals_nocase("vote")) {
 				type.cls = ICC_Vote;
 			}
-			else if(file.value.equals_nocase("effect")) {
+			else if(value.equals_nocase("effect")) {
 				type.cls = ICC_Effect;
 			}
-			else if(file.value.equals_nocase("action")) {
+			else if(value.equals_nocase("action")) {
 				type.cls = ICC_Action;
 			}
-			else if(file.value.equals_nocase("event")) {
+			else if(value.equals_nocase("event")) {
 				type.cls = ICC_Event;
 			}
-			else if(file.value.equals_nocase("instant")) {
+			else if(value.equals_nocase("instant")) {
 				type.cls = ICC_Instant;
 			}
-			else if(file.value.equals_nocase("misc")) {
+			else if(value.equals_nocase("misc")) {
 				type.cls = ICC_Misc;
 			}
 			else {
-				file.error("Invalid card class: "+file.value);
+				file.error("Invalid card class: "+value);
 			}
 		}
-		else if(file.key == "Rarity") {
-			if(file.value.equals_nocase("basic")) {
+		else if(key == "Rarity") {
+			if(value.equals_nocase("basic")) {
 				type.rarity = ICR_Basic;
 			}
-			else if(file.value.equals_nocase("common")) {
+			else if(value.equals_nocase("common")) {
 				type.rarity = ICR_Common;
 			}
-			else if(file.value.equals_nocase("uncommon")) {
+			else if(value.equals_nocase("uncommon")) {
 				type.rarity = ICR_Uncommon;
 			}
-			else if(file.value.equals_nocase("rare")) {
+			else if(value.equals_nocase("rare")) {
 				type.rarity = ICR_Rare;
 			}
-			else if(file.value.equals_nocase("epic")) {
+			else if(value.equals_nocase("epic")) {
 				type.rarity = ICR_Epic;
 			}
 			else {
-				file.error("Invalid card rarity: "+file.value);
+				file.error("Invalid card rarity: "+value);
 			}
 		}
-		else if(file.key == "Side") {
-			if(file.value.equals_nocase("both")) {
+		else if(key == "Side") {
+			if(value.equals_nocase("both")) {
 				type.sideMode = ICS_Both;
 			}
-			else if(file.value.equals_nocase("support")) {
+			else if(value.equals_nocase("support")) {
 				type.sideMode = ICS_Support;
 			}
-			else if(file.value.equals_nocase("oppose")) {
+			else if(value.equals_nocase("oppose")) {
 				type.sideMode = ICS_Oppose;
 			}
-			else if(file.value.equals_nocase("neutral")) {
+			else if(value.equals_nocase("neutral")) {
 				type.sideMode = ICS_Neutral;
 			}
 			else {
-				file.error("Invalid card side: "+file.value);
+				file.error("Invalid card side: "+value);
 			}
 		}
-		else if(file.key == "Base Purchase Cost") {
-			type.basePurchaseCost = toInt(file.value);
+		else if(key == "Base Purchase Cost") {
+			type.basePurchaseCost = toInt(value);
 		}
-		else if(file.key == "Quality Purchase Cost") {
-			type.qualityPurchaseCost = toInt(file.value);
+		else if(key == "Quality Purchase Cost") {
+			type.qualityPurchaseCost = toInt(value);
 		}
-		else if(file.key == "Placement Purchase Cost") {
-			type.placementPurchaseCost = toInt(file.value);
+		else if(key == "Placement Purchase Cost") {
+			type.placementPurchaseCost = toInt(value);
 		}
-		else if(file.key == "Uses Purchase Cost") {
-			type.usesPurchaseCost = toInt(file.value);
+		else if(key == "Uses Purchase Cost") {
+			type.usesPurchaseCost = toInt(value);
 		}
-		else if(file.key == "Base Play Cost") {
-			type.basePlayCost = toInt(file.value);
+		else if(key == "Base Play Cost") {
+			type.basePlayCost = toInt(value);
 		}
-		else if(file.key == "Quality Play Cost") {
-			type.qualityPlayCost = toInt(file.value);
+		else if(key == "Quality Play Cost") {
+			type.qualityPlayCost = toInt(value);
 		}
-		else if(file.key == "Base Weight") {
-			type.baseWeight = toInt(file.value);
+		else if(key == "Base Weight") {
+			type.baseWeight = toInt(value);
 		}
-		else if(file.key == "Quality Weight") {
-			type.qualityWeight = toInt(file.value);
+		else if(key == "Quality Weight") {
+			type.qualityWeight = toInt(value);
 		}
-		else if(file.key == "Min Quality") {
-			type.minQuality = toInt(file.value);
+		else if(key == "Min Quality") {
+			type.minQuality = toInt(value);
 		}
-		else if(file.key == "Max Quality") {
-			type.maxQuality = toInt(file.value);
+		else if(key == "Max Quality") {
+			type.maxQuality = toInt(value);
 		}
-		else if(file.key == "Can Overquality") {
-			type.canOverquality = toBool(file.value);
+		else if(key == "Can Overquality") {
+			type.canOverquality = toBool(value);
 		}
-		else if(file.key == "Min Uses") {
-			type.minUses = toInt(file.value);
+		else if(key == "Min Uses") {
+			type.minUses = toInt(value);
 		}
-		else if(file.key == "Max Uses") {
-			type.maxUses = toInt(file.value);
+		else if(key == "Max Uses") {
+			type.maxUses = toInt(value);
 		}
-		else if(file.key == "Target") {
-			parseTarget(type.targets, file.value);
+		else if(key == "Target") {
+			parseTarget(type.targets, value);
 		}
 		else {
 			if(file.line.findFirst("(") != -1) {
@@ -2579,36 +2590,46 @@ void readVoteLine(const string& line, InfluenceVoteType@ type, ReadFile@ file) {
 
 bool readVote(ReadFile@ file) {
 	InfluenceVoteType@ type;
+	string key, value;
 	do {
+		key = file.key;
+		value = file.value;
 		if(file.fullLine) {
 			if(type !is null)
 				readVoteLine(file.line, type, file);
 			else
 				file.error("Unexpected line: "+escape(file.line));
 		}
-		else if(file.key == "Vote") {
+		else if(key == "Vote") {
 			if(type !is null)
 				addInfluenceVoteType(type);
 			@type = InfluenceVoteType();
-			type.ident = file.value;
+			type.ident = value;
 		}
-		else if(file.key == "Name") {
-			type.name = localize(file.value);
+		else if(key == "Name") {
+			type.name = localize(value);
 		}
-		else if(file.key == "Description") {
-			type.description = localize(file.value);
+		else if(key == "Description") {
+			type.description = localize(value);
 		}
-		else if(file.key == "Color") {
-			type.color = toColor(file.value);
+		else if(key == "Color") {
+			if(activeSkin.voteColorOverrides.exists(type.ident)) {
+				activeSkin.voteColorOverrides.get(type.ident, type.color);
+			}
+			else type.color = toColor(value);
 		}
-		else if(file.key == "Icon") {
-			type.icon = getSprite(file.value);
+		else if(key == "Icon") {
+			if(activeSkin.voteIconOverrides.exists(type.ident)) {
+				activeSkin.voteIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
-		else if(file.key == "Target") {
-			parseTarget(type.targets, file.value);
+		else if(key == "Target") {
+			parseTarget(type.targets, value);
 		}
-		else if(file.key == "AI") {
-			auto@ hook = parseHook(file.value, "ai.diplomacy::", instantiate=false, file=file);
+		else if(key == "AI") {
+			auto@ hook = parseHook(value, "ai.diplomacy::", instantiate=false, file=file);
 			if(hook !is null)
 				type.ai.insertLast(hook);
 		}
@@ -2952,48 +2973,58 @@ void readEffectLine(const string& line, InfluenceEffectType@ type, ReadFile@ fil
 
 bool readEffect(ReadFile@ file) {
 	InfluenceEffectType@ type;
+	string key, value;
 	do {
+		key = file.key;
+		value = file.value;
 		if(file.fullLine) {
 			if(type !is null)
 				readEffectLine(file.line, type, file);
 			else
 				file.error("Unexpected line: "+escape(file.line));
 		}
-		else if(file.key == "Effect") {
+		else if(key == "Effect") {
 			if(type !is null)
 				addInfluenceEffectType(type);
 			@type = InfluenceEffectType();
-			type.ident = file.value;
+			type.ident = value;
 		}
-		else if(file.key == "Name") {
-			type.name = localize(file.value);
+		else if(key == "Name") {
+			type.name = localize(value);
 		}
-		else if(file.key == "Description") {
-			type.description = localize(file.value);
+		else if(key == "Description") {
+			type.description = localize(value);
 		}
-		else if(file.key == "Color") {
-			type.color = toColor(file.value);
+		else if(key == "Color") {
+			if(activeSkin.effectColorOverrides.exists(type.ident)) {
+				activeSkin.effectColorOverrides.get(type.ident, type.color);
+			}
+			else type.color = toColor(value);
 		}
-		else if(file.key == "Icon") {
-			type.icon = getSprite(file.value);
+		else if(key == "Icon") {
+			if(activeSkin.effectIconOverrides.exists(type.ident)) {
+				activeSkin.effectIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
-		else if(file.key == "Target") {
-			parseTarget(type.targets, file.value);
+		else if(key == "Target") {
+			parseTarget(type.targets, value);
 		}
-		else if(file.key == "Default Duration") {
-			type.defaultDuration = toDouble(file.value);
+		else if(key == "Default Duration") {
+			type.defaultDuration = toDouble(value);
 		}
-		else if(file.key == "Upkeep") {
-			type.reservation = toDouble(file.value);
+		else if(key == "Upkeep") {
+			type.reservation = toDouble(value);
 		}
-		else if(file.key == "Tag") {
-			type.tags.insertLast(file.value);
+		else if(key == "Tag") {
+			type.tags.insertLast(value);
 		}
-		else if(file.key == "Dismissable") {
-			type.dismissAble = toBool(file.value);
+		else if(key == "Dismissable") {
+			type.dismissAble = toBool(value);
 		}
-		else if(file.key == "Dismiss Needs Owner") {
-			type.dismissNeedOwner = toBool(file.value);
+		else if(key == "Dismiss Needs Owner") {
+			type.dismissNeedOwner = toBool(value);
 		}
 		else {
 			if(file.line.findFirst("(") != -1) {
@@ -3502,39 +3533,49 @@ void readClauseLine(const string& line, InfluenceClauseType@ type, ReadFile@ fil
 
 bool readClause(ReadFile@ file) {
 	InfluenceClauseType@ type;
+	string key, value;
 	do {
+		key = file.key;
+		value = file.value;
 		if(file.fullLine) {
 			if(type !is null)
 				readClauseLine(file.line, type, file);
 			else
 				file.error("Unexpected line: "+escape(file.line));
 		}
-		else if(file.key == "Clause") {
+		else if(key == "Clause") {
 			if(type !is null)
 				addInfluenceClauseType(type);
 			@type = InfluenceClauseType();
-			type.ident = file.value;
+			type.ident = value;
 		}
-		else if(file.key == "Name") {
-			type.name = localize(file.value);
+		else if(key == "Name") {
+			type.name = localize(value);
 		}
-		else if(file.key == "Description") {
-			type.description = localize(file.value);
+		else if(key == "Description") {
+			type.description = localize(value);
 		}
-		else if(file.key == "Color") {
-			type.color = toColor(file.value);
+		else if(key == "Color") {
+			if(activeSkin.clauseColorOverrides.exists(type.ident)) {
+				activeSkin.clauseColorOverrides.get(type.ident, type.color);
+			}
+			else type.color = toColor(value);
 		}
-		else if(file.key == "Icon") {
-			type.icon = getSprite(file.value);
+		else if(key == "Icon") {
+			if(activeSkin.clauseIconOverrides.exists(type.ident)) {
+				activeSkin.clauseIconOverrides.get(type.ident, value);
+				type.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
+			}
+			else type.icon = getSkinSprite(value);
 		}
-		else if(file.key == "Free Clause") {
-			type.freeClause = toBool(file.value);
+		else if(key == "Free Clause") {
+			type.freeClause = toBool(value);
 		}
-		else if(file.key == "Team Clause") {
-			type.teamClause = toBool(file.value);
+		else if(key == "Team Clause") {
+			type.teamClause = toBool(value);
 		}
-		else if(file.key == "Default Clause") {
-			type.defaultClause = toBool(file.value);
+		else if(key == "Default Clause") {
+			type.defaultClause = toBool(value);
 		}
 		else {
 			if(file.line.findFirst("(") != -1) {
@@ -3665,14 +3706,14 @@ tidy final class DiplomacyOffer : Serializable, Savable {
 			case DOT_Money:
 			{
 				return format("[img=$3;20/] [b][color=$1]$2[/color][/b]",
-						toString(colors::Money), formatMoney(value),
-						getSpriteDesc(icons::Money));
+						toString(activeSkin.Money), formatMoney(value),
+						getSpriteDesc(iconWrapper.Money));
 			}
 			case DOT_Energy:
 			{
 				return format("[img=$3;20/] [b][color=$1]$2[/color][/b]",
-						toString(colors::Energy), standardize(value, true),
-						getSpriteDesc(icons::Energy));
+						toString(activeSkin.Energy), standardize(value, true),
+						getSpriteDesc(iconWrapper.Energy));
 			}
 			case DOT_Planet:
 			case DOT_Fleet:
@@ -4055,19 +4096,21 @@ tidy final class DiplomacyEdict : Savable, Serializable {
 // {{{ Global initialization
 void readFile(const string& filename) {
 	ReadFile file(filename, true);
+	string key;
 	while(file++) {
 		bool used = false;
+		key = file.key;
 		while(!used) {
-			if(file.key == "Card") {
+			if(key == "Card") {
 				used = readCard(file);
 			}
-			else if(file.key == "Vote") {
+			else if(key == "Vote") {
 				used = readVote(file);
 			}
-			else if(file.key == "Effect") {
+			else if(key == "Effect") {
 				used = readEffect(file);
 			}
-			else if(file.key == "Clause") {
+			else if(key == "Clause") {
 				used = readClause(file);
 			}
 			else {

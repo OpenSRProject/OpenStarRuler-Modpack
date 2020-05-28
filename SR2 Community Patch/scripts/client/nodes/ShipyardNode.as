@@ -1,6 +1,8 @@
+import skins;
+
 final class ShipyardNodeScript {
 	const Model@ shipyard = getModel("Shipyard");
-	const Material@ shipyard_mat = getMaterial("VolkurGenericPBR");
+	const Material@ shipyard_mat = getSkinMaterial("VolkurGenericPBR");
 	const Design@ design;
 	float progress = 0;
 

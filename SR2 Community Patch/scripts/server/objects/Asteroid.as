@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import regions.regions;
 import saving;
@@ -144,7 +145,7 @@ tidy class AsteroidScript {
 		bool hasBase = obj.owner !is null && obj.owner.valid;
 		obj.HasBase = hasBase ? 1.f : 0.f;
 		if(hasBase && baseNode is null) {
-			@baseNode = MeshNode(model::MiningBase, material::GenericPBR_MiningBase);
+			@baseNode = MeshNode(model::MiningBase, getSkinMaterial("GenericPBR_MiningBase"));
 			nodeSyncObject(baseNode, obj);
 		}
 		else if(baseNode !is null && !hasBase) {
@@ -173,20 +174,20 @@ tidy class AsteroidScript {
 			}
 		switch(obj.id % 3) {
 			case 0:
-				@mesh.material = material::AsteroidPegmatite; break;
+				@mesh.material = getSkinMaterial("AsteroidPegmatite"); break;
 			case 1:
-				@mesh.material = material::AsteroidMagnetite; break;
+				@mesh.material = getSkinMaterial("AsteroidMagnetite"); break;
 			case 2:
-				@mesh.material = material::AsteroidTonalite; break;
+				@mesh.material = getSkinMaterial("AsteroidTonalite"); break;
 		}
 
 		mesh.memorable = true;
 
 		@icon = StrategicIconNode();
 		if(obj.cargoTypes != 0)
-			icon.establish(obj, 0.015, spritesheet::OreAsteroidIcon, 0);
+			icon.establish(obj, 0.015, getSkinSpriteSheet("OreAsteroidIcon"), 0);
 		else
-			icon.establish(obj, 0.015, spritesheet::AsteroidIcon, 0);
+			icon.establish(obj, 0.015, getSkinSpriteSheet("AsteroidIcon"), 0);
 		icon.memorable = true;
 
 		bindMesh(obj, mesh);
@@ -205,7 +206,7 @@ tidy class AsteroidScript {
 
 		bool hasBase = obj.owner !is null && obj.owner.valid;
 		if(hasBase && baseNode is null) {
-			@baseNode = MeshNode(model::MiningBase, material::GenericPBR_MiningBase);
+			@baseNode = MeshNode(model::MiningBase, getSkinMaterial("GenericPBR_MiningBase"));
 			nodeSyncObject(baseNode, obj);
 		}
 	}

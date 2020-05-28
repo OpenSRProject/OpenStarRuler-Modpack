@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import util.design_export;
 import influence;
@@ -335,16 +336,16 @@ void load(SaveFile& msg) {
 		if(msg >= SV_0119)
 			msg >> cast<Savable>(emp.EmpireAI);
 
-		@emp.background = getMaterial(emp.backgroundDef);
-		@emp.flag = getMaterial(emp.flagDef);
-		@emp.portrait = getMaterial(emp.portraitDef);
+		@emp.background = getSkinMaterial(emp.backgroundDef);
+		@emp.flag = getSkinMaterial(emp.flagDef);
+		@emp.portrait = getSkinMaterial(emp.portraitDef);
 
 		if(emp.flag is material::error)
-			@emp.flag = getMaterial("emp_flag_flag1");
+			@emp.flag = getSkinMaterial("emp_flag_flag1");
 		if(emp.portrait is material::error)
-			@emp.portrait = getMaterial("emp_portrait_feyh");
+			@emp.portrait = getSkinMaterial("emp_portrait_feyh");
 		if(emp.background is material::error)
-			@emp.background = getMaterial("emp_bg_blue");
+			@emp.background = getSkinMaterial("emp_bg_blue");
 
 		if(msg < SV_0085)
 			emp.initResearch();
@@ -506,7 +507,7 @@ void syncInitial(Message& msg) {
 		syncInitial(getEmpire(i), msg);
 }
 
-void sendChatMessage(const string& text, const string& user = "*", const Color& color = colors::White, int offset = 100) {
+void sendChatMessage(const string& text, const string& user = "*", const Color& color = activeSkin.White, int offset = 100) {
 	string msg = format("[b][color=$1]$2[/color][/b][offset=$4]$3[/offset]",
 		toString(color), bbescape(user), text, toString(offset));
 	recvMPChat(ALL_PLAYERS, msg);

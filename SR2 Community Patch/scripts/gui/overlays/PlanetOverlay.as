@@ -32,6 +32,7 @@ import overlays.Construction;
 from elements.GuiResources import LEVEL_REQ;
 from tabs.PlanetsTab import PlanetTree;
 from gui import animate_time;
+import skins;
 
 const double ANIM1_TIME = 0.15;
 const double ANIM2_TIME = 0.001;
@@ -180,7 +181,7 @@ class PlanetOverlay : GuiOverlay, ConstructionParent {
 
 	void draw() {
 		if(!settings::bGalaxyBG && objView.Alignment !is null)
-			material::Skybox.draw(AbsolutePosition);
+			getSkinMaterial("Skybox").draw(AbsolutePosition);
 		GuiOverlay::draw();
 	}
 };
@@ -258,7 +259,7 @@ class VarBox : BaseGuiElement {
 		@icon = GuiSprite(this, Alignment(Left+4, Top+2, Left+VAR_H, Bottom-2));
 		@value = GuiText(this, Alignment(Left+4, Top+2, Right-4, Bottom-6));
 		value.font = FT_Subtitle;
-		value.stroke = colors::Black;
+		value.stroke = activeSkin.Black;
 		value.vertAlign = 1.0;
 		value.horizAlign = 1.0;
 	}
@@ -302,12 +303,12 @@ class SurfaceDisplay : DisplayBox {
 		@name = GuiMarkupText(this, Alignment(Left+8, Top-2, Right-8, Top+38));
 		name.noClip = true;
 		name.defaultFont = FT_Big;
-		name.defaultStroke = colors::Black;
+		name.defaultStroke = activeSkin.Black;
 
 		@level = GuiText(this, Alignment(Left+8, Top+8, Right-8, Top+38));
 		level.font = FT_Medium;
 		level.horizAlign = 1.0;
-		level.stroke = colors::Black;
+		level.stroke = activeSkin.Black;
 		level.visible = false;
 
 		@resDisplay = GuiSkinElement(this, Alignment(Left+1, Top+38, Left+150, Bottom-2), SS_PatternBox);
@@ -362,7 +363,7 @@ class SurfaceDisplay : DisplayBox {
 		varIndex = 0;
 	}
 
-	void addVariable(const Sprite& icon, const string& value, const string& tooltip = "", const Color& color = colors::White) {
+	void addVariable(const Sprite& icon, const string& value, const string& tooltip = "", const Color& color = activeSkin.White) {
 		if(varIndex >= variables.length)
 			variables.insertLast(VarBox(varPanel, recti()));
 
@@ -393,76 +394,76 @@ class SurfaceDisplay : DisplayBox {
 
 		if(pl.visible) {
 			if(pl.owner.valid && pl.owner.HasPopulation != 0) {
-				Color popColor = colors::White;
+				Color popColor = activeSkin.White;
 				if(!pl.primaryResourceUsable) {
 					if(pl.population < getPlanetLevelRequiredPop(pl, pl.resourceLevel) && !pl.inCombat) {
-						popColor = colors::Orange;
+						popColor = activeSkin.Orange;
 					}
 				}
 				string popText = standardize(pl.population, true) + " / " + standardize(pl.maxPopulation, true);
-				addVariable(icons::Population, popText, locale::PLANET_POPULATION_TIP, popColor);
+				addVariable(iconWrapper.Population, popText, locale::PLANET_POPULATION_TIP, popColor);
 			}
 		}
 		if(pl.owner is playerEmpire) {
 			auto@ scTrait = getTrait("StarChildren");
 			auto@ anTrait = getTrait("Ancient");
 			if((scTrait is null || !pl.owner.hasTrait(scTrait.id)) && (anTrait is null || !pl.owner.hasTrait(anTrait.id))) {
-				Color color = colors::White;
+				Color color = activeSkin.White;
 				if(int(surface.totalPressure) > int(surface.pressureCap))
-					color = colors::Red;
+					color = activeSkin.Red;
 				string value = standardize(surface.totalPressure, true) + " / " + standardize(surface.pressureCap, true);
 				string ttip = format(locale::PLANET_PRESSURE_TIP, standardize(surface.totalPressure, true), standardize(surface.totalSaturate, true), standardize(surface.pressureCap, true));
-				addVariable(icons::Pressure, value, ttip, color);
+				addVariable(iconWrapper.Pressure, value, ttip, color);
 			}
 			{
-				Color color = colors::Money;
+				Color color = activeSkin.Money;
 				int income = pl.income;
 				if(income < 0)
-					color = colors::Red;
+					color = activeSkin.Red;
 				string value = formatMoney(income);
 				string ttip = format(locale::PLANET_INCOME_TIP, standardize(surface.pressures[TR_Money], true), standardize(surface.resources[TR_Money], true));
-				addVariable(icons::Money, value, ttip, color);
+				addVariable(iconWrapper.Money, value, ttip, color);
 			}
 
 		}
 		if(pl.owner.valid) {
 			string loyText = toString(pl.currentLoyalty, 0);
-			addVariable(icons::Loyalty, loyText, locale::PLANET_LOYALTY_TIP, colors::White);
+			addVariable(iconWrapper.Loyalty, loyText, locale::PLANET_LOYALTY_TIP, activeSkin.White);
 		}
 		if(pl.owner is playerEmpire) {
 			if(surface.resources[TR_Energy] > 0 || surface.pressures[TR_Energy] > 0) {
-				Color color = colors::Energy;
+				Color color = activeSkin.Energy;
 				string value = "+"+formatRate(surface.resources[TR_Energy] * TILE_ENERGY_RATE * pl.owner.EnergyEfficiency);
 				string ttip = format(locale::PLANET_ENERGY_TIP, standardize(surface.pressures[TR_Energy], true), standardize(surface.saturates[TR_Energy], true));
-				addVariable(icons::Energy, value, ttip, color);
+				addVariable(iconWrapper.Energy, value, ttip, color);
 			}
 
 			if(surface.resources[TR_Defense] > 0 || surface.pressures[TR_Defense] > 0) {
-				Color color = colors::Defense;
+				Color color = activeSkin.Defense;
 				string value = standardize(surface.resources[TR_Defense], true);
 				string ttip = format(locale::PLANET_DEFENSE_TIP, standardize(surface.pressures[TR_Defense], true), standardize(surface.saturates[TR_Defense], true));
-				addVariable(icons::Defense, value, ttip, color);
+				addVariable(iconWrapper.Defense, value, ttip, color);
 			}
 
 			if(surface.resources[TR_Influence] > 0 || surface.pressures[TR_Influence] > 0) {
-				Color color = colors::Influence;
+				Color color = activeSkin.Influence;
 				string value = standardize(surface.resources[TR_Influence], true);
 				string ttip = format(locale::PLANET_INFLUENCE_TIP, standardize(surface.pressures[TR_Influence], true), standardize(surface.saturates[TR_Influence], true));
-				addVariable(icons::Influence, value, ttip, color);
+				addVariable(iconWrapper.Influence, value, ttip, color);
 			}
 
 			if(surface.resources[TR_Research] > 0 || surface.pressures[TR_Research] > 0) {
-				Color color = colors::Research;
+				Color color = activeSkin.Research;
 				string value = "+"+formatRate(surface.resources[TR_Research] * TILE_RESEARCH_RATE * pl.owner.ResearchEfficiency);
 				string ttip = format(locale::PLANET_RESEARCH_TIP, standardize(surface.pressures[TR_Research], true), standardize(surface.saturates[TR_Research], true));
-				addVariable(icons::Research, value, ttip, color);
+				addVariable(iconWrapper.Research, value, ttip, color);
 			}
 
 			if(pl.laborIncome > 0) {
-				Color color = colors::Labor;
+				Color color = activeSkin.Labor;
 				string value = formatMinuteRate(pl.laborIncome);
 				string ttip = format(locale::PLANET_LABOR_TIP, standardize(surface.pressures[TR_Labor], true), standardize(surface.saturates[TR_Labor], true));
-				addVariable(icons::Labor, value, ttip, color);
+				addVariable(iconWrapper.Labor, value, ttip, color);
 			}
 
 			uint cargoCnt = pl.cargoTypes;
@@ -780,7 +781,7 @@ class LevelRow : BaseGuiElement {
 		@levelCaption = GuiText(this, Alignment(Left, Top, Left+80, Bottom));
 		levelCaption.horizAlign = 0.5;
 		levelCaption.vertAlign = 0.5;
-		levelCaption.stroke = colors::Black;
+		levelCaption.stroke = activeSkin.Black;
 	}
 
 	void take(array<Resource@>& resources, bool& doneUniversal, Resources& available) {
@@ -841,21 +842,21 @@ class LevelRow : BaseGuiElement {
 
 		if(reqLevel.level == curLevel) {
 			levelCaption.color = Color(0x80ff80ff);
-			levelCaption.stroke = colors::Black;
+			levelCaption.stroke = activeSkin.Black;
 			levelCaption.font = FT_Bold;
 			bg = Color(0x80ff80ff);
 			line = Color(0x80ff80ff);
 		}
 		else if(reqLevel.level <= resLevel) {
 			levelCaption.color = Color(0xffffffff);
-			levelCaption.stroke = colors::Black;
+			levelCaption.stroke = activeSkin.Black;
 			levelCaption.font = FT_Normal;
 			bg = Color(0xffffffff);
 			line = Color(0x00000000);
 		}
 		else if(reqLevel.level == resLevel+1 && !planet.primaryResourceExported) {
 			levelCaption.color = Color(0xff8000ff);
-			levelCaption.stroke = colors::Black;
+			levelCaption.stroke = activeSkin.Black;
 			levelCaption.font = FT_Italic;
 			bg = Color(0xffbb88ff);
 			line = Color(0x00000000);
@@ -1026,10 +1027,10 @@ class ResourceDisplay : DisplayBox {
 		@resourcePressure = GuiMarkupText(resourceBox, Alignment(Right-85, Top+3, Right-6, Bottom-3));
 
 		//Display toggle button
-		@toggleButton = GuiButton(this, Alignment(Right-40, Top, Right, Top+43));
+		@toggleButton = GuiButton(this, activeSkin.PlanetToggleTreeAlignment);
 		toggleButton.toggleButton = true;
 		toggleButton.color = Color(0xaaaaaaff);
-		toggleButton.setIcon(Sprite(material::TabPlanets, Color(0xffffff80)));
+		toggleButton.setIcon(Sprite(getSkinMaterial("TabPlanets"), Color(0xffffff80)));
 		toggleButton.pressed = SHOW_PLANET_TREE;
 	}
 

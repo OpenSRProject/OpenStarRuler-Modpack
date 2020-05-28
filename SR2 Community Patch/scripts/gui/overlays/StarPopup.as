@@ -1,3 +1,4 @@
+import skins;
 import overlays.Popup;
 import elements.GuiText;
 import elements.GuiButton;
@@ -28,14 +29,14 @@ class StarPopup : Popup {
 		@objView = Gui3DObject(this, Alignment(Left+4, Top+25, Right-4, Bottom-4));
 
 		@defIcon = GuiSprite(this, Alignment(Left+4, Top+25, Width=40, Height=40));
-		defIcon.desc = icons::Defense;
+		defIcon.desc = iconWrapper.Defense;
 		setMarkupTooltip(defIcon, locale::TT_IS_DEFENDING);
 		defIcon.visible = false;
 
 		@health = GuiProgressbar(this, Alignment(Left+8, Top+28, Right-8, Top+50));
 		health.visible = false;
 
-		auto@ healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), icons::Health);
+		auto@ healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), iconWrapper.Health);
 		healthIcon.noClip = true;
 
 		updateAbsolutePosition();
@@ -128,7 +129,7 @@ class StarPopup : Popup {
 		//Update health
 		if(obj.Health < obj.MaxHealth) {
 			health.progress = obj.Health / obj.MaxHealth;
-			health.frontColor = colors::Red.interpolate(colors::Green, health.progress);
+			health.frontColor = activeSkin.Red.interpolate(colors::Green, health.progress);
 			health.text = standardize(obj.Health)+" / "+standardize(obj.MaxHealth);
 			health.visible = true;
 		}

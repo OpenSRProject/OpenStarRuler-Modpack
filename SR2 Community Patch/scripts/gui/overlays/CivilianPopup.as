@@ -1,3 +1,4 @@
+import skins;
 import overlays.Popup;
 import elements.GuiText;
 import elements.GuiMarkupText;
@@ -36,14 +37,14 @@ class CivilianPopup : Popup {
 
 		@health = GuiProgressbar(this, Alignment(Left+3, Bottom-89, Right-4, Bottom-63));
 		health.tooltip = locale::HEALTH;
-		GuiSprite healthIcon(health, Alignment(Left+2, Top+1, Width=24, Height=24), icons::Health);
+		GuiSprite healthIcon(health, Alignment(Left+2, Top+1, Width=24, Height=24), iconWrapper.Health);
 
 		GuiSkinElement band(this, Alignment(Left+3, Bottom-65, Right-4, Bottom-32), SS_SubTitle);
 		band.color = Color(0xaaaaaaff);
 
 		@cargoLabel = GuiText(band, Alignment(Left+5, Top+3, Left+70, Bottom-2), locale::SHIP_CARGO);
 		cargoLabel.font = FT_Bold;
-		cargoLabel.stroke = colors::Black;
+		cargoLabel.stroke = activeSkin.Black;
 		@worth = GuiMarkupText(band, Alignment(Left+70, Top+6, Right-5, Bottom-2));
 
 		GuiSkinElement band2(this, Alignment(Left+3, Bottom-34, Right-4, Bottom-2), SS_SubTitle);

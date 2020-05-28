@@ -1,3 +1,4 @@
+import skins;
 import regions.regions;
 
 tidy class FreighterScript {
@@ -17,10 +18,10 @@ tidy class FreighterScript {
 		}
 		else {
 			@shipMesh.model = model::Fighter;
-			@shipMesh.material = material::Ship10;
+			@shipMesh.material = getSkinMaterial("Ship10");
 		}
 
-		@shipMesh.iconSheet = spritesheet::HullIcons;
+		@shipMesh.iconSheet = getSkinSpriteSheet("HullIcons");
 		shipMesh.iconIndex = 0;
 
 		bindMesh(obj, shipMesh);

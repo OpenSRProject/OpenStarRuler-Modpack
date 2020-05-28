@@ -24,6 +24,7 @@ import cargo;
 from obj_selection import hoveredObject;
 from gui import animate_time;
 from overlays.ContextMenu import FinanceDryDock;
+import skins;
 
 export ConstructionParent, ConstructionDisplay;
 export BuildElement;
@@ -201,7 +202,7 @@ class ConstructionDisplay : DisplayBox {
 
 		@laborBox = GuiSkinElement(this, Alignment(Left+0.5f+4, Top+8, Right-8, Top+42), SS_PlainOverlay);
 		@laborIcon = GuiSprite(laborBox, Alignment(Left+8, Top+5, Width=24, Height=24));
-		laborIcon.desc = Sprite(spritesheet::ResourceIcon, 6);
+		laborIcon.desc = Sprite(getSkinSpriteSheet("ResourceIcon"), 6);
 		@labor = GuiText(laborBox, Alignment(Left+40, Top, Right-8, Bottom));
 		labor.font = FT_Medium;
 
@@ -220,13 +221,13 @@ class ConstructionDisplay : DisplayBox {
 		repeatButton.style = SS_IconToggle;
 		repeatButton.color = Color(0x00ff00ff);
 		repeatButton.toggleButton = true;
-		repeatButton.setIcon(icons::Repeat);
+		repeatButton.setIcon(iconWrapper.Repeat);
 		setMarkupTooltip(repeatButton, locale::TT_REPEAT_QUEUE, width=300);
 
 		@drydockButton = GuiButton(queueBox, Alignment(Right-8-32-34, Bottom-32, Width=30, Height=30));
 		drydockButton.style = SS_IconButton;
 		drydockButton.color = Color(0x0080ffff);
-		drydockButton.setIcon(Sprite(spritesheet::GuiOrbitalIcons, 3, playerEmpire.color));
+		drydockButton.setIcon(Sprite(getSkinSpriteSheet("GuiOrbitalIcons"), 3, playerEmpire.color));
 		setMarkupTooltip(drydockButton, locale::TT_DRY_DOCK, width=300);
 
 		//Build panel buttons
@@ -236,14 +237,14 @@ class ConstructionDisplay : DisplayBox {
 		buildingsButton.toggleButton = true;
 		buildingsButton.disabled = true;
 		buildingsButton.style = SS_TabButton;
-		buildingsButton.buttonIcon = icons::Building;
+		buildingsButton.buttonIcon = iconWrapper.Building;
 
 		@orbitalsButton = GuiButton(buttonBox, Alignment(Left, Top, Left, Bottom));
 		orbitalsButton.text = locale::ORBITALS;
 		orbitalsButton.toggleButton = true;
 		orbitalsButton.disabled = true;
 		orbitalsButton.style = SS_TabButton;
-		orbitalsButton.buttonIcon = icons::Orbital;
+		orbitalsButton.buttonIcon = iconWrapper.Orbital;
 
 		@shipsButton = GuiButton(buttonBox, Alignment(Left, Top, Left, Bottom));
 		shipsButton.text = locale::SHIPS;
@@ -251,7 +252,7 @@ class ConstructionDisplay : DisplayBox {
 		shipsButton.pressed = true;
 		shipsButton.disabled = true;
 		shipsButton.style = SS_TabButton;
-		shipsButton.buttonIcon = icons::Ship;
+		shipsButton.buttonIcon = iconWrapper.Ship;
 
 		@modulesButton = GuiButton(buttonBox, Alignment(Left, Top, Left, Bottom));
 		modulesButton.text = locale::ORBITAL_MODULES;
@@ -265,7 +266,7 @@ class ConstructionDisplay : DisplayBox {
 		constructionsButton.toggleButton = true;
 		constructionsButton.disabled = true;
 		constructionsButton.style = SS_TabButton;
-		constructionsButton.buttonIcon = icons::Project;
+		constructionsButton.buttonIcon = iconWrapper.Project;
 
 		//Build panel section
 		@buildPanel = GuiPanel(this, Alignment(Left+8, Top+Q_HEIGHT+44, Right-8, Bottom-8));
@@ -428,12 +429,12 @@ class ConstructionDisplay : DisplayBox {
 					if(list is null) {
 						@list = GuiListbox(this, recti(0, 0, 100, 20));
 						list.style = SS_NULL;
-						list.itemHeight = 30;
+						list.itemHeight = activeSkin.ConstructionListItemHeight;
 
 						MarkupTooltip tt(400, 0.f, true, true);
 						tt.Lazy = true;
 						tt.LazyUpdate = false;
-						tt.Padding = 4;
+						tt.Padding = activeSkin.ConstructionListTooltipPadding;
 						@list.tooltipObject = tt;
 
 						catNames.insertLast(type.category);
@@ -466,12 +467,12 @@ class ConstructionDisplay : DisplayBox {
 			if(obj.hasConstruction && obj.canBuildOrbitals) {
 				GuiListbox@ list = GuiListbox(this, recti(0, 0, 100, 20));
 				list.style = SS_NULL;
-				list.itemHeight = 30;
+				list.itemHeight = activeSkin.ConstructionListItemHeight;
 
 				MarkupTooltip tt(400, 0.f, true, true);
 				tt.Lazy = true;
 				tt.LazyUpdate = false;
-				tt.Padding = 4;
+				tt.Padding = activeSkin.ConstructionListTooltipPadding;
 				@list.tooltipObject = tt;
 
 				auto@ drydock = getOrbitalModule("DryDock");
@@ -497,12 +498,12 @@ class ConstructionDisplay : DisplayBox {
 			if(obj.isOrbital && !cast<Orbital>(obj).isStandalone) {
 				GuiListbox@ list = GuiListbox(this, recti(0, 0, 100, 20));
 				list.style = SS_NULL;
-				list.itemHeight = 30;
+				list.itemHeight = activeSkin.ConstructionListItemHeight;
 
 				MarkupTooltip tt(400, 0.f, true, true);
 				tt.Lazy = true;
 				tt.LazyUpdate = false;
-				tt.Padding = 4;
+				tt.Padding = activeSkin.ConstructionListTooltipPadding;
 				@list.tooltipObject = tt;
 
 				for(uint i = 0, cnt = getOrbitalModuleCount(); i < cnt; ++i) {
@@ -548,12 +549,12 @@ class ConstructionDisplay : DisplayBox {
 					if(list is null) {
 						@list = GuiListbox(this, recti(0, 0, 100, 20));
 						list.style = SS_NULL;
-						list.itemHeight = 30;
+						list.itemHeight = activeSkin.ConstructionListItemHeight;
 
 						MarkupTooltip tt(400, 0.f, true, true);
 						tt.Lazy = true;
 						tt.LazyUpdate = false;
-						tt.Padding = 4;
+						tt.Padding = activeSkin.ConstructionListTooltipPadding;
 						@list.tooltipObject = tt;
 
 						catNames.insertLast(type.category);
@@ -681,12 +682,12 @@ class ConstructionDisplay : DisplayBox {
 			//Create the box
 			GuiListbox@ list = GuiListbox(this, recti(0, 0, 100, 20));
 			list.style = SS_NULL;
-			list.itemHeight = 30;
+			list.itemHeight = activeSkin.ConstructionListItemHeight;
 
 			MarkupTooltip tt(400, 0.f, true, true);
 			tt.Lazy = true;
 			tt.LazyUpdate = false;
-			tt.Padding = 4;
+			tt.Padding = activeSkin.ConstructionListTooltipPadding;
 			@list.tooltipObject = tt;
 
 			for(uint j = 0, jcnt = cls.designCount; j < jcnt; ++j) {
@@ -1187,7 +1188,7 @@ class OrbitalTarget : PointTargeting {
 		else if(def.icon.valid)
 			icon = def.icon;
 		else
-			icon = icons::Labor;
+			icon = iconWrapper.Labor;
 	}
 
 	bool valid(const vec3d& pos) override {
@@ -1372,7 +1373,7 @@ class BuildElement : GuiListElement {
 	string energyText;
 	Sprite icon;
 	Color nameColor;
-	Color iconColor = colors::White;
+	Color iconColor = activeSkin.White;
 	bool isSupport = false;
 	bool incomplete = false;
 	array<Sprite> extraIcons;
@@ -1493,7 +1494,7 @@ class BuildElement : GuiListElement {
 			{
 				double energyCost = dsg.total(SV_EnergyBuildCost);
 				if(energyCost > 0) {
-					extraIcons.insertLast(icons::Energy);
+					extraIcons.insertLast(iconWrapper.Energy);
 					extraCosts.insertLast(standardize(energyCost, true));
 					if(buildAt is null || buildAt.owner.EnergyStored < energyCost)
 						hasError = true;
@@ -1503,7 +1504,7 @@ class BuildElement : GuiListElement {
 			{
 				int influenceCost = dsg.total(SV_InfluenceBuildCost);
 				if(influenceCost > 0) {
-					extraIcons.insertLast(icons::Influence);
+					extraIcons.insertLast(iconWrapper.Influence);
 					extraCosts.insertLast(toString(influenceCost, 0));
 					if(buildAt is null || buildAt.owner.Influence < influenceCost)
 						hasError = true;
@@ -1513,7 +1514,7 @@ class BuildElement : GuiListElement {
 			{
 				double ftlCost = dsg.total(SV_FTLBuildCost);
 				if(ftlCost > 0) {
-					extraIcons.insertLast(icons::FTL);
+					extraIcons.insertLast(iconWrapper.FTL);
 					extraCosts.insertLast(standardize(ftlCost, true));
 					if(buildAt is null || buildAt.owner.FTLStored < ftlCost)
 						hasError = true;
@@ -1555,7 +1556,7 @@ class BuildElement : GuiListElement {
 			else
 				time = building.getBuildTime(buildAt) / (buildAt.buildingConstructRate * buildAt.owner.BuildingConstructRate * buildAt.owner.ImperialBldConstructionRate);
 			icon = building.sprite;
-			iconColor = colors::White;
+			iconColor = activeSkin.White;
 			isSupport = false;
 
 			ttText = building.getTooltip(valueObject=buildAt, isOption=true);
@@ -1578,7 +1579,7 @@ class BuildElement : GuiListElement {
 			labor = construction.getLaborCost(buildAt);
 			time = construction.getTimeCost(buildAt);
 			icon = construction.icon;
-			iconColor = colors::White;
+			iconColor = activeSkin.White;
 			isSupport = false;
 			ttText = construction.formatTooltip(buildAt);
 
@@ -1662,9 +1663,9 @@ class BuildElement : GuiListElement {
 		int x = 4;
 		if(icon.valid) {
 			int isize = min(icon.size.width, 28);
-			recti ipos = recti_area(vec2i(x,(30-isize)/2)+pos.topLeft, vec2i(isize, isize));
+			recti ipos = recti_area(vec2i(x,(activeSkin.ConstructionIconBaseHeight-isize)/2)+pos.topLeft, vec2i(isize, isize));
 			if(dsg !is null && isSupport) {
-				spritesheet::ResourceIconsSmallMods.draw(0, ipos.padded(-1));
+				getSkinSpriteSheet("ResourceIconsSmallMods").draw(0, ipos.padded(-1));
 				icon.draw(ipos.padded(3), iconColor);
 			}
 			else {
@@ -1683,63 +1684,63 @@ class BuildElement : GuiListElement {
 				x -= 120;
 			else
 				x -= 60;
-			icons::Labor.draw(recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-			font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(92, 30)),
+			iconWrapper.Labor.draw(recti_area(vec2i(x, activeSkin.ConstructionCostIconTopPadding)+pos.topLeft, vec2i(24, 24)));
+			font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(92, 30)),
 					horizAlign=0.0, vertAlign=0.5,
-					text=laborText, ellipsis=locale::ELLIPSIS, color=colors::White);
+					text=laborText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 
 			if(timeText.length != 0 && ((costText.length == 0 && extraCosts.length < 4) || extraCosts.length == 0)) {
-				font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(92, 30)),
+				font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(92, 30)),
 						horizAlign=1.0, vertAlign=0.5,
-						text=timeText, ellipsis=locale::ELLIPSIS, color=colors::White);
+						text=timeText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 			}
 		}
 		else if(timeText.length != 0) {
 			x -= 120;
-			spritesheet::ContextIcons.draw(1, recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-			font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(57, 30)),
+			getSkinSpriteSheet("ContextIcons").draw(1, recti_area(vec2i(x, 8)+pos.topLeft, vec2i(24, 24)));
+			font.draw(pos=recti_area(vec2i(x+28, 6)+pos.topLeft, vec2i(57, 30)),
 					horizAlign=0.0, vertAlign=0.5,
-					text=timeText, ellipsis=locale::ELLIPSIS, color=colors::White);
+					text=timeText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 		}
 
 		//Cost
 		if(energyText.length != 0) {
 			x -= 90;
-			icons::Energy.draw(recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-			font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(62, 30)),
+			iconWrapper.Energy.draw(recti_area(vec2i(x, activeSkin.ConstructionCostIconTopPadding)+pos.topLeft, vec2i(24, 24)));
+			font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(62, 30)),
 					horizAlign=0.0, vertAlign=0.5,
-					text=energyText, ellipsis=locale::ELLIPSIS, color=colors::White);
+					text=energyText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 		}
 
 		if(costText.length != 0) {
 			if(maintainText.length != 0) {
 				x -= 135;
-				icons::Money.draw(recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-				font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(92, 30)),
+				iconWrapper.Money.draw(recti_area(vec2i(x, activeSkin.ConstructionCostIconTopPadding)+pos.topLeft, vec2i(24, 24)));
+				font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(92, 30)),
 						horizAlign=0.0, vertAlign=0.5,
-						text=costText, ellipsis=locale::ELLIPSIS, color=colors::White);
-				font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(92, 30)),
+						text=costText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
+				font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(92, 30)),
 						horizAlign=0.5, vertAlign=0.5,
-						text=slashStr, ellipsis=locale::ELLIPSIS, color=colors::White);
-				font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(92, 30)),
+						text=slashStr, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
+				font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(92, 30)),
 						horizAlign=1.0, vertAlign=0.5,
-						text=maintainText, ellipsis=locale::ELLIPSIS, color=colors::White);
+						text=maintainText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 			}
 			else {
 				x -= 90;
-				icons::Money.draw(recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-				font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(62, 30)),
+				iconWrapper.Money.draw(recti_area(vec2i(x, activeSkin.ConstructionCostIconTopPadding)+pos.topLeft, vec2i(24, 24)));
+				font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(62, 30)),
 						horizAlign=0.0, vertAlign=0.5,
-						text=costText, ellipsis=locale::ELLIPSIS, color=colors::White);
+						text=costText, ellipsis=locale::ELLIPSIS, color=activeSkin.White);
 			}
 		}
 
 		for(uint i = 0, cnt = extraCosts.length; i < cnt; ++i) {
 			x -= 60;
-			extraIcons[i].draw(recti_area(vec2i(x, 3)+pos.topLeft, vec2i(24, 24)));
-			font.draw(pos=recti_area(vec2i(x+28, 0)+pos.topLeft, vec2i(32, 32)),
+			extraIcons[i].draw(recti_area(vec2i(x, activeSkin.ConstructionCostIconTopPadding)+pos.topLeft, vec2i(24, 24)));
+			font.draw(pos=recti_area(vec2i(x+28, activeSkin.ConstructionCostTextTopPadding)+pos.topLeft, vec2i(32, 32)),
 					horizAlign=0.0, vertAlign=0.5,
-					text=extraCosts[i], ellipsis=locale::SHORT_ELLIPSIS, color=colors::White);
+					text=extraCosts[i], ellipsis=locale::SHORT_ELLIPSIS, color=activeSkin.White);
 		}
 
 		//Requirements
@@ -1788,9 +1789,9 @@ class QueueItem : BaseGuiElement {
 		updateAbsolutePosition();
 
 		@cancelButton = GuiButton(this, Alignment(Right-32, Top+6, Right-5, Top+32));
-		cancelButton.color = colors::Red;
+		cancelButton.color = activeSkin.Red;
 		cancelButton.style = SS_IconButton;
-		cancelButton.setIcon(icons::Remove);
+		cancelButton.setIcon(iconWrapper.Remove);
 		cancelButton.tooltip = locale::CANCEL_CONSTRUCTION;
 	}
 
@@ -1945,7 +1946,7 @@ class QueueItem : BaseGuiElement {
 				textColor = Color(0x999999ff);
 		}
 		font.draw(pos=midBar.padded(7, 0), text=name, color=textColor,
-				horizAlign=0.0, vertAlign=0.5, stroke=colors::Black);
+				horizAlign=0.0, vertAlign=0.5, stroke=activeSkin.Black);
 
 		//vec2i nameSize = font.getDimension(name);
 		//drawResources(skin, absPos.topLeft + vec2i(80+nameSize.x, 3), cost, supplyCost);
@@ -1955,7 +1956,7 @@ class QueueItem : BaseGuiElement {
 			absPos.botRight - vec2i(100, 29), vec2i(100, 29)));
 
 		font.draw(pos=recti_area(absPos.botRight - vec2i(100, 29), vec2i(64, 29)),
-				text=timeText, horizAlign=1.0, vertAlign=0.5, stroke=colors::Black);
+				text=timeText, horizAlign=1.0, vertAlign=0.5, stroke=activeSkin.Black);
 	}
 
 	void draw() override {
@@ -1998,7 +1999,7 @@ class SupportItem : BaseGuiElement {
 		skin.draw(SS_Field, SF_Normal, absPos);
 
 		recti ipos = recti_area(absPos.topLeft+vec2i(8, 2), vec2i(16, 16));
-		spritesheet::ResourceIconsSmallMods.draw(0, ipos);
+		getSkinSpriteSheet("ResourceIconsSmallMods").draw(0, ipos);
 		dat.dsg.icon.draw(ipos.padded(2), dat.dsg.color);
 
 		skin.draw(FT_Normal, absPos.topLeft+vec2i(32, 3), dat.dsg.name);
@@ -2028,7 +2029,7 @@ class FlagshipDrydock : GuiMarkupContextOption {
 				dsg.name,
 				standardize(dsg.size, true),
 				getSpriteDesc(dsg.icon),
-				toString(dsg.color.interpolate(colors::White, 0.5))),
+				toString(dsg.color.interpolate(activeSkin.White, 0.5))),
 				FT_Subtitle);
 		icon = dsg.icon;
 		icon.color = dsg.color;

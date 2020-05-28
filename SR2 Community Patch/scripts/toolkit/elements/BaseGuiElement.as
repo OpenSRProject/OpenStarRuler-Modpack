@@ -1,3 +1,4 @@
+import skins;
 import elements.IGuiElement;
 import elements.Alignment;
 from gui import get_nextGuiID, getRootGuiElement, setGuiFocus, setGuiAbsorb, getGuiFocus, isGuiFocusIn, clearGuiHovered, gui_root;
@@ -62,7 +63,7 @@ class BaseGuiElement : IGuiElement {
 	IGuiElement@ Parent;
 	IGuiElement@[] Children;
 	KeybindGroup@ keybinds;
-	const Skin@ skin = getSkin(settings::sSkinName);
+	const Skin@ skin = activeSkin.skin;
 	Alignment@ Alignment;
 	IGuiCallback@ callback;
 	recti Position;

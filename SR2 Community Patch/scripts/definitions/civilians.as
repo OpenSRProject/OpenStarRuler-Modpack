@@ -1,3 +1,6 @@
+#priority init 9990
+import skins;
+
 enum CargoType {
 	CT_Resource,
 	CT_Goods,
@@ -13,15 +16,9 @@ array<const Model@> CivilianModels = {
 	model::CommerceStation,
 };
 
-array<const Material@> CivilianMaterials = {
-	material::Ship10,
-	material::GenericPBR_CommerceStation,
-};
+array<const Material@> CivilianMaterials;
 
-array<Sprite> CivilianIcons = {
-	Sprite(spritesheet::HullIcons, 2),
-	Sprite(spritesheet::OrbitalIcons, 0),
-};
+array<Sprite> CivilianIcons;
 
 const double CIV_SIZE_MIN = 2.0;
 const double CIV_SIZE_MAX = 5.4;
@@ -84,12 +81,19 @@ string getCivilianName(uint type, double radius) {
 Sprite getCivilianIcon(Empire@ owner, uint type, double radius) {
 	if(type == CiT_Freighter) {
 		if(radius >= CIV_SIZE_CARAVAN)
-			return Sprite(spritesheet::HullIcons, 4);
+			return Sprite(getSkinSpriteSheet("HullIcons"), 4);
 		else if(radius >= CIV_SIZE_FREIGHTER)
-			return Sprite(spritesheet::HullIcons, 3);
+			return Sprite(getSkinSpriteSheet("HullIcons"), 3);
 	}
 	return CivilianIcons[type];
 }
 
 const double STATION_MIN_RAD = 5.0;
 const double STATION_MAX_RAD = 10.0;
+
+void init() {
+	CivilianMaterials.insertLast(getSkinMaterial("Ship10"));
+	CivilianMaterials.insertLast(getSkinMaterial("GenericPBR_CommerceStation"));
+	CivilianIcons.insertLast(Sprite(getSkinSpriteSheet("HullIcons"), 2));
+	CivilianIcons.insertLast(Sprite(getSkinSpriteSheet("OrbitalIcons"), 0));
+}

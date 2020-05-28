@@ -1,3 +1,4 @@
+import skins;
 import ftl;
 import empire_data;
 
@@ -49,14 +50,14 @@ void syncInitial(Empire& emp, Message& msg) {
 	msg >> emp.ColonizerModel;
 	msg >> emp.ColonizerMaterial;
 
-	@emp.background = getMaterial(emp.backgroundDef);
+	@emp.background = getSkinMaterial(emp.backgroundDef);
 	
 	auto@ flag = getEmpireFlag(emp.flagDef);
 	if(flag is null)
 		@flag = getEmpireFlag(emp.id % getEmpireFlagCount());
 	@emp.flag = flag.flag;
 	
-	@emp.portrait = getMaterial(emp.portraitDef);
+	@emp.portrait = getSkinMaterial(emp.portraitDef);
 	if(emp.portrait is material::error)
 		@emp.portrait = getEmpirePortrait(randomi(0, getEmpirePortraitCount()-1)).portrait;
 }

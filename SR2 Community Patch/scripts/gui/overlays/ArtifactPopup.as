@@ -35,7 +35,7 @@ class ArtifactPopup : Popup {
 		@cost = GuiText(this, Alignment(Left+35, Bottom-34, Right, Bottom-4));
 		cost.horizAlign = 0.5;
 		cost.font = FT_Bold;
-		cost.color = colors::Energy;
+		cost.color = activeSkin.Energy;
 
 		updateAbsolutePosition();
 	}
@@ -62,7 +62,7 @@ class ArtifactPopup : Popup {
 		skin.draw(SS_BG3D, SF_Normal, objView.absolutePosition.padded(-4));
 		skin.draw(SS_SubTitle, SF_Normal, recti_area(bgPos.topLeft+vec2i(2,1), vec2i(bgPos.width-5, 30)));
 		if(cost.visible)
-			skin.draw(SS_SubTitle, SF_Normal, cost.absolutePosition.padded(-31,-3,4,-1), colors::Energy);
+			skin.draw(SS_SubTitle, SF_Normal, cost.absolutePosition.padded(-31,-3,4,-1), activeSkin.Energy);
 		BaseGuiElement::draw();
 	}
 

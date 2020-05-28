@@ -1,3 +1,4 @@
+import skins;
 import resources;
 import ftl;
 from obj_selection import selectedObject, selectedObjects, getSelectionPosition, getSelectionScale;
@@ -51,13 +52,13 @@ class SlipstreamDisplay : PointDisplay {
 		else
 			color = Color(0xff0000ff);
 
-		font::DroidSans_11_Bold.draw(mousePos + vec2i(16, 0),
+		activeSkin.skin.getFont(FT_Bold).draw(mousePos + vec2i(16, 0),
 			toString(int(ht.cost)) + " " + locale::FTL
 			 + " (" + toString(ht.distance, 0) + "u)",
 			color);
 		
 		if(ht.distance > ht.range) {
-			font::OpenSans_11_Italic.draw(mousePos + vec2i(16, 16),
+			activeSkin.skin.getFont(FT_Italic).draw(mousePos + vec2i(16, 16),
 				locale::INSUFFICIENT_FTL,
 				color);
 		}
@@ -68,7 +69,7 @@ class SlipstreamDisplay : PointDisplay {
 		if(shiftKey)
 			outColor = Color(0xffe400ff);
 		else
-			outColor = colors::Red;
+			outColor = activeSkin.Red;
 		PointDisplay::render(mode);
 	}
 };

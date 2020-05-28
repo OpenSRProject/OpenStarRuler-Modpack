@@ -1,5 +1,6 @@
 #priority init 5001
 #include "include/map.as"
+import skins;
 
 #section server
 import systems;
@@ -173,7 +174,7 @@ class InvasionMap : Map {
 			auto@ flag = getEmpireFlag(randomi(0, getEmpireFlagCount()-1));
 			Invaders.flagDef = flag.flagDef;
 			Invaders.flagID = flag.id;
-			@Invaders.flag = getMaterial(Creeps.flagDef);
+			@Invaders.flag = getSkinMaterial(Creeps.flagDef);
 			@Invaders.shipset = getShipset("ALL");
 		}
 
@@ -785,7 +786,7 @@ class InvasionUI : BaseGuiElement {
 		@bar = GuiProgressbar(this, Alignment(Left+90, Top+8, Left+250, Bottom-8));
 		bar.frontColor = Color(0xff8080ff);
 		bar.font = FT_Small;
-		bar.strokeColor = colors::Black;
+		bar.strokeColor = activeSkin.Black;
 
 		@strengthLabel = GuiText(this, Alignment(Left+270, Top+4, Left+330, Bottom-4), locale::NEXT_STRENGTH);
 		strengthLabel.color = Color(0xaaaaaaff);

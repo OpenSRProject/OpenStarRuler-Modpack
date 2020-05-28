@@ -2,6 +2,7 @@
 const double GROW_TIMER = 1.0;
 const double SHOW_TIMER = 10.0;
 const double SHOW_SCALE = 0.1;
+import skins;
 
 class Ping {
 	Empire@ fromEmpire;
@@ -38,11 +39,11 @@ class Ping {
 			scale *= (1.0 - (t-GROW_TIMER*0.5)/(GROW_TIMER*0.5)) * (1.0 - SHOW_SCALE) + SHOW_SCALE;
 		scale *= node.sortDistance * 0.2;
 
-		renderPlane(material::Ping, node.abs_position, scale, fromEmpire.color);
+		renderPlane(getSkinMaterial("Ping"), node.abs_position, scale, fromEmpire.color);
 		if(type == 0)
-			renderBillboard(spritesheet::AttributeIcons, 5, node.abs_position, node.sortDistance * 0.02, 0, fromEmpire.color);
+			renderBillboard(getSkinSpriteSheet("AttributeIcons"), 5, node.abs_position, node.sortDistance * 0.02, 0, fromEmpire.color);
 		else if(type == 1)
-			renderBillboard(material::Minus, node.abs_position, node.sortDistance * 0.02, 0);
+			renderBillboard(getSkinMaterial("Minus"), node.abs_position, node.sortDistance * 0.02, 0);
 	}
 };
 
