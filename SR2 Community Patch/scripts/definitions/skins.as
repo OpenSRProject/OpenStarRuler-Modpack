@@ -15,11 +15,17 @@ Sprite getSkinSprite(const string& desc) {
     }
     else {
         pos = tmp.findFirst("*");
-        if(activeSkin.materialOverrides.exists(tmp.substr(0, pos))) {
-            activeSkin.materialOverrides.get(tmp.substr(0, pos), reference);
-            if(pos >= 0)
+        if(pos >= 0) {
+            if(activeSkin.materialOverrides.exists(tmp.substr(0, pos))) {
+                activeSkin.materialOverrides.get(tmp.substr(0, pos), reference);
                 return getSprite(reference + tmp.substr(pos));
-            else return getSprite(reference);
+            }
+        }
+        else {
+            if(activeSkin.materialOverrides.exists(tmp)) {
+                activeSkin.materialOverrides.get(tmp, reference);
+                return getSprite(reference);
+            }
         }
     }
     return getSprite(desc); // No matching overrides found, get the default sprite!
@@ -535,11 +541,8 @@ tidy class ExtendedSkin {
 #section all
 }
 
-void preInit() { // We want to set the default skin before any other skins get to init.
+void preInit() { // We want to set the active skin before anything else starts preparing.
     skins.set("Default", @activeSkin);
-}
-
-void init() { // We don't want to read the skin list until all the skins have had a chance to init.
     skins.get(settings::sSkinName, @activeSkin);
     if(activeSkin is null)
         skins.get("Default", @activeSkin);

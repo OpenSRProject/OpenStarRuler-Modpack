@@ -21,6 +21,8 @@ tidy final class Trait {
 	string name;
 	string description;
 	string unique;
+	string iconValue;
+	string colorValue;
 	Sprite icon;
 	Color color;
 	int order = 0;
@@ -265,17 +267,10 @@ void loadTraits(const string& filename) {
 			@trait.category = getTraitCategory(value, create=true);
 		}
 		else if(key.equals_nocase("Icon")) {
-			if(activeSkin.traitIconOverrides.exists(trait.ident)) {
-				activeSkin.traitIconOverrides.get(trait.ident, value);
-				trait.icon = getSprite(value); // The skin defined this, so why waste time figuring out if there's an override for the override?
-			}
-			else trait.icon = getSkinSprite(value);
+			trait.iconValue = value;
 		}
 		else if(key.equals_nocase("Color")) {
-			if(activeSkin.traitColorOverrides.exists(trait.ident)) {
-				activeSkin.traitColorOverrides.get(trait.ident, trait.color);
-			}
-			else trait.color = toColor(value);
+			trait.colorValue = value;
 		}
 		else if(key.equals_nocase("Order")) {
 			trait.order = toInt(value);
@@ -321,17 +316,30 @@ void initTraits() {
 
 void preInit() {
 	initTraits();
-#section game
 	for(uint i = 0, cnt = traits.length; i < cnt; ++i) {
 		auto@ trait = traits[i];
+
+		// Traits are loaded by onGameSettings(), too... and you can't specify
+		// priorities for that callback, so we have to apply trait overrides
+		// *after* loading.
+		if(activeSkin.traitIconOverrides.exists(trait.ident)) {
+			activeSkin.traitIconOverrides.get(trait.ident, trait.iconValue);
+			trait.icon = getSprite(trait.iconValue); // The skin defined this, so why waste time figuring out if there's an override for the override?
+		}
+		else trait.icon = getSkinSprite(trait.iconValue);
+		if(activeSkin.traitColorOverrides.exists(trait.ident)) {
+			activeSkin.traitColorOverrides.get(trait.ident, trait.color);
+		}
+		else trait.color = toColor(trait.colorValue);
+#section game
 
 		for(uint n = 0, ncnt = trait.hookDefs.length; n < ncnt; ++n) {
 			auto@ hook = cast<ITraitEffect>(parseHook(trait.hookDefs[n], "trait_effects::", instantiate=false));
 			if(hook !is null)
 				trait.hooks.insertLast(hook);
 		}
-	}
 #section all
+	}
 }
 
 void init() {
