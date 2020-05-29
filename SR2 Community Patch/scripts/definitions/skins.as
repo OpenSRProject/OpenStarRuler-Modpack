@@ -539,7 +539,7 @@ void preInit() { // We want to set the default skin before any other skins get t
     skins.set("Default", @activeSkin);
 }
 
-void postInit() { // We don't want to read the skin list until all the skins have had a chance to init.
+void init() { // We don't want to read the skin list until all the skins have had a chance to init.
     skins.get(settings::sSkinName, @activeSkin);
     if(activeSkin is null)
         skins.get("Default", @activeSkin);
