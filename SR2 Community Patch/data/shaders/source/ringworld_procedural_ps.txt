@@ -225,7 +225,7 @@ vec2 rotator(vec2 rotate, float rate)
 // regular atan() fails at 0,0
 float atan2(float y, float x)
 {
-    return x == 0.0 ? sign(y)*pi/2 : atan(y, x);
+    return x == 0.0 ? sign(y)*pi/2.0 : atan(y, x);
 }
 
 
@@ -233,13 +233,13 @@ void main() {
 	// atmoMask 1 = ground geometry, atmoMask 0 = cloud geometry
 	int atmoSteps;
 	if (advancedProcedurals){
-		atmoSteps = 8 - int(atmoSteps * 4.0); // reduce cloud iterations for softer shadows and performance
+		atmoSteps = 8; // reduce cloud iterations for softer shadows and performance
 	}
 	else if (simpleProcedurals){		
-		atmoSteps = 6 - int(atmoSteps * 3.0);
+		atmoSteps = 6;
 	}
 	else{
-		atmoSteps = 4 - int(atmoSteps * 2.0);
+		atmoSteps = 4;
 	}
 	// create cloud shadows and animated clouds
 	float shadow = abs(mod(uv.x + cycle - (1.0 - atmoMask), 1.0/8.0) * 8.0 - 0.5) * 2.0;
