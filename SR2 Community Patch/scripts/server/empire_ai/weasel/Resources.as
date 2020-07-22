@@ -472,7 +472,7 @@ final class Resources : AIComponent {
 	void cancelRequest(ImportData@ data) {
 		if(data.beingMet) {
 			breakImport(data);
-			active.remove(data);
+			requested.remove(data);
 		}
 		else {
 			requested.remove(data);
