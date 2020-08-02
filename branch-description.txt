@@ -1,0 +1,7 @@
+**********************************************
+WARNING: This description format can only be read by an outdated version of SR2MM. It has been deprecated in v1.1.1, and is no longer guaranteed to provide accurate information about the selected branch.
+
+It is recommended that you update to the latest SR2MM build at your earliest convenience.
+**********************************************
+
+The purpose of this branch is unclear due to an issue that was fixed by the new branch description format.
