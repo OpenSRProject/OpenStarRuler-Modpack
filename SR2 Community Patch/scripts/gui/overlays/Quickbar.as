@@ -1001,7 +1001,7 @@ class LaborPlanets : ObjectMode {
 		Object@ obj;
 		while(receive(objs, obj)) {
 			Orbital@ orb = cast<Orbital>(obj);
-			if(orb !is null && orb.hasConstruction) {
+			if(orb !is null && orb.hasConstruction && obj.laborIncome > 0) {
 				auto@ dat = cache(orb);
 				grid.set(index, dat);
 				++index;
