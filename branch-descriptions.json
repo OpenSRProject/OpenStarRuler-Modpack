@@ -1,0 +1,4 @@
+{
+  "Main": "This is the main development branch for the Community Patch. If you're reading this description, and you're not specifically planning on testing the new CP version, you probably want the \"master\" branch.",
+  "master": "This is the Workshop-tracking branch of the Community Patch. If it's on the Workshop, it's here - and vice versa."
+}
