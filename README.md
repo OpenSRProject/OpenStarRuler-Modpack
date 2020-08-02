@@ -16,6 +16,6 @@ must be merged to keep functionalities from the Community Patch.
 
 It is strongly recommended that you observe certain standards when working on the Community Patch, to make things easier for you, people reviewing your code, and people tracking down bugs or other changes:
 
-1. Follow the instructions outlined in the SR2MM readme, located at https://github.com/DaloLorn/SR2ModManager, to properly connect your CP repository to your game.
+1. Follow the instructions outlined in the SR2MM readme, located at https://github.com/DaloLorn/SR2ModManager#modders-guide, to properly connect your CP repository to your game. (These instructions can also be applied to other mods.)
 
 2. When editing a file that previously existed in the base game, commit the original, *unmodified* file in a "clone commit", then commit your changes after that. This will make your changes easier to identify when looking through the commit history. (Obviously, images and other binary files are an exception...)
