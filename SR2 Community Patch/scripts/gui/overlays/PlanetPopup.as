@@ -47,6 +47,7 @@ class PlanetPopup : Popup {
 	GuiSkinElement@ statusBox;
 
 	GuiProgressbar@ health;
+	GuiProgressbar@ strength;
 
 	GuiCargoDisplay@ cargo;
 
@@ -57,7 +58,7 @@ class PlanetPopup : Popup {
 
 	PlanetPopup(BaseGuiElement@ parent) {
 		super(parent);
-		size = vec2i(190, 160);
+		size = vec2i(190, 186);
 
 		@name = GuiText(this, Alignment(Left+50, Top+6, Right-4, Top+28));
 		@ownerName = GuiText(this, Alignment(Left+48, Top+28, Right-6, Top+46));
@@ -72,17 +73,24 @@ class PlanetPopup : Popup {
 		setMarkupTooltip(defIcon, locale::TT_IS_DEFENDING);
 		defIcon.visible = false;
 
+		@strength = GuiProgressbar(this, Alignment(Left+8, Top+53, Right-8, Top+75));
+		strength.visible = false;
+		strength.tooltip = locale::FLEET_STRENGTH;
+
+		GuiSprite strIcon(strength, Alignment(Left-8, Top-9, Left+24, Bottom-8), icons::Strength);
+		strIcon.noClip = true;
+
 		GuiSkinElement band(this, Alignment(Left+3, Bottom-35, Right-4, Bottom-2), SS_SubTitle);
 		band.color = Color(0xaaaaaaff);
 
-		@popBox = BaseGuiElement(this, Alignment(Left+3, Bottom-67, Left+50, Bottom-35));
+		@popBox = BaseGuiElement(this, Alignment(Left+3, Bottom-93, Left+50, Bottom-61));
 		@popIcon = GuiSprite(popBox, Alignment(Left-12, Top+2, Left+24, Bottom+6));
 		popIcon.desc = icons::Population;
 		@popValue = GuiText(popBox, Alignment(Left+26, Top+12, Right, Height=20));
 		popIcon.tooltip = locale::POPULATION;
 		popValue.tooltip = locale::POPULATION;
 
-		@loyBox = BaseGuiElement(this, Alignment(Right-50, Bottom-67, Right-5, Bottom-35));
+		@loyBox = BaseGuiElement(this, Alignment(Right-50, Bottom-93, Right-5, Bottom-61));
 		@loyIcon = GuiSprite(loyBox, Alignment(Right-24, Top+8, Right, Bottom-1));
 		loyIcon.desc = icons::Loyalty;
 		@loyValue = GuiText(loyBox, Alignment(Right-50, Top+12, Right-26, Height=20));
@@ -96,10 +104,9 @@ class PlanetPopup : Popup {
 		statusBox.noClip = true;
 		statusBox.visible = false;
 
-		@health = GuiProgressbar(this, Alignment(Left+8, Top+53, Right-8, Top+75));
-		health.visible = false;
+		@health = GuiProgressbar(this, Alignment(Left+3, Bottom-61, Right-4, Bottom-35));
 
-		auto@ healthIcon = GuiSprite(health, Alignment(Left-8, Top-9, Left+24, Bottom-8), icons::Health);
+		auto@ healthIcon = GuiSprite(health, Alignment(Left+2, Top+1, Width=24, Height=24), icons::Health);
 		healthIcon.noClip = true;
 
 		updateAbsolutePosition();
@@ -277,15 +284,9 @@ class PlanetPopup : Popup {
 		}
 
 		//Update health
-		if(pl.Health < pl.MaxHealth) {
-			health.progress = pl.Health / pl.MaxHealth;
-			health.frontColor = colors::Red.interpolate(colors::Green, health.progress);
-			health.text = standardize(pl.Health)+" / "+standardize(pl.MaxHealth);
-			health.visible = true;
-		}
-		else {
-			health.visible = false;
-		}
+		health.progress = pl.Health / pl.MaxHealth;
+		health.frontColor = colors::Red.interpolate(colors::Green, health.progress);
+		health.text = standardize(pl.Health)+" / "+standardize(pl.MaxHealth);
 
 		//Update resources
 		resources.resources.syncFrom(pl.getAllResources());
@@ -326,6 +327,8 @@ class PlanetPopup : Popup {
 			loyIcon.visible = false;
 		}
 
+		updateStrengthBar();
+
 		//Update construction
 		uint consIndex = 0;
 		if(owned) {
@@ -343,5 +346,30 @@ class PlanetPopup : Popup {
 
 		Popup::update();
 		Popup::updatePosition(pl);
+	}
+
+	void updateStrengthBar() {
+		double currentStrength = pl.getFleetStrength() * 0.001;
+		double totalStrength = pl.getFleetMaxStrength() * 0.001;
+		if (totalStrength == 0) {
+			strength.visible = false;
+			strength.progress = 0.f;
+			strength.frontColor = Color(0xff6a00ff);
+			strength.text = "--";
+		} else {
+			strength.visible = true;
+			strength.progress = currentStrength / totalStrength;
+			if (strength.progress > 1.001f) {
+				strength.progress = 1.f;
+				strength.font = FT_Bold;
+			}
+			else {
+				strength.font = FT_Normal;
+			}
+
+			strength.frontColor = Color(0xff6a00ff).interpolate(Color(0xffc600ff), strength.progress);
+			strength.text = standardize(currentStrength);
+			strength.tooltip = locale::FLEET_STRENGTH+": "+standardize(currentStrength)+"/"+standardize(totalStrength);
+		}
 	}
 };
