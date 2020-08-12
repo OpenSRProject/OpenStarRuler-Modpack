@@ -1074,6 +1074,13 @@ class RemoveIfNoRemnantsInSystem : StatusHook {
 #section all
 };
 
+tidy final class NativeData {
+	double pressurePct = 0.0;
+	uint nativeResourceCount = 1;
+	double lastCheckedForUpdates = 0;
+	array<double> pressures(TR_COUNT, 0.0);
+};
+
 class ProduceNativePressurePct : StatusHook {
 	Document doc("Produce a percentage of the native resource's pressure.");
 	Argument base(AT_Decimal, "0", doc="Percentage to produce.");
@@ -1081,60 +1088,92 @@ class ProduceNativePressurePct : StatusHook {
 
 #section server
 	void onCreate(Object& obj, Status@ status, any@ data) override {
-		double pct = 0.0;
-		data.store(pct);
+		NativeData nativeData;
+		nativeData.lastCheckedForUpdates = gameTime;
+		nativeData.nativeResourceCount = obj.nativeResourceCount;
+		data.store(@nativeData);
 	}
 
 	bool onTick(Object& obj, Status@ status, any@ data, double time) override {
-		double prevPct = 0.0;
-		data.retrieve(prevPct);
+		NativeData@ nativeData;
+		data.retrieve(@nativeData);
 
+		double prevPct = nativeData.pressurePct;
 		double newPct = base.decimal;
 		newPct += per_stack.decimal * status.stacks;
 
-		if(newPct != prevPct) {
-			auto@ resource = getResource(obj.primaryResourceType);
-			if(resource is null) {
+		uint nativeResourceCount = obj.nativeResourceCount;
+
+		bool update = (newPct != prevPct)
+			|| (nativeResourceCount != nativeData.nativeResourceCount)
+			|| (gameTime > nativeData.lastCheckedForUpdates + 30);
+
+		if (update) {
+			array<Resource> planetResources;
+			planetResources.syncFrom(obj.getNativeResources());
+
+			nativeData.nativeResourceCount = planetResources.length;
+			nativeData.pressurePct = newPct;
+			nativeData.lastCheckedForUpdates = gameTime;
+
+			if (planetResources.length == 0) {
 				newPct = 0.0;
-			}
-			else {
-				for(uint i = 0; i < TR_COUNT; ++i) {
-					double prev = double(resource.tilePressure[i]) * prevPct;
-					double cur = double(resource.tilePressure[i]) * newPct;
-					if(prev != cur)
+			} else {
+				// check each type of pressure
+				for (uint i = 0; i < TR_COUNT; ++i) {
+					// then sum up over all native resources with this pressure
+					double prev = nativeData.pressures[i];
+					double cur = 0;
+					for (uint j = 0, cnt = planetResources.length; j < cnt; ++j) {
+						cur += double(planetResources[j].type.tilePressure[i]) * newPct;
+					}
+					// adjust pressure for this type to be correct
+					if (prev != cur) {
 						obj.modResource(i, cur - prev);
+						nativeData.pressures[i] = cur;
+					}
 				}
 			}
 
-			data.store(newPct);
+			data.store(nativeData);
 		}
 
 		return true;
 	}
 
 	void onDestroy(Object& obj, Status@ status, any@ data) override {
-		double pct = 0;
-		data.retrieve(pct);
+		NativeData@ nativeData;
+		data.retrieve(@nativeData);
 
-		auto@ resource = getResource(obj.primaryResourceType);
-		if(resource !is null) {
-			for(uint i = 0; i < TR_COUNT; ++i) {
-				double prev = double(resource.tilePressure[i]) * pct;
-				obj.modResource(i, -prev);
-			}
+		// check each type of pressure
+		for (uint i = 0; i < TR_COUNT; ++i) {
+			// then sum up over all native resources with this pressure
+			double prev = nativeData.pressures[i];
+			// adjust pressure back to 0
+			obj.modResource(i, -prev);
 		}
 	}
 
 	void save(Status@ status, any@ data, SaveFile& file) override {
-		double pct = 0;
-		data.retrieve(pct);
-		file << pct;
+		NativeData@ nativeData;
+		data.retrieve(@nativeData);
+		file << nativeData.pressurePct;
+		file << nativeData.nativeResourceCount;
+		file << nativeData.lastCheckedForUpdates;
+		for (uint i = 0; i < TR_COUNT; ++i) {
+			file << nativeData.pressures[i];
+		}
 	}
 
 	void load(Status@ status, any@ data, SaveFile& file) override {
-		double pct = 0;
-		file >> pct;
-		data.store(pct);
+		NativeData nativeData;
+		data.store(@nativeData);
+		file >> nativeData.pressurePct;
+		file >> nativeData.nativeResourceCount;
+		file >> nativeData.lastCheckedForUpdates;
+		for (uint i = 0; i < TR_COUNT; ++i) {
+			file >> nativeData.pressures[i];
+		}
 	}
 #section all
 };
