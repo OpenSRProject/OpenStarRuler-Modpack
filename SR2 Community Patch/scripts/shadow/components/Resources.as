@@ -207,6 +207,8 @@ tidy class ObjectResources : Component_Resources {
 		auto@ to = r.exportedTo;
 		if(ExportDisabled != 0)
 			return locale::EXPBLOCK_DISABLED;
+		if(terraforming)
+			return locale::EXPBLOCK_TERRAFORMING;
 		if((to !is null && to.region is null) || obj.region is null)
 			return locale::EXPBLOCK_DEEPSPACE;
 		if(!obj.owner.valid) {

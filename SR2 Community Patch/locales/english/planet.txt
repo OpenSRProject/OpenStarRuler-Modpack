@@ -117,6 +117,7 @@ EXPBLOCK_USE: [color=#f33][b]Cannot Use Resource:[/b][/color]\n$1
 EXPBLOCK_EXPORT: [color=#f33][b]Cannot Export Resource:[/b][/color]\n$1
 EXPBLOCK_IMPORT: [color=#f33][b]Cannot Import Resource:[/b][/color]\n$1
 EXPBLOCK_DISABLED: Planet is blocked from exporting.
+EXPBLOCK_TERRAFORMING: Planet is being terraformed.
 EXPBLOCK_DEEPSPACE: Can only trade from within systems.
 EXPBLOCK_UNOWNED: Can only trade within the same empire.
 EXPBLOCK_UNMINED: Asteroid must be mined.
