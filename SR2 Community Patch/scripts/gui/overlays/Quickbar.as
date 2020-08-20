@@ -975,7 +975,8 @@ class LaborPlanets : ObjectMode {
 	}
 
 	bool filter(ObjectData@ dat) {
-		if(dat.obj.getResourceProduction(TR_Labor) > 0)
+		int minLabor = playerEmpire.hasTrait(getTraitID("Mechanoid")) ? 1 : 0;
+		if(dat.obj.getResourceProduction(TR_Labor) > minLabor)
 			return true;
 		return false;
 	}
