@@ -145,11 +145,11 @@ class SettingsPage {
 		return ele;
 	}
 
-	GuiGameFrequency@ Frequency(const string& text, const string& configName, double min = 0.0, double max = 2.0, Alignment@ align = null) {
-		return Frequency(text, config(configName), config::get(configName), min, max, align);
+	GuiGameFrequency@ Frequency(const string& text, const string& configName, double min = 0.0, double max = 2.0, Alignment@ align = null, const string& tooltip = "") {
+		return Frequency(text, config(configName), config::get(configName), min, max, align, tooltip);
 	}
 
-	GuiGameFrequency@ Frequency(const string& text, uint setting, double value, double min = 0.0, double max = 2.0, Alignment@ align = null) {
+	GuiGameFrequency@ Frequency(const string& text, uint setting, double value, double min = 0.0, double max = 2.0, Alignment@ align = null, const string& tooltip = "") {
 		if(align is null)
 			@align = nextAlignment();
 		GuiGameFrequency ele(cur, align, text, setting);
@@ -157,6 +157,8 @@ class SettingsPage {
 		ele.set(value);
 		ele.setMin(min);
 		ele.setMax(max);
+		if(tooltip.length != 0)
+			setMarkupTooltip(ele, tooltip, width=300);
 		options.insertLast(ele);
 		return ele;
 	}
