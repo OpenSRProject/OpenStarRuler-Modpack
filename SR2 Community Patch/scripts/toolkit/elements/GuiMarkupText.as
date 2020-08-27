@@ -747,7 +747,10 @@ void markupParse(BBTag@ tag, MarkupState@ state){
 	else if(tag.name == "hr") {
 		tag.type = TT_Data;
 		tag.value = state.data.length;
-		state.data.insertLast(MarkupLine());
+		MarkupLine ml = MarkupLine();
+		if(tag.argument.length > 0 && tag.argument[0] == '#')
+			ml.color = toColor(tag.argument);
+		state.data.insertLast(ml);
 		state.wasPrintable = false;
 	}
 	else if(tag.name == "levels") {

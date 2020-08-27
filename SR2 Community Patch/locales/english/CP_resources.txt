@@ -1,0 +1,62 @@
+GTT_MONEY: <<
+	[font=Medium]Money[/font]
+	[color=#aaa][i]Every budget cycle of 3 minutes generates new money to spend. Any money not spent after the budget cycle ends is put into [img=$4;20/] welfare.[/i][/color]
+
+	Remaining Budget: [vspace=-16/][right]$1[/right][hr=#333/]
+	Time Remaining: [vspace=-16/][right]$3[/right][hr=#333/]
+	Upcoming Budget: [vspace=-16/][right]$2[/right][hr=#333/]
+>>
+GTT_INFLUENCE: <<
+	[font=Medium]Influence[/font]
+	[color=#aaa][i]Influence points are used to trigger diplomatic actions and win galactic senate votes. If storing more points than your optimal storage cap (based on your total generation), your generation rate will be decreased.[/i][/color]
+
+	Available Points: [vspace=-16/][right]$1[/right][hr=#333/]
+	Optimal Storage: [vspace=-16/][right]$2[/right][hr=#333/]
+	Generation Rate: [vspace=-16/][right]$3[/right][hr=#333/]
+
+	Influence Stake: [vspace=-16/][right]$5[/right][hr=#333/]
+	Galactic Stake Percentage: [vspace=-16/][right]$4[/right][hr=#333/]
+
+	[color=#aaa][i]Influence Stake is provided by influence buildings. The percentage of the total influence stake from all empires that you currently control determines your influence generation rate.[/i][/color]
+>>
+
+GTT_ENERGY: <<
+	[font=Medium]Energy[/font]
+	[color=#aaa][i]Energy is used to activate abilities on artifacts found across the galaxy. The more Energy you are currently storing above your free storage cap, the more your generation rate is reduced.[/i][/color]
+
+	Available Energy: [vspace=-16/][right]$1[/right][hr=#333/]
+	Generation Rate: [vspace=-16/][right]$2[/right][hr=#333/]
+	Free Storage: [vspace=-16/][right]$3[/right][hr=#333/]
+	Storage Penalty: [vspace=-16/][right]$4[/right][hr=#333/]
+>>
+
+GTT_FTL: <<
+	[font=Medium]FTL Energy[/font]
+	[color=#aaa][i]FTL Energy is paid to engage the faster-than-light drives on your ships.[/i][/color]
+
+	Available FTL: [vspace=-16/][right]$1[/right][hr=#333/]
+	Maximum Storage: [vspace=-16/][right]$2[/right][hr=#333/]
+	Generation Rate: [vspace=-16/][right]$3[/right][hr=#333/]
+>>
+
+GTT_RESEARCH: <<
+	[font=Medium]Research[/font]
+	[color=#aaa][i]Research points can be spent to unlock various technologies in the research grid. Research generation goes down over time as you generate more points.[/i][/color]
+
+	Available Research Points: [vspace=-16/][right]$1[/right][hr=#333/]
+	Generation Rate: [vspace=-16/][right]$2[/right][hr=#333/]
+>>
+
+GTT_RESEARCH_TECH: <<
+	Currently Researching: [right][b][color=$3]$1[/color][/b] (ETA: $2)[/right]
+>>
+
+GTT_DEFENSE: <<
+	[font=Medium]Global Defense[/font]
+	[color=#aaa][i]Global defense automatically creates support ships on planets or systems you have indicated to use it. Right click a system's star to mark it for global defense use. Every point of defense counts as 2 labor for support ship spawning.[/i][/color]
+
+	Global Defense Rate: [vspace=-16/][right]$1[/right][hr=#333/]
+	Defense Reserve: [vspace=-16/][right]$3 / $2[/right][hr=#333/]
+
+	[color=#aaa][i]Defense reserve is filled up before ships are spawned automatically. If the defense reserve is full, it can be deployed at any planet to spawn defense ships. While full, global defense generation automatically spawns ships as usual.[/i][/color]
+>>
