@@ -3324,8 +3324,11 @@ tidy final class IfInOwnedSpace : IfHook {
 		Region@ region = obj.region;
 		if(region is null)
 			return false;
-		if(allow_allies.boolean)
-			return region.PlanetsMask & obj.owner.ForcedPeaceMask.value != 0;
+		// Also consider the player's owned space if allow_allies is true
+		// but not in allied space, fixes vanilla bug where owned space
+		// that wasn't allied space was failing this condition.
+		if(allow_allies.boolean && (region.PlanetsMask & obj.owner.ForcedPeaceMask.value != 0))
+			return true;
 		else
 			return region.PlanetsMask & obj.owner.mask != 0;
 	}
