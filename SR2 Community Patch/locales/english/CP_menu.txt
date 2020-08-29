@@ -98,3 +98,6 @@ OPTTT_RINGWORLD_FIX: <<
 
 	Due to the resulting loss of quality, it may be advisable not to enable this option if you are not experiencing issues with Ringworld-related crashes.
 >>
+LABOR_PLANETS: Planets/Orbitals with +$1 Labor
+OPT_QUICKBAR_MINLABOR: Minimum labor threshold
+OPT_QUICKBAR_MINLABOR_DESC: This changes the minimum labor a planet/orbital needs to show up in the quickbar filter "Planets/Orbitals with Labor"

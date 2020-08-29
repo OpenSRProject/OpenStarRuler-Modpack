@@ -25,6 +25,10 @@ Category: Game
 		Default: True
 	Bool: bMenuBGScreenshot
 		Default: False
+	Double: dQuickbarMinLabor
+		Default: 1.0
+		Min: 1.0
+		Max: 1000.0
 Category: Interface
 	String: sSkinName
 		Default: Default
