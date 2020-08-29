@@ -225,7 +225,7 @@ class GameOptions : OptionsBox {
 		));
 
 		y += 38;
-		GuiEngineNumber quickbarMinLabor(
+		GuiEngineDecimal quickbarMinLabor(
 			panel, recti_area(8, y,  550, 28),
 			locale::OPT_QUICKBAR_MINLABOR,
 			"dQuickbarMinLabor"
