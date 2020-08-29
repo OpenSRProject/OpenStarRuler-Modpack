@@ -351,7 +351,7 @@ tidy class CivilianScript {
 				} else if (curRegion is nextRegion)
 					arrived = true;
 
-				if(arrived || arriveWithEmpirePropulsionTechnology(obj, enterDest)) {
+				if(arrived || obj.moveTo(enterDest, moveId, enterOrbit=false)) {
 					if(cargoType == CT_Resource)
 						prevRegion.bumpTradeCounter(obj.owner);
 					moveId = -1;
@@ -385,7 +385,7 @@ tidy class CivilianScript {
 					pos += (nextRegion.position - obj.position).normalized(nextRegion.radius * 0.85);
 					pos.y = nextRegion.position.y;
 					obj.maxAcceleration = ACC_INTERSYSTEM;
-					if(arriveWithEmpirePropulsionTechnology(obj, pos)) {
+					if(obj.moveTo(pos, moveId, enterOrbit=false)) {
 						moveId = -1;
 						return 0.4;
 					}
@@ -454,33 +454,6 @@ tidy class CivilianScript {
 			}
 		}
 		return 0.2;
-	}
-
-	bool arriveWithEmpirePropulsionTechnology(Civilian& obj, vec3d enterDest) {
-		if(awaitingGateJump)
-			return obj.moveTo(enterDest, moveId, enterOrbit=false);
-
-		if(obj.owner.hasTrait(getTraitID("Jumpdrive"))) {
-			playParticleSystem("GateFlash", obj.position, obj.rotation, obj.radius, obj.visibleMask);
-			awaitingGateJump = true;
-			obj.position = enterDest;
-			obj.clearMovement();
-			playParticleSystem("GateFlash", enterDest, obj.rotation, obj.radius, obj.visibleMask);
-			return true;
-		}
-		if(obj.owner.hasTrait(getTraitID("Hyperdrive"))) {
-			if(!obj.inFTL)
-				playParticleSystem("GateFlash", obj.position, obj.rotation, obj.radius, obj.visibleMask);
-			if(enterDest.distanceToSQ(obj.position) < DEST_RANGE * DEST_RANGE ||
-				obj.FTLTo(enterDest, ACC_INTERSYSTEM * 4, moveId)
-			) {
-				obj.FTLDrop();
-				playParticleSystem("GateFlash", obj.position, obj.rotation, obj.radius, obj.visibleMask);
-				return true;
-			}
-			return false;
-		}
-		return obj.moveTo(enterDest, moveId, enterOrbit=false);
 	}
 
 	bool hasGateToNextRegion(Region& curRegion, Empire& owner) {
