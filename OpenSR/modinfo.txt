@@ -1,4 +1,4 @@
-	Name: SR2 Community Patch
+	Name: OpenSR Modpack
 
 	Description: <<
 		A collection of bug fixes and non-gameplay changing improvements.
