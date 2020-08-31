@@ -50,6 +50,7 @@ tidy class PickupControl : Component_PickupControl {
 	Object@[] protectors;
 	vec3d offset;
 	bool pickupDelta = false;
+	bool collected = false;
 
 	const CampType@ campType;
 
@@ -201,6 +202,9 @@ tidy class PickupControl : Component_PickupControl {
 			return;
 		if(isPickupProtected)
 			return;
+		if(collected)
+			return;
+		collected = true;
 		type.onPickup(pickup, by);
 		obj.destroy();
 	}
