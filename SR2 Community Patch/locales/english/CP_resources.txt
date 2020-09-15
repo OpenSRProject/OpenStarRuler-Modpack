@@ -1,8 +1,5 @@
 GTT_ALIGNED_STAT: <<
-	$1: [vspace=-16/][right]$2[/right][hr=#333/]
->>
-GTT_ALIGNED_STATC: <<
-	$1: [vspace=-16/][right][color=$3]$2[/color][/right][hr=#333/]
+	$1: [vspace=-16/][right]$2[/right][hr=#333/][vspace=-16/]
 >>
 GTT_MONEY: <<
 	[font=Medium]Money[/font]
@@ -33,6 +30,7 @@ GTT_ENERGY: <<
 	[bbloc=#GTT_ALIGNED_STAT:Generation Rate:$2/]
 	[bbloc=#GTT_ALIGNED_STAT:Free Storage:$3/]
 	[bbloc=#GTT_ALIGNED_STAT:Storage Penalty:$4/]
+
 >>
 
 GTT_FTL: <<
@@ -42,6 +40,7 @@ GTT_FTL: <<
 	[bbloc=#GTT_ALIGNED_STAT:Available FTL:$1/]
 	[bbloc=#GTT_ALIGNED_STAT:Maximum Storage:$2/]
 	[bbloc=#GTT_ALIGNED_STAT:Generation Rate:$3/]
+
 >>
 
 GTT_RESEARCH: <<
@@ -50,6 +49,7 @@ GTT_RESEARCH: <<
 
 	[bbloc=#GTT_ALIGNED_STAT:Available Research Points:$1/]
 	[bbloc=#GTT_ALIGNED_STAT:Generation Rate:$2/]
+
 >>
 
 GTT_RESEARCH_TECH: <<
