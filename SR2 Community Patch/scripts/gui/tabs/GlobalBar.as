@@ -346,8 +346,7 @@ class BudgetResource : ResourceDisplay {
 		for(int i = MoT_COUNT - 1; i >= 0; --i) {
 			int money = playerEmpire.getMoneyFromType(i);
 			if(money != 0) {
-				tt += format("$1: [vspace=-16/][right]$2[/right][hr=#333/]",
-					localize("MONEY_TYPE_"+i), formatMoneyChange(money, true));
+				tt += format(locale::GTT_ALIGNED_STAT, localize("MONEY_TYPE_"+i), formatMoneyChange(money, true));
 			}
 		}
 
