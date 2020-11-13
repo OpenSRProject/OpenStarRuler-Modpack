@@ -18,10 +18,10 @@ ColonyShip@ createColonizer(Object& from, Object& to, double population, double 
 	colDesc.delayedCreation = true;
 	if(from.owner.ColonizerName.length != 0)
 		colDesc.name = from.owner.ColonizerName;
-	
+
 	quaterniond rot = quaterniond_fromVecToVec(vec3d_front(), to.position - from.position, vec3d_up());
 	colDesc.position = from.position + rot * vec3d_front(colDesc.radius + from.radius);
-	
+
 	@colDesc.owner = from.owner;
 
 	ColonyShip@ colShip = cast<ColonyShip>(makeObject(colDesc));
@@ -45,7 +45,7 @@ ColonyShip@ createColonizer(Empire@ owner, vec3d from, Object& to, double popula
 	colDesc.delayedCreation = true;
 	if(owner.ColonizerName.length != 0)
 		colDesc.name = owner.ColonizerName;
-	
+
 	@colDesc.owner = owner;
 	colDesc.position = from;
 
@@ -88,14 +88,14 @@ Ship@ createShip(vec3d position, const Design@ design, Empire@ owner, Object@ gr
 	shipDesc.position = position;
 	if(memorable)
 		shipDesc.flags |= objMemorable;
-	
+
 	MeshDesc shipMesh;
 	getDesignMesh(owner, design, shipMesh);
 	shipMesh.memorable = memorable;
-	
+
 	Object@ obj = makeObject(shipDesc);
 	bindMesh(obj, shipMesh);
-	
+
 	Ship@ ship = cast<Ship>(obj);
 	if(free)
 		ship.isFree = true;
@@ -111,6 +111,12 @@ Ship@ createShip(vec3d position, const Design@ design, Empire@ owner, Object@ gr
 		if(groupLeader !is null && groupLeader.valid
 				&& groupLeader.owner is ship.owner && groupLeader.hasLeaderAI)
 			groupLeader.registerSupport(ship);
+
+		// CE: Spawn in with velocity of leader
+		if (groupLeader !is null) {
+			// spawn in with the movement of the leader
+			ship.velocity = groupLeader.velocity;
+		}
 	}
 	else {
 		ship.activateLeaderAI();
@@ -161,13 +167,13 @@ Ship@ createShip(Object& at, const Design@ design, Empire@ owner = null, Object@
 	}
 	else
 		shipDesc.position = at.position + random3d(at.radius + shipDesc.radius + 0.75);
-	
+
 	MeshDesc shipMesh;
 	getDesignMesh(owner, design, shipMesh);
-	
+
 	Object@ obj = makeObject(shipDesc);
 	bindMesh(obj, shipMesh);
-	
+
 	Planet@ planet = cast<Planet>(at);
 	Ship@ ship = cast<Ship>(obj);
 	if(free)
@@ -209,6 +215,13 @@ Ship@ createShip(Object& at, const Design@ design, Empire@ owner = null, Object@
 	}
 
 	ship.finalizeCreation();
+
+	// CE: Spawn in with velocity of leader
+	if (groupLeader !is null && design.hasTag(ST_IsSupport)) {
+		// spawn in with the velocity of the leader
+		ship.velocity = groupLeader.velocity;
+	}
+
 	return ship;
 }
 
@@ -222,7 +235,7 @@ Orbital@ createOrbital(const vec3d& at, const OrbitalModule@ core, Empire@ owner
 		oDesc.name = core.name;
 	oDesc.radius = core.size;
 	oDesc.position = at;
-	
+
 	Object@ obj = makeObject(oDesc);
 	Orbital@ orb = cast<Orbital>(obj);
 
@@ -246,7 +259,7 @@ Civilian@ createCivilian(const vec3d& at, Empire@ owner, uint type = CiT_Freight
 	desc.radius = radius;
 	desc.position = at;
 	desc.delayedCreation = true;
-	
+
 	Civilian@ obj = cast<Civilian>(makeObject(desc));
 	obj.sightRange = 0;
 	obj.setCivilianType(type);
