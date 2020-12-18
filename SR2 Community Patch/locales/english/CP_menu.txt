@@ -98,6 +98,9 @@ OPTTT_RINGWORLD_FIX: <<
 
 	Due to the resulting loss of quality, it may be advisable not to enable this option if you are not experiencing issues with Ringworld-related crashes.
 >>
-LABOR_PLANETS: Planets/Orbitals with +$1 Labor
-OPT_QUICKBAR_MINLABOR: Minimum labor threshold
-OPT_QUICKBAR_MINLABOR_DESC: This changes the minimum labor a planet/orbital needs to show up in the quickbar filter "Planets/Orbitals with Labor"
+OPT_QUICKBAR_MINLABOR: Minimum Labor Threshold
+OPT_QUICKBAR_MINLABOR_DESC: <<
+	This changes the minimum Labor generation a planet/orbital needs to have, in order to be visible on the "Planets/Orbitals with Labor" quickbar.
+	
+	This threshold is increased by 1 for Mechanoid races, since they are guaranteed to have at least 1 Labor on each of their planets. For example, if this setting is set to 1, a Mechanoid planet would need to generate 2 or more Labor per minute in order to be shown on the Labor object quickbar.
+>>
