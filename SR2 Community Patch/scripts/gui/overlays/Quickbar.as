@@ -985,7 +985,7 @@ class LaborPlanets : ObjectMode {
 	}
 
 	string get_name() override {
-		return format(locale::LABOR_PLANETS, settings::dQuickbarMinLabor);
+		return locale::LABOR_PLANETS;
 	}
 
 	void longUpdate() override {
@@ -999,9 +999,12 @@ class LaborPlanets : ObjectMode {
 
 		DataList@ objs = playerEmpire.getOrbitals();
 		Object@ obj;
+		int minLabor = settings::dQuickbarMinLabor;
+		if(playerEmpire.hasTrait(getTraitID("Mechanoid")) // Mechanoids always have 1 Labor.
+			minLabor++;
 		while(receive(objs, obj)) {
 			Orbital@ orb = cast<Orbital>(obj);
-			if(orb !is null && orb.hasConstruction && obj.laborIncome >= settings::dQuickbarMinLabor) {
+			if(orb !is null && orb.hasConstruction && obj.laborIncome >= minLabor) {
 				auto@ dat = cache(orb);
 				grid.set(index, dat);
 				++index;
