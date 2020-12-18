@@ -366,6 +366,7 @@ class DesignSet {
 				for(uint i = 0, cnt = dsg.errorCount; i < cnt; ++i)
 					print("   "+dsg.errors[i].text);
 			}
+			// BEGIN NON-MIT CODE - DOF
 			if(dsg is null || dsg.hasFatalErrors())  { //DOF - Try additional hull types
 				//Try support
 				hullName = format("$1Tiny", emp.shipset.ident);
@@ -397,6 +398,7 @@ class DesignSet {
 				if(dsg is null || dsg.hasFatalErrors())
 					continue;
 			}
+			// END NON-MIT CODE
 			if(emp.getDesign(dsg.name) !is null)
 				continue;
 			if(desc.settings !is null)

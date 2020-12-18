@@ -28,7 +28,7 @@ tidy class ConstructionType {
 	bool inContext = false;
 
 	array<IConstructionHook@> hooks;
-	array<Hook@> ai;
+	array<Hook@> ai; // NON-MIT CODE - SOI (AI)
 
 	string formatTooltip(Object& obj) const {
 		string tt = format("[font=Medium]$1[/font]\n$2\n", name, description);

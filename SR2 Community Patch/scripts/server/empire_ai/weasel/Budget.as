@@ -8,7 +8,7 @@ import empire_ai.weasel.WeaselAI;
 
 enum BudgetType {
 	BT_Military,
-	BT_Infrastructure,
+	BT_Infrastructure, // NON-MIT CODE - SOI (AI)
 	BT_Colonization,
 	BT_Development,
 
@@ -88,7 +88,7 @@ final class BudgetPart {
 				}
 			}
 			else {
-				if(budget.canSpend(type, alloc.cost, alloc.maintenance, alloc.priority)) {
+				if(budget.canSpend(type, alloc.cost, alloc.maintenance, alloc.priority)) { // NON-MIT CODE - SOI (AI)
 					budget.spend(type, alloc.cost, alloc.maintenance);
 					alloc.allocated = true;
 					allocations.removeAt(i);
@@ -136,6 +136,7 @@ final class BudgetPart {
 };
 
 final class Budget : AIComponent {
+	// BEGIN NON-MIT CODE - SOI (AI)
 	//Budget thresholds
 	private int _criticalThreshold = 350;
 	private int _lowThreshold = 400;
@@ -154,6 +155,7 @@ final class Budget : AIComponent {
 	int get_mediumThreshold() const { return _mediumThreshold; }
 	int get_highThreshold() const { return _highThreshold; }
 	int get_veryHighThreshold() const { return _veryHighThreshold; }
+	// END NON-MIT CODE
 
 	array<BudgetPart@> parts;
 	int NextAllocId = 0;
@@ -186,9 +188,11 @@ final class Budget : AIComponent {
 		file << FreeMaintenance;
 		file << NextAllocId;
 		file << checkedMilitarySpending;
+		// BEGIN NON-MIT CODE - SOI (AI)
 		file << _askedFocus;
 		file << _focusing;
 		file << _focus;
+		// END NON-MIT CODE
 
 		for(uint i = 0, cnt = parts.length; i < cnt; ++i)
 			parts[i].save(this, file);
@@ -203,9 +207,11 @@ final class Budget : AIComponent {
 		file >> FreeMaintenance;
 		file >> NextAllocId;
 		file >> checkedMilitarySpending;
+		// BEGIN NON-MIT CODE - SOI (AI)
 		file >> _askedFocus;
 		file >> _focusing;
 		file >> _focus;
+		// END NON-MIT CODE
 
 		for(uint i = 0, cnt = parts.length; i < cnt; ++i)
 			parts[i].load(this, file);
@@ -273,10 +279,11 @@ final class Budget : AIComponent {
 		}
 	}
 
-	bool canSpend(uint type, int money, int maint = 0, double priority = 1.0) {
+	bool canSpend(uint type, int money, int maint = 0, double priority = 1.0) { // NON-MIT CODE - SOI (AI)
 		int canFree = FreeBudget;
 		int canFreeMaint = FreeMaintenance;
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		if (priority < 2.0) {
 			//Rules for normal priority requests
 			//Don't allow any spending not in our current focus
@@ -303,6 +310,7 @@ final class Budget : AIComponent {
 			//Allow borrowing from next budget for high priority requests
 			canFree = money;
 		}
+		// END NON-MIT CODE
 
 		auto@ part = parts[type];
 		if(money > part.remaining + canFree)
@@ -335,14 +343,14 @@ final class Budget : AIComponent {
 			ai.print("==============");
 			ai.print("Unspent:");
 			ai.print(" Military: "+parts[BT_Military].remaining+" / "+parts[BT_Military].remainingMaintenance);
-			ai.print(" Infrastructure: "+parts[BT_Infrastructure].remaining+" / "+parts[BT_Infrastructure].remainingMaintenance);
+			ai.print(" Infrastructure: "+parts[BT_Infrastructure].remaining+" / "+parts[BT_Infrastructure].remainingMaintenance); // NON-MIT CODE - SOI (AI)
 			ai.print(" Colonization: "+parts[BT_Colonization].remaining+" / "+parts[BT_Colonization].remainingMaintenance);
 			ai.print(" Development: "+parts[BT_Development].remaining+" / "+parts[BT_Development].remainingMaintenance);
 			ai.print(" FREE: "+FreeBudget+" / "+FreeMaintenance);
 			ai.print("==============");
 			ai.print("Total Expenditures:");
 			ai.print(" Military: "+parts[BT_Military].spent+" / "+parts[BT_Military].gainedMaintenance);
-			ai.print(" Infrastructure: "+parts[BT_Infrastructure].spent+" / "+parts[BT_Infrastructure].gainedMaintenance);
+			ai.print(" Infrastructure: "+parts[BT_Infrastructure].spent+" / "+parts[BT_Infrastructure].gainedMaintenance); // NON-MIT CODE - SOI (AI)
 			ai.print(" Colonization: "+parts[BT_Colonization].spent+" / "+parts[BT_Colonization].gainedMaintenance);
 			ai.print(" Development: "+parts[BT_Development].spent+" / "+parts[BT_Development].gainedMaintenance);
 			ai.print("==============");
@@ -357,6 +365,7 @@ final class Budget : AIComponent {
 
 		checkedMilitarySpending = false;
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//Handle focus status
 		if (_focusing) {
 			_focusing = false;
@@ -369,6 +378,7 @@ final class Budget : AIComponent {
 			if (log)
 				ai.print("Budget: starting focus");
 		}
+		// END NON-MIT CODE
 
 		//Tell the budget parts to perform turns
 		for(uint i = 0, cnt = parts.length; i < cnt; ++i)
@@ -416,6 +426,7 @@ final class Budget : AIComponent {
 		FreeMaintenance += maint;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool canFocus() {
 		return !(ai.empire.EstNextBudget <= criticalThreshold || _askedFocus || _focusing);
 	}
@@ -438,6 +449,7 @@ final class Budget : AIComponent {
 				_askedFocus = true;
 		}
 	}
+	// END NON-MIT CODE
 
 	void tick(double time) {
 		//Record some simple data

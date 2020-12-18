@@ -1,3 +1,4 @@
+// BEGIN NON-MIT CODE - SOI (AI)
 // Infrastructure
 // ------
 // Manages building basic structures in newly colonized or weakened systems
@@ -1330,3 +1331,4 @@ final class Infrastructure : AIComponent {
 AIComponent@ createInfrastructure() {
 	return Infrastructure();
 }
+// END NON-MIT CODE

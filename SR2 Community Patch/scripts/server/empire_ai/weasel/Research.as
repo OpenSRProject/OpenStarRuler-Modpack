@@ -9,17 +9,19 @@ import empire_ai.weasel.Development;
 
 import research;
 
-const double baseAimResearchRate = 2.0;
+const double baseAimResearchRate = 2.0; // NON-MIT CODE - SOI (AI)
 
 class Research : AIComponent {
-	Development@ development;
+	Development@ development; // NON-MIT CODE - SOI (AI)
 
 	TechnologyGrid grid;
 	array<TechnologyNode@> immediateQueue;
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	void create() {
 		@development = cast<Development>(ai.development);
 	}
+	// END NON-MIT CODE
 
 	void save(SaveFile& file) {
 		uint cnt = immediateQueue.length;
@@ -203,8 +205,10 @@ class Research : AIComponent {
 			}
 		}
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//Update research generation rate goal
 		development.aimResearchRate = clamp(gameTime / (20.0 * 60.0) - 0.5, 0.0, baseAimResearchRate);
+		// END NON-MIT CODE
 	}
 };
 
