@@ -224,6 +224,16 @@ class GameOptions : OptionsBox {
 			locale::OPT_MENU_BG_SCREENSHOT, "bMenuBGScreenshot"
 		));
 
+		y += 38;
+		GuiEngineNumber quickbarMinLabor(
+			panel, recti_area(8, y,  550, 28),
+			locale::OPT_QUICKBAR_MINLABOR,
+			"iQuickbarMinLabor"
+		);
+		quickbarMinLabor.decimals = 0;
+		setMarkupTooltip(quickbarMinLabor, locale::OPT_QUICKBAR_MINLABOR_DESC);
+		options.insertLast(quickbarMinLabor);
+
 		GuiText text(this, Alignment(Left+12, Bottom-32, Right-12, Bottom-8), locale::OPT_RESTART);
 		text.color = Color(0xaaaaaaff);
 		text.font = FT_Italic;

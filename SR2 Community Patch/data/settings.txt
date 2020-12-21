@@ -25,6 +25,10 @@ Category: Game
 		Default: True
 	Bool: bMenuBGScreenshot
 		Default: False
+	Integer: iQuickbarMinLabor
+		Default: 1
+		Min: 1
+		Max: 100000
 Category: Interface
 	String: sSkinName
 		Default: Default
