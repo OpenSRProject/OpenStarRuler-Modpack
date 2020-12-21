@@ -111,7 +111,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 	array<ExportData@> aiResources;
 
 	double aimFTLStorage = 0.0;
-	double aimResearchRate = 0.0;
+	double aimResearchRate = 0.0; // NON-MIT CODE - SOI (AI)
 
 	bool managePlanetPressure = true;
 	bool manageAsteroidPressure = true;
@@ -249,12 +249,14 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 		return true;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool requestsResearchGeneration() {
 		double rate = ai.empire.ResearchRate;
 		if (aimResearchRate <= rate)
 			return false;
 		return true;
 	}
+	// END NON-MIT CODE
 
 	bool isBuilding(const BuildingType& type) {
 		for(uint i = 0, cnt = genericBuilds.length; i < cnt; ++i) {
@@ -428,17 +430,21 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 				w = 1.0;
 				if(sys.border)
 					w *= 0.25;
+				// BEGIN NON-MIT CODE - SOI (AI)
 				if (!sys.owned && !sys.border)
 					w /= 0.25;
+				// END NON-MIT CODE
 				if(sys.obj.PlanetsMask & ~ai.mask != 0)
 					w *= 0.25;
 				if(p.resource.cls is colonization.scalableClass)
 					w *= 10.0;
 
+				// BEGIN NON-MIT CODE - SOI (AI)
 				if (w > bestWeight) {
 					@newFocus = p.pl;
 					bestWeight = w;
 				}
+				// END NON-MIT CODE
 			}
 
 			if(newFocus !is null) {
@@ -705,12 +711,14 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 								if(log)
 									ai.print("AI hook generically requested building of type "+type.name, buildOn);
 
+								// BEGIN NON-MIT CODE - SOI (AI)
 								double priority = 1.0;
 								//Resource buildings should be built as soon as possible
 								if (cast<AsCreatedResource>(hook) !is null)
 									priority = 2.0;
 
 								auto@ req = planets.requestBuilding(plAI, type, priority, expire=ai.behavior.genericBuildExpire);
+								// END NON-MIT CODE
 								if(req !is null)
 									genericBuilds.insertLast(req);
 								break;
@@ -774,6 +782,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 		return true;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Planet@ getLaborAt(Territory@ territory, double&out expires) {
 		if (territory is null) {
 			if (log)
@@ -801,6 +810,7 @@ class Development : AIComponent, Buildings, ConsiderFilter, AIResources {
 		}
 		return pl;
 	}
+	// END NON-MIT CODE
 };
 
 AIComponent@ createDevelopment() {

@@ -49,7 +49,7 @@ class Consider : AIComponent, Considerer {
 	double bestWeight;
 	ImportData@ request;
 	const BuildingType@ bldType;
-	const OrbitalModule@ _module;
+	const OrbitalModule@ _module; // NON-MIT CODE - SOI (AI)
 	ConsiderComponent@ comp;
 	ConsiderFilter@ cfilter;
 
@@ -89,6 +89,7 @@ class Consider : AIComponent, Considerer {
 		@bldType = type;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	const OrbitalModule@ get_module() {
 		return _module;
 	}
@@ -96,6 +97,7 @@ class Consider : AIComponent, Considerer {
 	void set_module(const OrbitalModule@ type) {
 		@_module = type;
 	}
+	// END NON-MIT CODE
 
 	ConsiderComponent@ get_component() {
 		return comp;
@@ -226,6 +228,7 @@ class Consider : AIComponent, Considerer {
 		return best;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Object@ SystemsInTerritory(const ConsiderHook& hook, const Territory& territory, uint limit = uint(-1)) {
 		Object@ best;
 		bestWeight = 0.0;
@@ -250,6 +253,7 @@ class Consider : AIComponent, Considerer {
 		clear();
 		return best;
 	}
+	// END NON-MIT CODE
 
 	Object@ ImportantPlanets(const ConsiderHook& hook) {
 		Object@ best;
@@ -271,6 +275,7 @@ class Consider : AIComponent, Considerer {
 		return best;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Object@ ImportantPlanetsInTerritory(const ConsiderHook& hook, const Territory& territory) {
 		Object@ best;;
 		bestWeight = 0.0;
@@ -294,6 +299,7 @@ class Consider : AIComponent, Considerer {
 		clear();
 		return best;
 	}
+	//END NON-MIT CODE
 
 	Object@ AllPlanets(const ConsiderHook& hook) {
 		Object@ best;
@@ -315,6 +321,7 @@ class Consider : AIComponent, Considerer {
 		return best;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Object@ PlanetsInTerritory(const ConsiderHook& hook, const Territory& territory) {
 		Object@ best;
 		bestWeight = 0.0;
@@ -338,6 +345,7 @@ class Consider : AIComponent, Considerer {
 		clear();
 		return best;
 	}
+	// END NON-MIT CODE - SOI (AI)
 
 	Object@ SomePlanets(const ConsiderHook& hook, uint count, bool alwaysImportant) {
 		Object@ best;

@@ -38,8 +38,10 @@ interface Considerer {
 	const BuildingType@ get_building();
 	void set_building(const BuildingType@ type);
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	const OrbitalModule@ get_module();
 	void set_module(const OrbitalModule@ type);
+	// END NON-MIT CODE
 
 	ConsiderComponent@ get_component();
 	void set_component(ConsiderComponent@ comp);
@@ -54,8 +56,10 @@ interface Considerer {
 	//Consider all systems we know other empires have planets in
 	Object@ OtherSystems(const ConsiderHook& hook);
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	//Consider all systems in one of our territories
 	Object@ SystemsInTerritory(const ConsiderHook& hook, const Territory& territory, uint limit = uint(-1));
+	// END NON-MIT CODE
 
 	//Consider all our fleets
 	Object@ Fleets(const ConsiderHook& hook);
@@ -63,14 +67,18 @@ interface Considerer {
 	//Consider planets we own that are important in some way
 	Object@ ImportantPlanets(const ConsiderHook& hook);
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	//Consider planets we own that are important in some way in one of our territories
 	Object@ ImportantPlanetsInTerritory(const ConsiderHook& hook, const Territory& territory);
+	// END NON-MIT CODE
 
 	//Consider all our planets
 	Object@ AllPlanets(const ConsiderHook& hook);
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	//Consider all our planets in one of our territories
 	Object@ PlanetsInTerritory(const ConsiderHook& hook, const Territory& territory);
+	// END NON-MIT CODE
 
 	//Consider a random selection of our planets
 	Object@ SomePlanets(const ConsiderHook& hook, uint count = 5, bool alwaysImportant = true);

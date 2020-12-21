@@ -226,11 +226,13 @@ class Battle {
 					if(ourStrength < enemyStrength * 0.5)
 						shouldRetreat = true;
 				}
+				// BEGIN NON-MIT CODE - DOF (AI)
 				//DOF - Adding some leader based checks
 				if(miss.fleet.flagshipHealth < 0.5)  {
 					if(ourStrength < enemyStrength * 0.75)
 						shouldRetreat = true;
 				}
+				// END NON-MIT CODE
 				if(shouldRetreat) {
 					war.fleets.returnToBase(miss.fleet);
 					fleets.removeAt(i);

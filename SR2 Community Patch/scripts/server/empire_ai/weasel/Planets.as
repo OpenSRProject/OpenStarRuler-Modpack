@@ -20,8 +20,10 @@ import ai.consider;
 import buildings;
 import saving;
 
+// BEGIN NON-MIT CODE - SOI (AI)
 final class BuildingRequest : IBuildingConstruction {
 	protected int _id = -1;
+	// END NON-MIT CODE
 	PlanetAI@ plAI;
 	AllocateBudget@ alloc;
 	const BuildingType@ type;
@@ -39,6 +41,7 @@ final class BuildingRequest : IBuildingConstruction {
 	BuildingRequest() {
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	int id {
 		get const { return _id; }
 		set { _id = value; }
@@ -52,6 +55,7 @@ final class BuildingRequest : IBuildingConstruction {
 	}
 	
 	const BuildingType@ get_building() const { return type; }
+	// END NONN-MIT CODE
 
 	void save(Planets& planets, SaveFile& file) {
 		planets.saveAI(file, plAI);
@@ -117,6 +121,7 @@ final class BuildingRequest : IBuildingConstruction {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 final class ConstructionRequest : IGenericConstruction {
 	protected int _id = -1;
 	PlanetAI@ plAI;
@@ -212,6 +217,7 @@ final class ConstructionRequest : IGenericConstruction {
 		return true;
 	}
 };
+// END NON-MIT CODE
 
 final class PlanetAI {
 	Planet@ obj;
@@ -225,7 +231,7 @@ final class PlanetAI {
 
 	void init(AI& ai, Planets& planets) {
 		@resources = planets.resources.availableResource(obj);
-		planets.events.notifyPlanetAdded(this, EventArgs());
+		planets.events.notifyPlanetAdded(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 	}
 
 	void save(Planets& planets, SaveFile& file) {
@@ -265,7 +271,7 @@ final class PlanetAI {
 			@claimedChain = null;
 		}
 		@resources = null;
-		planets.events.notifyPlanetRemoved(this, EventArgs());
+		planets.events.notifyPlanetRemoved(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 	}
 
 	void tick(AI& ai, Planets& planets, double time) {
@@ -439,6 +445,7 @@ final class PlanetAI {
 		return vec2i(-1,-1);
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool buildConstruction(AI& ai, Planets& planets, const ConstructionType@ type) {
 		if(type is null || !type.canBuild(obj))
 			return false;
@@ -449,6 +456,7 @@ final class PlanetAI {
 
 			return true;
 	}
+	// END NON-MIT CODE
 }
 
 final class PotentialSource {
@@ -503,8 +511,10 @@ final class AsteroidData {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class Planets : AIComponent, AIConstructions {
 	Events@ events;
+	// END NON-MIT CODE
 	Resources@ resources;
 	Budget@ budget;
 	Systems@ systems;
@@ -516,18 +526,20 @@ class Planets : AIComponent, AIConstructions {
 	array<PlanetAI@> bumped;
 	uint planetIdx = 0;
 
-
 	array<BuildingRequest@> building;
 	int nextBuildingRequestId = 0;
+	// BEGIN NON-MIT CODE - SOI (AI)
 	array<ConstructionRequest@> constructionRequests;
 	int nextConstructionRequestId = 0;
+	// END NON-MIT CODE
 
 	void create() {
-		@events = cast<Events>(ai.events);
+		@events = cast<Events>(ai.events); // NON-MIT CODE - SOI (AI)
 		@resources = cast<Resources>(ai.resources);
 		@budget = cast<Budget>(ai.budget);
 		@systems = cast<Systems>(ai.systems);
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//Register specialized construction types
 		for(uint i = 0, cnt = getConstructionTypeCount(); i < cnt; ++i) {
 			auto@ type = getConstructionType(i);
@@ -537,8 +549,10 @@ class Planets : AIComponent, AIConstructions {
 					hook.register(this, type);
 			}
 		}
+		// END NON-MIT CODE
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Empire@ get_empire() {
 		return ai.empire;
 	}
@@ -554,10 +568,11 @@ class Planets : AIComponent, AIConstructions {
 				break;
 		}
 	}
+	// END NON-MIT CODE
 
 	void save(SaveFile& file) {
 		file << nextBuildingRequestId;
-		file << nextConstructionRequestId;
+		file << nextConstructionRequestId; // NON-MIT CODE - SOI (AI)
 
 		uint cnt = planets.length;
 		file << cnt;
@@ -574,12 +589,14 @@ class Planets : AIComponent, AIConstructions {
 			building[i].save(this, file);
 		}
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		cnt = constructionRequests.length;
 		file << cnt;
 		for(uint i = 0; i < cnt; ++i) {
 			saveConstructionRequest(file, constructionRequests[i]);
 			constructionRequests[i].save(this, file);
 		}
+		// END NON-MIT CODE
 
 		cnt = ownedAsteroids.length;
 		file << cnt;
@@ -589,7 +606,7 @@ class Planets : AIComponent, AIConstructions {
 
 	void load(SaveFile& file) {
 		file >> nextBuildingRequestId;
-		file >> nextConstructionRequestId;
+		file >> nextConstructionRequestId; // NON-MIT CODE - SOI (AI)
 
 		uint cnt = 0;
 		file >> cnt;
@@ -601,6 +618,7 @@ class Planets : AIComponent, AIConstructions {
 				PlanetAI().load(this, file);
 		}
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		file >> cnt;
 		for(uint i = 0; i < cnt; ++i) {
 			auto@ req = loadBuildingRequest(file);
@@ -609,6 +627,7 @@ class Planets : AIComponent, AIConstructions {
 				building.insertLast(req);
 			}
 		}
+		// END NON-MIT CODE
 
 		file >> cnt;
 		for(uint i = 0; i < cnt; ++i) {
@@ -679,6 +698,7 @@ class Planets : AIComponent, AIConstructions {
 			id = data.id;
 		file << id;
 	}
+	// BEGIN NON-MIT CODE - SOI (AI)
 	array<ConstructionRequest@> constructionLoadIds;
 	ConstructionRequest@ loadConstructionRequest(int id) {
 		if(id == -1)
@@ -706,9 +726,10 @@ class Planets : AIComponent, AIConstructions {
 			id = data.id;
 		file << id;
 	}
+	// END NON-MIT CODE
 	void postLoad(AI& ai) {
 		buildingLoadIds.length = 0;
-		constructionLoadIds.length= 0;
+		constructionLoadIds.length= 0; // NON-MIT CODE - SOI (AI)
 	}
 
 	void start() {
@@ -762,6 +783,7 @@ class Planets : AIComponent, AIConstructions {
 			}
 		}
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//Construct any constructions we are waiting on
 		for(uint i = 0, cnt = constructionRequests.length; i < cnt; ++i) {
 			if(!constructionRequests[i].tick(ai, this, time)) {
@@ -770,6 +792,7 @@ class Planets : AIComponent, AIConstructions {
 				break;
 			}
 		}
+		// END NON-MIT CODE
 	}
 
 	uint prevCount = 0;
@@ -887,6 +910,7 @@ class Planets : AIComponent, AIConstructions {
 		return req;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	ConstructionRequest@ requestConstruction(PlanetAI@ plAI, Object@ buildAt, const ConstructionType@ type, double priority = 1.0, double expire = INFINITY, uint moneyType = BT_Development) {
 		if(plAI is null)
 			return null;
@@ -902,6 +926,7 @@ class Planets : AIComponent, AIConstructions {
 		constructionRequests.insertLast(req);
 		return req;
 	}
+	// END NON-MIT CODE
 
 	bool isBuilding(Planet@ planet, const BuildingType@ type) {
 		for(uint i = 0, cnt = building.length; i < cnt; ++i) {
@@ -911,6 +936,7 @@ class Planets : AIComponent, AIConstructions {
 		return false;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool isBuilding(Planet@ planet, const ConstructionType@ type) {
 		for(uint i = 0, cnt = constructionRequests.length; i < cnt; ++i) {
 			if(constructionRequests[i].type is type && constructionRequests[i].plAI.obj is planet)
@@ -918,6 +944,7 @@ class Planets : AIComponent, AIConstructions {
 		}
 		return false;
 	}
+	// END NON-MIT CODE
 
 	void getColonizeSources(array<PotentialSource@>& sources) {
 		sources.length = 0;

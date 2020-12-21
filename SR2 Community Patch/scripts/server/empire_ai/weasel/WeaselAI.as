@@ -338,10 +338,12 @@ final class AIBehavior {
 final class AIDefs {
 	const BuildingType@ Factory;
 	const BuildingType@ LaborStorage;
-	const ConstructionType@ MoonBase;
+	const ConstructionType@ MoonBase; // NON-MIT CODE - SOI (AI)
 	const OrbitalModule@ Shipyard;
+	// BEGIN NON-MIT CODE - SOI (AI)
 	const OrbitalModule@ TradeOutpost;
 	const OrbitalModule@ TradeStation;
+	// END NON-MIT CODE
 };
 
 final class AI : AIController, Savable {
@@ -360,7 +362,7 @@ final class AI : AIController, Savable {
 
 	array<IAIComponent@> components;
 	array<ProfileData> profileData;
-	IAIComponent@ events;
+	IAIComponent@ events; // NON-MIT CODE - SOI (AI)
 	IAIComponent@ fleets;
 	IAIComponent@ budget;
 	IAIComponent@ colonization;
@@ -382,7 +384,7 @@ final class AI : AIController, Savable {
 	IAIComponent@ diplomacy;
 	IAIComponent@ consider;
 	IAIComponent@ orbitals;
-	IAIComponent@ infrastructure;
+	IAIComponent@ infrastructure; // NON-MIT CODE - SOI (AI)
 
 	IAIComponent@ ftl;
 	IAIComponent@ race;
@@ -414,7 +416,7 @@ final class AI : AIController, Savable {
 		@diplomacy = add(createDiplomacy());
 		@consider = add(createConsider());
 		@orbitals = add(createOrbitals());
-		@infrastructure = add(createInfrastructure());
+		@infrastructure = add(createInfrastructure()); 
 
 		//Make FTL component
 		if(empire.hasTrait(getTraitID("Hyperdrive")))

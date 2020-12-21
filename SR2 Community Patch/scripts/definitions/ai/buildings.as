@@ -9,7 +9,7 @@ interface Buildings : ConsiderComponent {
 	Considerer@ get_consider();
 
 	bool requestsFTLStorage();
-	bool requestsResearchGeneration();
+	bool requestsResearchGeneration(); // NON-MIT CODE - SOI (AI)
 
 	bool isBuilding(const BuildingType& type);
 	bool isFocus(Object@ obj);
@@ -40,9 +40,11 @@ class BuildingAI : Hook, ConsiderHook {
 		return null;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Object@ considerBuild(Buildings& buildings, const BuildingType& type, const ref@ param) const {
 		return null;
 	}
+	// END NON-MIT CODE
 };
 
 class RegisterForUse : BuildingAI {
@@ -59,6 +61,7 @@ class RegisterForUse : BuildingAI {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class RegisterForLaborUse : BuildingAI {
 	Document doc("This building is used in a specific way to generate labor where needed. Only one building can be used for a specific specialized use.");
 	Argument use(AT_Custom, doc="Specialized usage for this orbital.");
@@ -93,6 +96,7 @@ class RegisterForLaborUse : BuildingAI {
 		}
 	#section all
 };
+// END NON-MIT CODE
 
 class AsCreatedResource : BuildingAI {
 	Document doc("This building is used to spawn a new resource type on a planet that needs it.");
@@ -180,6 +184,7 @@ class AsFTLStorage : BuildingAI {
 #section all
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class AsResearchGeneration : BuildingAI {
 	Document doc("This building is built whenever more research generation is requested.");
 
@@ -213,3 +218,4 @@ class AsResearchGeneration : BuildingAI {
 	}
 #section all
 };
+// END NON-MIT CODE

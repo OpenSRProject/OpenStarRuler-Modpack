@@ -18,6 +18,8 @@
 		soloriens
 		Dalo Lorn
 		dolynick
+		Skeletonxf
+		scitor
 	>>
 
 	Compatibility: 200

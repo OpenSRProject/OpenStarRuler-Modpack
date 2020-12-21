@@ -15,10 +15,12 @@ import util.formatting;
 
 import systems;
 
+// BEGIN NON-MIT CODE - SOI (AI)
 enum ColonizationPhase {
 	CP_Expansion,
 	CP_Stabilization,
 };
+// END NON-MIT CODE
 
 interface RaceColonization {
 	bool orderColonization(ColonizeData& data, Planet@ sourcePlanet);
@@ -164,6 +166,7 @@ final class Colonization : AIComponent {
 	bool performColonization = true;
 	bool queueColonization = true;
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	//Colonization focus
 	private uint _phase = CP_Expansion;
 
@@ -172,11 +175,14 @@ final class Colonization : AIComponent {
 	private bool _needsNewTerritory = false;
 	private uint _territoryRequests = 0;
 	private Region@ _newTerritoryTarget;
+	// END NON-MIT CODE
 
 	Object@ colonizeWeightObj;
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool get_needsMoreTerritory() const { return _needsMoreTerritory; }
 	bool get_needsNewTerritory() const { return _needsNewTerritory; }
+	// END NON-MIT CODE
 
 	void create() {
 		@resources = cast<Resources>(ai.resources);
@@ -198,6 +204,7 @@ final class Colonization : AIComponent {
 		file << remainColonizations;
 		file << curColonizations;
 		file << prevColonizations;
+		// BEGIN NON-MIT CODE - SOI (AI)
 		file << _phase;
 		file << _needsMoreTerritory;
 		file << _needsNewTerritory;
@@ -208,6 +215,7 @@ final class Colonization : AIComponent {
 		}
 		else
 			file.write0();
+		// END NON-MIT CODE
 
 		uint cnt = colonizing.length;
 		file << cnt;
@@ -244,6 +252,7 @@ final class Colonization : AIComponent {
 		file >> remainColonizations;
 		file >> curColonizations;
 		file >> prevColonizations;
+		// BEGIN NON-MIT CODE - SOI (AI)
 		file >> _phase;
 		file >> _needsMoreTerritory;
 		file >> _needsNewTerritory;
@@ -251,6 +260,7 @@ final class Colonization : AIComponent {
 		if(file.readBit()) {
 			file >> _newTerritoryTarget;
 		}
+		// END NON-MIT CODE
 
 		uint cnt = 0;
 		file >> cnt;
@@ -352,6 +362,7 @@ final class Colonization : AIComponent {
 		return true;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool shouldForceExpansion() {
 		uint otherColonizedSystems = 0;
 		for (uint i = 0, cnt = systems.outsideBorder.length; i < cnt; ++i) {
@@ -384,6 +395,7 @@ final class Colonization : AIComponent {
 
 		return true;
 	}
+	// END NON-MIT CODE
 
 	double getSourceWeight(PotentialSource& source, ColonizeData& data) {
 		double w = source.weight;
@@ -570,11 +582,13 @@ final class Colonization : AIComponent {
 		if(data.colonizeFrom is null)
 			awaitingSource.remove(data);
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//If we just colonized a new territory, reset request data
 		if (data.target.region is _newTerritoryTarget) {
 			_needsNewTerritory = false;
 			@_newTerritoryTarget = null;
 		}
+		// END NON-MIT CODE
 
 		PlanetAI@ plAI = planets.register(data.target);
 
@@ -670,22 +684,29 @@ final class Colonization : AIComponent {
 				continue;
 			if(isColonizing(p.pl))
 				continue;
+			// BEGIN NON-MIT CODE - SOI (AI)
 			//Skip planets out of our new territory target if we are colonizing a new one
 			if (_newTerritoryTarget !is null && p.pl.region !is _newTerritoryTarget)
 				continue;
+			// END NON-MIT CODE
 
 			auto@ sys = systems.getAI(reg);
 			w = 1.0;
 			if (sys.border)
 				w *= 0.25;
+			// BEGIN NON-MIT CODE - SOI (AI)
 			if (!sys.owned && !sys.border)
 				w /= 0.25;
+			// END NON-MIT CODE
 			if (sys.obj.PlanetsMask & ~ai.mask != 0)
 				w *= 0.25;
+
+			// BEGIN NON-MIT CODE - SOI (AI)
 			if (w > bestWeight) {
 				@newColony = p.pl;
 				bestWeight = w;
 			}
+			// END NON-MIT CODE
 		}
 
 		if(newColony !is null)
@@ -748,12 +769,14 @@ final class Colonization : AIComponent {
 		for(uint i = 0, cnt = systems.outsideBorder.length; i < cnt; ++i)
 			checkSystem(systems.outsideBorder[i]);
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		if(needsNewTerritory) {
 			for(uint i = 0, cnt = systems.all.length; i < cnt; ++i) {
 				if(systems.all[i].explored)
 					checkSystem(systems.all[i]);
 			}
 		}
+		// END NON-MIT CODE
 
 		if(systems.owned.length == 0) {
 			Region@ homeSys = ai.empire.HomeSystem;
@@ -816,20 +839,25 @@ final class Colonization : AIComponent {
 					continue;
 				if(reg.PlanetsMask & ai.mask != 0)
 					continue;
+				// BEGIN NON-MIT CODE - SOI (AI)
 				//Skip planets out of our new territory target if we are colonizing a new one
 				if (_newTerritoryTarget !is null && p.pl.region !is _newTerritoryTarget)
 					continue;
+				// END NON-MIT CODE
 				if(w == 0)
 					continue;
+				// BEGIN NON-MIT CODE - SOI (AI)
 				if (w > bestWeight) {
 					@expand = p;
 					bestWeight = w;
 				}
+				// END NON-MIT CODE
 			}
 
 			if(expand !is null) {
 				auto@ data = colonize(expand.pl);
 				potentials.remove(expand);
+				// BEGIN NON-MIT CODE - SOI (AI)
 				if (needsNewTerritory && _newTerritoryTarget is null) {
 					//Check if our target planet is outside our tradable area
 					bool found = false;
@@ -844,6 +872,7 @@ final class Colonization : AIComponent {
 					if (!found)
 						@_newTerritoryTarget = expand.pl.region;
 				}
+				// END NON-MIT CODE
 				return data;
 			}
 		}
@@ -854,6 +883,7 @@ final class Colonization : AIComponent {
 		//Figure out how much we can colonize
 		remainColonizations = ai.behavior.maxColonizations;
 
+		// BEGIN NON-MIT CODE - SOI (AI)
 		//Decide colonization phase
 		if (_phase == CP_Expansion) {
 			if (ai.empire.EstNextBudget < budget.criticalThreshold) {
@@ -949,6 +979,7 @@ final class Colonization : AIComponent {
 			_territoryRequests = 0;
 			@_newTerritoryTarget = null;
 		}
+		// END NON-MIT CODE
 
 		prevColonizations = curColonizations;
 		curColonizations = 0;
@@ -1073,9 +1104,11 @@ final class Colonization : AIComponent {
 			if(!q.spec.meets(p.resource))
 				continue;
 
+			// BEGIN NON-MIT CODE - SOI (AI)
 			//Skip planets out of our new territory target if we are colonizing a new one
 			if (_newTerritoryTarget !is null && p.pl.region !is _newTerritoryTarget)
 				continue;
+			// END NON-MIT CODE - SOI (AI)
 
 			if(p.weight > takeWeight) {
 				takeWeight = p.weight;
@@ -1190,9 +1223,11 @@ final class Colonization : AIComponent {
 				if(!q.spec.meets(p.resource))
 					continue;
 
+				// BEGIN NON-MIT CODE - SOI (AI)
 				//Skip planets out of our new territory target if we are colonizing a new one
 				if (_newTerritoryTarget !is null && p.pl.region !is _newTerritoryTarget)
 					continue;
+				// END NON-MIT CODE - SOI (AI)
 
 				double w = p.weight;
 				modPotentialWeight(p, w);
