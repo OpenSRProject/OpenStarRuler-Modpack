@@ -15,7 +15,7 @@ enum FleetClass {
 	FC_Combat,
 	FC_Slipstream,
 	FC_Mothership,
-	FC_Defense,
+	FC_Defense, // NON-MIT CODE - DOF (AI)
 
 	FC_ALL
 };
@@ -178,12 +178,14 @@ final class FleetAI {
 			if(obj.velocity.length / obj.maxAcceleration > 16.0)
 				return false;
 		}
+		// BEGIN NON-MIT CODE - DOF (AI)
 		//DOF - Do not send badly damaged flagships
 		Ship@ flagship = cast<Ship>(obj);
 		auto@ bp = flagship.blueprint;
 		if(bp.currentHP / bp.design.totalHP < 0.75)  {
 				return false;
 		}
+		// END NON-MIT CODE
 		return true;
 	}
 
@@ -416,11 +418,13 @@ class Fleets : AIComponent {
 			if(obj !is null)
 				register(obj);
 		}
+		// BEGIN NON-MIT CODE - DOF (AI)
 		@data = ai.empire.getStations();
 		while(receive(data, obj)) {
 			if(obj !is null)
 				register(obj);
 		}
+		// END NON-MIT CODE
 	}
 
 	bool haveCombatReadyFleets() {

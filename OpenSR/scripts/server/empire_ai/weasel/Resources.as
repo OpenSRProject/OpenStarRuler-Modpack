@@ -18,7 +18,7 @@ interface RaceResources {
 };
 
 final class Resources : AIComponent {
-	Events@ events;
+	Events@ events; // NON-MIT CODE - SOI (AI)
 	
 	RaceResources@ race;
 
@@ -31,7 +31,7 @@ final class Resources : AIComponent {
 	int nextExportId = 0;
 
 	void create() {
-		@events = cast<Events>(ai.events);
+		@events = cast<Events>(ai.events); // NON-MIT CODE - SOI (AI)
 		@race = cast<RaceResources>(ai.race);
 	}
 
@@ -232,6 +232,7 @@ final class Resources : AIComponent {
 					continue;
 				if(!av.usable || av.obj is null || !av.obj.valid || av.obj.owner !is ai.empire)
 					continue;
+				// BEGIN NON-MIT CODE - SOI (AI)
 				//Check if a trade route exists between the two locations
 				if(!canTradeBetween(av.obj, req.obj) && av.obj.region !is null && req.obj.region !is null) {
 					auto@ territoryA = av.obj.region.getTerritory(ai.empire);
@@ -243,6 +244,7 @@ final class Resources : AIComponent {
 					}
 					continue;
 				}
+				// END NON-MIT CODE
 				if(av.localOnly && av.obj !is req.obj)
 					continue;
 

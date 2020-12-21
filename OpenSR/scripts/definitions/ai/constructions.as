@@ -1,3 +1,4 @@
+// BEGIN NON-MIT CODE - SOI (AI)
 import hooks;
 import constructions;
 import resources;
@@ -48,3 +49,4 @@ class RegisterForUse : ConstructionAIHook {
 		}
 	}
 };
+// END NON-MIT CODE

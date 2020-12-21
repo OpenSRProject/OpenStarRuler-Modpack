@@ -9,7 +9,7 @@ interface AIOrbitals : ConsiderComponent {
 	Empire@ get_empire();
 	Considerer@ get_consider();
 	
-	bool isBuilding(const OrbitalModule& type);
+	bool isBuilding(const OrbitalModule& type); // NON-MIT CODE - SOI (AI)
 
 	void registerUse(OrbitalUse use, const OrbitalModule& type);
 };
@@ -39,9 +39,11 @@ class OrbitalAIHook : Hook, ConsiderHook {
 		return null;
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	Object@ considerBuild(AIOrbitals& orbitals, const OrbitalModule& type, const ref@ param) const {
 		return null;
 	}
+	// END NON-MIT CODE
 };
 
 class RegisterForUse : OrbitalAIHook {
@@ -49,6 +51,7 @@ class RegisterForUse : OrbitalAIHook {
 	Argument use(AT_Custom, doc="Specialized usage for this orbital.");
 
 	void register(AIOrbitals& orbitals, const OrbitalModule& type) const override {
+		// BEGIN NON-MIT CODE - SOI (AI)
 		Empire@ emp = orbitals.empire;
 
 		for(uint i = 0, cnt = OrbitalUseName.length; i < cnt; ++i) {
@@ -65,9 +68,11 @@ class RegisterForUse : OrbitalAIHook {
 				return;
 			}
 		}
+		// END NON-MIT CODE
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class RegisterForTradeUse : OrbitalAIHook {
 	Document doc("This module is used in a specific way to create a trade route between territories. Only one orbital can be used for a specific specialized use.");
 	Argument use(AT_Custom, doc="Specialized usage for this orbital.");
@@ -99,3 +104,4 @@ class RegisterForTradeUse : OrbitalAIHook {
 		}
 	#section all
 };
+// END NON-MIT CODE

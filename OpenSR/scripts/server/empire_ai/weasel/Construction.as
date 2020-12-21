@@ -23,11 +23,13 @@ import ai.construction;
 from constructible import ConstructibleType;
 from constructions import ConstructionType, getConstructionType;
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class AllocateConstruction : IConstruction {
 	protected bool _completed = false;
 	protected bool _started = false;
 	
 	protected int _id = -1;
+	//END NON-MIT CODE
 	uint moneyType = BT_Development;
 	Factory@ tryFactory;
 	double maxTime = INFINITY;
@@ -40,6 +42,7 @@ class AllocateConstruction : IConstruction {
 	AllocateConstruction() {
 	}
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	int id {
 		get const { return _id; }
 		set { _id = value; }
@@ -51,6 +54,7 @@ class AllocateConstruction : IConstruction {
 		get const { return _completed; }
 		set { _completed = value; }
 	}
+	// END NON-MIT CODE
 
 	void _save(Construction& construction, SaveFile& file) {
 		file << moneyType;
@@ -115,8 +119,10 @@ class AllocateConstruction : IConstruction {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class BuildFlagship : AllocateConstruction, IFlagshipConstruction {
 	protected const Design@ _design;
+	// END NON-MIT CODE
 	double baseLabor = 0.0;
 	DesignTarget@ target;
 
@@ -131,7 +137,7 @@ class BuildFlagship : AllocateConstruction, IFlagshipConstruction {
 		@this.target = target;
 	}
 	
-	const Design@ get_design() const { return _design; }
+	const Design@ get_design() const { return _design; } // NON-MIT CODE - SOI (AI)
 
 	void save(Construction& construction, SaveFile& file) {
 		file << baseLabor;
@@ -239,8 +245,10 @@ class BuildFlagshipSourced : BuildFlagship {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class BuildStation : AllocateConstruction, IStationConstruction {
 	protected const Design@ _design;
+	// END NON-MIT CODE
 	double baseLabor = 0.0;
 	DesignTarget@ target;
 	vec3d position;
@@ -269,7 +277,7 @@ class BuildStation : AllocateConstruction, IStationConstruction {
 		this.local = true;
 	}
 	
-	const Design@ get_design() const { return _design; }
+	const Design@ get_design() const { return _design; } // NON-MIT CODE - SOI (AI)
 
 	void save(Construction& construction, SaveFile& file) {
 		file << baseLabor;
@@ -375,10 +383,12 @@ class BuildStation : AllocateConstruction, IStationConstruction {
 	}
 };
 
+// BEGIN NON-MIT CODE - SOI (AI)
 class BuildOrbital : AllocateConstruction, IOrbitalConstruction {
 	protected const OrbitalModule@ _module;
+	// END NON-MIT CODE
 	double baseLabor = 0.0;
-	const Planet@ planet;
+	const Planet@ planet; // NON-MIT CODE - SOI (AI)
 	bool local = false;
 	vec3d position;
 
@@ -397,6 +407,7 @@ class BuildOrbital : AllocateConstruction, IOrbitalConstruction {
 		baseLabor = module.laborCost;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	BuildOrbital(const OrbitalModule@ module, const Planet@ planet) {
 		this.local = true;
 		@this.planet = planet;
@@ -405,6 +416,7 @@ class BuildOrbital : AllocateConstruction, IOrbitalConstruction {
 	}
 	
 	const OrbitalModule@ get_module() const { return _module; }
+	// END NON-MIT CODE
 
 	void save(Construction& construction, SaveFile& file) {
 		file << baseLabor;
@@ -473,6 +485,7 @@ class BuildOrbital : AllocateConstruction, IOrbitalConstruction {
 	}
 
 	void construct(AI& ai, Factory@ f) {
+		// BEGIN NON-MIT CODE - SOI (AI)
 		if(local) {
 			if (planet !is null) {
 				position = planet.position;
@@ -490,6 +503,7 @@ class BuildOrbital : AllocateConstruction, IOrbitalConstruction {
 				}
 			}
 		}
+		// END NON-MIT CODE
 		f.obj.buildOrbital(_module.id, position);
 		AllocateConstruction::construct(ai, f);
 	}
@@ -1168,10 +1182,10 @@ class Construction : AIComponent {
 		return f;
 	}
 
-	BuildOrbital@ buildOrbital(const OrbitalModule@ module, const vec3d& position, double priority = 1.0, bool force = false, uint moneyType = BT_Infrastructure) {
+	BuildOrbital@ buildOrbital(const OrbitalModule@ module, const vec3d& position, double priority = 1.0, bool force = false, uint moneyType = BT_Infrastructure) { // NON-MIT CODE - SOI (AI)
 		//Potentially build a flagship
 		BuildOrbital f(module, position);
-		f.moneyType = moneyType;
+		f.moneyType = moneyType; // NON-MIT CODE - SOI (AI)
 		f.priority = priority;
 		build(f, force=force);
 		return f;
@@ -1195,15 +1209,16 @@ class Construction : AIComponent {
 		return f;
 	}
 
-	BuildOrbital@ buildLocalOrbital(const OrbitalModule@ module, double priority = 1.0, bool force = false, uint moneyType = BT_Infrastructure) {
+	BuildOrbital@ buildLocalOrbital(const OrbitalModule@ module, double priority = 1.0, bool force = false, uint moneyType = BT_Infrastructure) { // NON-MIT CODE - SOI (AI)
 		//Potentially build a flagship
 		BuildOrbital f(module, local=true);
-		f.moneyType = moneyType;
+		f.moneyType = moneyType; // NON-MIT CODE - SOI (AI)
 		f.priority = priority;
 		build(f, force=force);
 		return f;
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	BuildOrbital@ buildLocalOrbital(const OrbitalModule@ module, Planet@ planet, double priority = 1.0, bool force = false, uint moneyType = BT_Infrastructure) {
 		//Potentially build a flagship
 		BuildOrbital f(module, planet);
@@ -1212,6 +1227,7 @@ class Construction : AIComponent {
 		build(f, force=force);
 		return f;
 	}
+	// END NON-MIT CODE
 
 	RetrofitShip@ retrofit(Ship@ ship, double priority = 1.0, bool force = false) {
 		//Potentially build a flagship
