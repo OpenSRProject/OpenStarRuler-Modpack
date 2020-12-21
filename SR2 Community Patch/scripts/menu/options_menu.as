@@ -225,10 +225,10 @@ class GameOptions : OptionsBox {
 		));
 
 		y += 38;
-		GuiEngineDecimal quickbarMinLabor(
+		GuiEngineNumber quickbarMinLabor(
 			panel, recti_area(8, y,  550, 28),
 			locale::OPT_QUICKBAR_MINLABOR,
-			"dQuickbarMinLabor"
+			"iQuickbarMinLabor"
 		);
 		quickbarMinLabor.decimals = 0;
 		setMarkupTooltip(quickbarMinLabor, locale::OPT_QUICKBAR_MINLABOR_DESC);

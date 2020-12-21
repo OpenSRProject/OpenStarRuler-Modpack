@@ -975,7 +975,7 @@ class LaborPlanets : ObjectMode {
 	}
 
 	bool filter(ObjectData@ dat) {
-		if(dat.obj.getResourceProduction(TR_Labor) >= settings::dQuickbarMinLabor)
+		if(dat.obj.getResourceProduction(TR_Labor) >= settings::iQuickbarMinLabor)
 			return true;
 		return false;
 	}
@@ -999,8 +999,8 @@ class LaborPlanets : ObjectMode {
 
 		DataList@ objs = playerEmpire.getOrbitals();
 		Object@ obj;
-		int minLabor = settings::dQuickbarMinLabor;
-		if(playerEmpire.hasTrait(getTraitID("Mechanoid")) // Mechanoids always have 1 Labor.
+		int minLabor = settings::iQuickbarMinLabor;
+		if(playerEmpire.hasTrait(getTraitID("Mechanoid"))) // Mechanoids always have 1 Labor.
 			minLabor++;
 		while(receive(objs, obj)) {
 			Orbital@ orb = cast<Orbital>(obj);
