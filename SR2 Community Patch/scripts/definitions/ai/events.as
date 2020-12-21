@@ -1,3 +1,4 @@
+// BEGIN NON-MIT CODE - SOI (AI)
 from orbitals import OrbitalModule;
 
 //Event callback
@@ -74,3 +75,4 @@ class OrbitalRequestedEventArgs : EventArgs {
 		this.moneyType = moneyType;
 	}
 };
+// END NON-MIT CODE

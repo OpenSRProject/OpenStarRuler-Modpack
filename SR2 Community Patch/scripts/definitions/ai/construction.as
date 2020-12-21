@@ -1,3 +1,4 @@
+// BEGIN NON-MIT CODE - SOI (AI)
 from constructions import ConstructionType;
 from buildings import BuildingType;
 from orbitals import OrbitalModule;
@@ -27,3 +28,4 @@ interface IFlagshipConstruction : IConstruction {
 interface IStationConstruction : IConstruction {
   const Design@ design { get const; }
 }
+// END NON-MIT CODE

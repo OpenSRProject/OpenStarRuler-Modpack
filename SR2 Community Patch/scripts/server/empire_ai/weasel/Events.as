@@ -1,3 +1,4 @@
+// BEGIN NON-MIT CODE - SOI (AI)
 // Events
 // ------
 // Notifies subscribed components of events raised by other components.
@@ -116,3 +117,4 @@ final class Events : AIComponent {
 AIComponent@ createEvents() {
 	return Events();
 }
+// END NON-MIT CODE

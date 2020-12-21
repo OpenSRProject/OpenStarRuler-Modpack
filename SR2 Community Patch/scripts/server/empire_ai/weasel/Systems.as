@@ -164,19 +164,19 @@ final class SystemAI {
 		}
 
 		//Check if we should be owned
-		bool shouldOwned = obj.TradeMask & ai.mask != 0;
+		bool shouldOwned = obj.TradeMask & ai.mask != 0; // NON-MIT CODE - SOI (AI)
 		if(owned != shouldOwned) {
 			if(shouldOwned) {
 				systems.owned.insertLast(this);
 				systems.hopsChanged = true;
 				hopDistance = 0;
-				systems.events.notifyOwnedSystemAdded(this, EventArgs());
+				systems.events.notifyOwnedSystemAdded(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			else {
 				hopDistance = 1;
 				systems.owned.remove(this);
 				systems.hopsChanged = true;
-				systems.events.notifyOwnedSystemRemoved(this, EventArgs());
+				systems.events.notifyOwnedSystemRemoved(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			owned = shouldOwned;
 		}
@@ -208,11 +208,11 @@ final class SystemAI {
 		if(border != shouldBorder) {
 			if(shouldBorder) {
 				systems.border.insertLast(this);
-				systems.events.notifyBorderSystemAdded(this, EventArgs());
+				systems.events.notifyBorderSystemAdded(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			else {
 				systems.border.remove(this);
-				systems.events.notifyBorderSystemRemoved(this, EventArgs());
+				systems.events.notifyBorderSystemRemoved(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			border = shouldBorder;
 		}
@@ -222,11 +222,11 @@ final class SystemAI {
 		if(outsideBorder != shouldOutsideBorder) {
 			if(shouldOutsideBorder) {
 				systems.outsideBorder.insertLast(this);
-				systems.events.notifyOutsideBorderSystemAdded(this, EventArgs());
+				systems.events.notifyOutsideBorderSystemAdded(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			else {
 				systems.outsideBorder.remove(this);
-				systems.events.notifyOutsideBorderSystemRemoved(this, EventArgs());
+				systems.events.notifyOutsideBorderSystemRemoved(this, EventArgs()); // NON-MIT CODE - SOI (AI)
 			}
 			outsideBorder = shouldOutsideBorder;
 		}
@@ -301,7 +301,7 @@ final class SystemAI {
 };
 
 class Systems : AIComponent {
-	Events@ events;
+	Events@ events; // NON-MIT CODE - SOI (AI)
 	
 	//All owned systems
 	array<SystemAI@> owned;
@@ -322,9 +322,11 @@ class Systems : AIComponent {
 	uint sysIdx = 0;
 	bool hopsChanged = false;
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	void create() {
 		@events = cast<Events>(ai.events);
 	}
+	// END NON-MIT CODE
 
 	void save(SaveFile& file) {
 		uint cnt = all.length;

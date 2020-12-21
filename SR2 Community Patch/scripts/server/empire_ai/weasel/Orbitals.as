@@ -57,9 +57,11 @@ class Orbitals : AIComponent, AIOrbitals {
 	array<OrbitalAI@> orbitals;
 	uint orbIdx = 0;
 	
+	// BEGIN NON-MIT CODE - SOI (AI)
 	array<IOrbitalConstruction@> genericBuilds;
 	
 	bool buildOrbitals = true;
+	// END NON-MIT CODE
 
 	void create() {
 		@budget = cast<Budget>(ai.budget);
@@ -125,12 +127,14 @@ class Orbitals : AIComponent, AIOrbitals {
 			case OU_Shipyard:
 				@ai.defs.Shipyard = type;
 				break;
+			// BEGIN NON-MIT CODE - SOI (AI)
 			case OU_TradeOutpost:
 				@ai.defs.TradeOutpost = type;
 				break;
 			case OU_TradeStation:
 				@ai.defs.TradeStation = type;
 				break;
+			// END NON-MIT CODE
 		}
 	}
 
@@ -194,6 +198,7 @@ class Orbitals : AIComponent, AIOrbitals {
 		}
 	}
 
+	// BEGIN NON-MIT CODE - SOI (AI)
 	bool isBuilding(const OrbitalModule& type) {
 		for(uint i = 0, cnt = genericBuilds.length; i < cnt; ++i) {
 			if(genericBuilds[i].module is type)
@@ -201,6 +206,7 @@ class Orbitals : AIComponent, AIOrbitals {
 		}
 		return false;
 	}
+	// END NON-MIT CODE
 
 	void tick(double time) {
 		double curTime = gameTime;
