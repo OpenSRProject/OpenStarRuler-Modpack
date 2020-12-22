@@ -12,6 +12,7 @@ Trait: Linked
 	AddStatusOwnedFleets(FleetLinked, Give to Stations = False)
 
 	UnlockSubsystem(ShipComputer)
+	UnlockSubsystem(AICore)
 	UnlockSubsystem(EmergencySupplies)
 
 	SpawnOrbital(Mainframe, Free = True)
