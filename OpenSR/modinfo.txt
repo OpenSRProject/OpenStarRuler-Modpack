@@ -1,25 +1,26 @@
 	Name: OpenSR Modpack
-
 	Description: <<
-		A collection of bug fixes and non-gameplay changing improvements.
-		Can be used as a standalone mod or overridden and included as a resource by other mods for them to inherit the changes from the Community Patch. See readme for details.
+		A collection of bugfixes and improvements compiled as part of the Open Star Ruler project. Compatible with OpenSR and all commercial versions of the game.
 
-		[h1]Current version: 1.0.0[/h1]
+		The Modpack can be used either as a standalone mode, or as a dependency for other mods to inherit from. See the OpenSR Modder's Guide for details.
 
-		[h1][b]Features[/b][/h1]
-		Ported from Rising Stars, Shores of Infinity and Dolynick's Faction Add-on:
-		- Bug fixes.
-		- Quality of life improvements.
-		- Improved AI.
+		[b][h1]Current version: v1.1.0[/h1][/b]
 
-		Detailed changes can be found in the patch notes.
+		[b][h1]Notable changes include:[/b][/h1][list]
+		[*]AI improvements by dolynick, sol-oriens, and Skeletonxf
+		[*]Assorted bugfixes
+		[*]Assorted minor improvements
+		[*]Bromma and Farum shipsets by Jon Micheelsen, previously limited to open-source versions of the game
+		[/list]
 
-		[h1][b]Credits[/b][/h1]
-		soloriens
-		Dalo Lorn
-		dolynick
-		Skeletonxf
-		scitor
+		Full patch notes can be found on GitHub.
+		[h1][b]Links[/b][/h1]
+		[b]SR2 Mod Manager:[/b] https://github.com/DaloLorn/SR2ModManager
+		[b]OpenSR on GitHub:[/b] https://github.com/OpenSRProject
+		[b]OpenSR Modpack on GitHub:[/b] https://github.com/OpenSRProject/OpenStarRuler-Modpack
+		[b]OpenSR Discord chat:[/b] https://discord.gg/sUJKJDc
+		[b]OpenSR Modder's Guide:[/b] https://github.com/OpenSRProject/OpenStarRuler-Modpack/blob/master/modders.md
+		[b]Patch notes:[/b] https://github.com/OpenSRProject/OpenStarRuler-Modpack/blob/master/patch_notes.md
+		[b]Credits:[/b] https://github.com/OpenSRProject/OpenStarRuler-Modpack/blob/master/credits.md
 	>>
-
 	Compatibility: 200
