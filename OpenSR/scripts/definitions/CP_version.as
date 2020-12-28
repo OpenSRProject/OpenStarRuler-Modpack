@@ -9,8 +9,8 @@ namespace CommunityPatch {
 		"5101",
 		"5095",
 	};
-	const string MOD_NAME = "SR2 Community Patch v1.0.0";
-	const string MOD_REVISION = "1";
+	const string MOD_NAME = "OpenSR Modpack v1.1.0";
+	const string MOD_REVISION = "163";
 	const string MOD_VERSION = MOD_NAME + " (revision " + MOD_REVISION + ") for Star Ruler 2 " + VERSIONS[0] + " (revision " + REVISIONS[0]
 		+ ", currently using " + GAME_VERSION + " " + SCRIPT_VERSION + ")";
 
