@@ -31,7 +31,7 @@
 
 ### SR2 Mod Manager
 
-0. Follow the instructions in the SR2MM Modder's Guide. (This step is optional, but *strongly* recommended.)
+0. Follow the instructions in the [SR2MM Modder's Guide](https://github.com/DaloLorn/SR2ModManager#modders-guide). (This step is optional, but *strongly* recommended.)
 1. Push your mod to a publicly accessible Git repository. SR2MM cannot install mods without a public Git repository.
 2. Add the file `metadata.json` to the root of your Git repository, with the following text. Be advised that if you are inheriting from a different mod, that mod - and all of its dependencies - must *all* be available in public Git repositories:
 ```json

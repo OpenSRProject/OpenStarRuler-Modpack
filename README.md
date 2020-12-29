@@ -1,20 +1,20 @@
-# SR2 Community Patch
+# OpenSR Modpack
 
 This mod can be overridden and included as a resource by other mods for them to inherit
-the changes from the Community Patch.
+the changes from the Modpack.
 The following line must be added to modinfo.txt:
 
-Derives From: SR2 Community Patch
+Derives From: OpenSR Modpack
 
-The Community Patch must not be enabled in the SR2 mod list when used in this way,
+The Modpack must not be enabled in the SR2 mod list when used in this way;
 the parent mod will automatically run it. Files overridden by the parent mod have
-priority over those of the Community Patch.
-This means that files overridden by both the parent mod and the Community Patch
-must be merged to keep functionalities from the Community Patch.
+priority over those of the Modpack.
+This means that files overridden by both the parent mod and the OpenSR Modpack
+must be merged to keep functionalities from the Modpack.
 
 ## For contributors
 
-It is strongly recommended that you observe certain standards when working on the Community Patch, to make things easier for you, people reviewing your code, and people tracking down bugs or other changes:
+It is strongly recommended that you observe certain standards when working on the Modpack, to make things easier for you, people reviewing your code, and people tracking down bugs or other changes:
 
 1. Follow the instructions outlined in the SR2MM readme, located at https://github.com/DaloLorn/SR2ModManager#modders-guide, to properly connect your CP repository to your game. (These instructions can also be applied to other mods.)
 
