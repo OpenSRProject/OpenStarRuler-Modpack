@@ -2,7 +2,7 @@
 	Description: <<
 		A collection of bugfixes and improvements compiled as part of the Open Star Ruler project. Compatible with OpenSR and all commercial versions of the game.
 
-		The Modpack can be used either as a standalone mode, or as a dependency for other mods to inherit from. See the OpenSR Modder's Guide for details.
+		The Modpack can be used either as a standalone mod, or as a dependency for other mods to inherit from. See the OpenSR Modder's Guide for details.
 
 		[b][h1]Current version: v1.1.0[/h1][/b]
 
