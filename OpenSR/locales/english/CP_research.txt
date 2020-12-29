@@ -1,0 +1,7 @@
+R_SYS_SHIP_COMPUTER_DESC: <<
+	[color=#aaa][i]Unlocks the Control Computer[dlc=Heralds] and AI Core[/dlc] subsystem[dlc=Heralds]s[/dlc].[/i][/color]
+
+	[bbloc=#SHIPCOMPUTER_DESC/]
+
+    [dlc=Heralds][bbloc=#S_AICORE_DESC/][/dlc]
+>>
