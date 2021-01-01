@@ -5,7 +5,7 @@ Shipset: Farum
 	Hull: FarumFlagVeryLarge
 	Hull: FarumFlagLarge
 	Hull: FarumFlagMedium
-	Hull: FarumFlagSmall
+	Hull: FarumFlagTiny
 	Hull: FarumHuge
 	Hull: FarumLarge
 	Hull: FarumMedium

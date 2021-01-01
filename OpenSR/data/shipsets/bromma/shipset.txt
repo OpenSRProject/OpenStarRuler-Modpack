@@ -5,7 +5,7 @@ Shipset: Bromma
 	Hull: BrommaFlagVeryLarge
 	Hull: BrommaFlagLarge
 	Hull: BrommaFlagMedium
-	Hull: BrommaFlagSmall
+	Hull: BrommaFlagTiny
 	Hull: BrommaHuge
 	Hull: BrommaLarge
 	Hull: BrommaMedium

@@ -63,7 +63,7 @@ Hull: FarumHuge
 	MinSize: 80
 	Subsystem: SupportHull
 
-Hull: FarumFlagSmall
+Hull: FarumFlagTiny
 	Name: Small Battleship
 	Background: VolkurBlueprint
 	ModelScale: 1.0

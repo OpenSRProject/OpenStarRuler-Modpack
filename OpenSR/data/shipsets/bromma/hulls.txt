@@ -63,7 +63,7 @@ Hull: BrommaHuge
 	MinSize: 80
 	Subsystem: SupportHull
 
-Hull: BrommaFlagSmall
+Hull: BrommaFlagTiny
 	Name: Small Battleship
 	Background: VolkurBlueprint
 	ModelScale: 1.0
