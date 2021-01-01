@@ -1,4 +1,8 @@
-# v1.1.0
+### r171 - January 1, 2021
+
+- Bromma and Farum shipsets should no longer have issues loading starter designs. Thanks to Skeletonxf for noticing the issue!
+
+# OpenSR Modpack v1.1.0 (r169) - December 29, 2020
 
 ## Major Highlights
 
@@ -47,7 +51,7 @@
 - If a resource is disabled due to ongoing terraforming, the UI will now show an appropriate message.
 - Improved the readability of global bar resource tooltips.
 
-# v1.0.0
+# SR2 Community Patch v1.0.0 - April 7, 2019
 
 ## Artificial Intelligence
 
