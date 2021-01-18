@@ -2631,7 +2631,7 @@ class MakeDesign : Action {
 			}
 			
 			double thrust = dsg.total(SV_Thrust);
-			double mass = max(dsg.total(HV_Mass), 0.01);
+			double mass = max(getMassFor(dsg, ai.empire), 0.01);
 			{
 				double speed = thrust / mass;
 				//error("Speed: " + speed + "/" + goalSpeed);

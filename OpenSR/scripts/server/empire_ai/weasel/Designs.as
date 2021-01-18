@@ -206,7 +206,7 @@ tidy final class DesignTarget {
 			else if(purpose == DP_Scout)
 				targetAccel *= 3.0;
 
-			w *= weight(dsg.total(SV_Thrust) / max(dsg.total(HV_Mass), 0.01), targetAccel);
+			w *= weight(dsg.total(SV_Thrust) / max(getMassFor(dsg, ai.empire), 0.01), targetAccel);
 		}
 
 		//Penalties for having important systems easy to shoot down
