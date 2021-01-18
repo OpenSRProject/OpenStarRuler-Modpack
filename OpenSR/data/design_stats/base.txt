@@ -12,7 +12,7 @@ GlobalStat: HP
 		Color: #aaa
 		Secondary: HP
 
-		Variable: Repair
+		CustomFormula: Repair
 
 GlobalStat: DPS
 	Name: #S_DPS
@@ -46,7 +46,7 @@ GlobalStat: SupplyCap
 		  Secondary: SupplyCap
 		  Suffix: /s
 
-		  Variable: SupplyDrain
+		  CustomFormula: SupplyDrain
 
 GlobalStat: SupportSupplyCapacity
 	Name: #S_SUPPLYCAP_SUPPORT
@@ -65,7 +65,7 @@ GlobalStat: SupportSupplyUse
 
 	 RequireTag: SupportHull
 
-	 Variable: SupplyDrain
+	 CustomFormula: SupplyDrain
 
 GlobalStat: SupportCap
 	Name: #S_SUPPORTCAP

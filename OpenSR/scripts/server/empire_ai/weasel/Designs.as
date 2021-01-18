@@ -187,7 +187,7 @@ tidy final class DesignTarget {
 		if(purpose != DP_Scout && purpose != DP_Slipstream && purpose != DP_Mothership) {
 			predictDPS += dsg.total(SV_DPS);
 			predictHP += dsg.totalHP + dsg.total(SV_ShieldCapacity);
-			predictDrain += dsg.total(SV_SupplyDrain);
+			predictDrain += getSupplyDrainFor(dsg, ai.empire);
 
 			if(purpose != DP_Support) {
 				w *= (predictHP * predictDPS) * 0.001;
@@ -381,7 +381,7 @@ tidy final class DesignTarget {
 
 		dps = dsg.total(SV_DPS);
 		hp = dsg.totalHP + dsg.total(SV_ShieldCapacity);
-		supplyDrain = dsg.total(SV_SupplyDrain);
+		supplyDrain = getSupplyDrainFor(dsg, dsg.owner);
 	}
 };
 

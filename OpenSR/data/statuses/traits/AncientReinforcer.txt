@@ -1,8 +1,5 @@
 Status: AncientReinforcer
 	Visible To: Nobody
-
-	EnableModifier(CoreHealthFactor(1.25))
-	EnableModifier(CoreMassFactor(1.25))
-
-	EnableModifier(AncientCore::HpFactor(1.25))
-	EnableModifier(AncientCore::MassFactor(1.25))
+	
+	ModEmpireAttribute(EmpireRepairFactor, Multiply, 1.07)
+	ModEmpireAttribute(EmpireRepairMassFactor, Multiply, 1.25)

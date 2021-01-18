@@ -536,6 +536,10 @@ tidy class ShipScript {
 			ship.modSupplyCapacity(supply - prevSupply);
 			prevSupply = supply;
 		}
+
+		//Store the amount of repair we have available
+		currentRepair = getRepairFor(ship);
+		currentRepairCost = getRepairCostFor(ship);
 	}
 
 	void updateStats(Ship& ship, bool init = false) {
@@ -648,10 +652,6 @@ tidy class ShipScript {
 		else {
 			ship.blueprint.shipEffectiveness = double(effectiveness) * double(ship.getFleetEffectiveness());
 		}
-
-		//Store the amount of repair we have available
-		currentRepair = ship.blueprint.getEfficiencySum(SV_Repair);
-		currentRepairCost = ship.blueprint.getEfficiencySum(SV_RepairSupplyCost);
 
 		//Check if we should update our maintenance
 		if(!ship.isFree && ship.owner !is null && ship.owner.valid) {

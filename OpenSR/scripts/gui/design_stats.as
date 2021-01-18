@@ -28,6 +28,8 @@ enum CustomStatFormula {
 	CSF_Mass,
 	CSF_Acceleration,
 	CSF_SupportCap,
+	CSF_Repair,
+	CSF_SupplyUse,
 };
 
 class DesignStat {
@@ -155,16 +157,19 @@ namespace design_stats {
 	double getMass(const Design@ dsg, const Subsystem@ sys, vec2u hex, SysVariableType type, int aggregate = 0) {
 		double baseMass = 0;
 		double supportMass = 0;
+		double repairMass = 0;
 		if(type == SVT_HexVariable) {
 			if(hex != vec2u(uint(-1))) {
 				baseMass = dsg.variable(hex, HV_Mass);
 				supportMass = dsg.variable(hex, HV_SupportCapacityMass);
+				repairMass = dsg.variable(hex, HV_RepairMass);
 			}
 			else if(sys !is null) {
 				switch(aggregate) {
 					case ::SA_Sum:
 						baseMass = sys.total(HV_Mass);
 						supportMass = sys.total(HV_SupportCapacityMass);
+						repairMass = sys.total(HV_RepairMass);
 					break;
 				}
 			}
@@ -173,6 +178,7 @@ namespace design_stats {
 					case ::SA_Sum:
 						baseMass = dsg.total(HV_Mass);
 						supportMass = dsg.total(HV_SupportCapacityMass);
+						repairMass = dsg.total(HV_RepairMass);
 					break;
 				}
 			}
@@ -181,12 +187,14 @@ namespace design_stats {
 			if(sys !is null) {
 				baseMass = sys.total(HV_Mass);
 				supportMass = sys.total(HV_SupportCapacityMass);
+				repairMass = sys.total(HV_RepairMass);
 			}
 			else {
 				switch(aggregate) {
 					case ::SA_Sum:
 						baseMass = dsg.total(HV_Mass);
 						supportMass = dsg.total(HV_SupportCapacityMass);
+						repairMass = dsg.total(HV_RepairMass);
 					break;
 				}
 			}
@@ -194,10 +202,12 @@ namespace design_stats {
 		else if(type == SVT_ShipVariable) {
 			baseMass = dsg.total(HV_Mass);
 			supportMass = dsg.total(HV_SupportCapacityMass);
+			repairMass = dsg.total(HV_RepairMass);
 		}
 
 		if(playerEmpire !is null) {
 			baseMass += supportMass * max(playerEmpire.EmpireSupportCapacityMassFactor - 1.0, 0.0);
+        	baseMass += repairMass * max(playerEmpire.EmpireRepairMassFactor - 1.0, 0.0);
 			baseMass *= playerEmpire.EmpireMassFactor;
 		}
 		return baseMass;
@@ -234,6 +244,12 @@ DesignStats@ getDesignStats(const Design@ dsg) {
 			break;
 			case CSF_SupportCap:
 				val = getSupportCommandFor(dsg, playerEmpire);
+			break;
+			case CSF_Repair:
+				val = getRepairFor(dsg, playerEmpire);
+			break;
+			case CSF_SupplyUse:
+				val = getSupplyDrainFor(dsg, playerEmpire);
 			break;
 			case CSF_None:
 			default:
@@ -436,6 +452,12 @@ void loadStats(const string& filename) {
 			}
 			else if(value.equals_nocase("SupportCap")) {
 				stat.customFormula = CSF_SupportCap;
+			}
+			else if(value.equals_nocase("Repair")) {
+				stat.customFormula = CSF_Repair;
+			}
+			else if(value.equals_nocase("SupplyDrain")) {
+				stat.customFormula = CSF_SupplyUse;
 			}
 		}
 		else if(key == "Secondary") {

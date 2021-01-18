@@ -18,6 +18,7 @@ import icons;
 from overlays.Construction import ConstructionOverlay;
 from obj_selection import isSelected, selectObject, clearSelection, addToSelection;
 from tabs.GalaxyTab import zoomTabTo, openOverlay, toggleSupportOverlay;
+import ancient_buffs;
 
 bool SHIP_INFOBAR_EXPANDED = false;
 
@@ -372,7 +373,7 @@ class ShipInfoBar : InfoBar {
 
 		double repair = 0.0, combatMod = 1.0;
 		if(design !is null) {
-			repair = design.total(SV_Repair);
+			repair = getRepairFor(ship);
 			combatMod *= min(bp.shipEffectiveness, 1.0);
 		}
 

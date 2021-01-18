@@ -1,0 +1,5 @@
+BLD_ANCIENT_DEVELOPER_DESC: <<
+	Repair rates on all your ships are increased by 7%, but all subsystems with a repair rate have 25% more Mass.
+
+	[bbloc=#TIP_CONSUME_BASE_MATERIAL:10/]
+>>
