@@ -83,7 +83,7 @@ GlobalStat: Acceleration
 	 Suffix: u/s²
 
 	 Variable: Thrust
-	 DivBy: Hex.Mass
+	 CustomFormula: Acceleration
 
 	 GlobalStat: Thrust
 		  Name: #S_THRUST
@@ -99,7 +99,7 @@ GlobalStat: Acceleration
 		Color: #aaa
 		Secondary: Acceleration
 
-		Variable: Hex.Mass
+		CustomFormula: Mass
 
 	GlobalStat: TurnRate
 		 Name: #S_TURN_THRUST
@@ -109,7 +109,7 @@ GlobalStat: Acceleration
 		 Suffix: rad/s
 
 		 Variable: TurnThrust
-		 DivBy: Hex.Mass
+		 CustomFormula: Acceleration
 
 GlobalStat: Power
 	Name: #S_POWER

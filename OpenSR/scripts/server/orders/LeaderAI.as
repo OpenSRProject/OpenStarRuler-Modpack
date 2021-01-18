@@ -24,6 +24,7 @@ import ftl;
 import util.target_search;
 import ship_groups;
 import design_settings;
+import ancient_buffs;
 
 tidy class ActiveConstruction {
 	uint id;
@@ -2058,7 +2059,7 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 		return obj.radius * 10.0 + 20.0;
 	}
 	
-	double get_slowestSupportAccel() const {
+	double get_slowestSupportAccel(const Object& obj) const {
 		double slowest = 0.0;
 		
 		for(uint i = 0, cnt = groupData.length; i < cnt; ++i) {
@@ -2068,7 +2069,7 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 			
 			auto design = dat.dsg;
 			
-			double mass = max(design.total(HV_Mass), 0.01f);
+			double mass = max(getMassFor(design, obj.owner), 0.01f);
 			double accel = design.total(SV_Thrust) / mass;
 			if((accel < slowest || slowest == 0) && accel > 0.0)
 				slowest = accel;

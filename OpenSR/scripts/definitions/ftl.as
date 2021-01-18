@@ -2,6 +2,7 @@
 from regions.regions import getRegion;
 #section all
 import orbitals;
+import ancient_buffs;
 
 const double HYPERDRIVE_COST = 0.08;
 const double HYPERDRIVE_START_COST = 25.0;
@@ -35,7 +36,7 @@ int hyperdriveCost(Object& obj, const vec3d& position) {
 	Empire@ owner = obj.owner;
 	if(reg !is null && owner !is null && reg.FreeFTLMask & owner.mask != 0)
 		return 0;
-	return ceil(log(dsg.size) * (dsg.total(HV_Mass)*0.5/dsg.size) * sqrt(position.distanceTo(obj.position)) * HYPERDRIVE_COST + HYPERDRIVE_START_COST + owner.HyperdriveStartCostMod) * owner.FTLCostFactor;
+	return ceil(log(dsg.size) * (getMassFor(ship)*0.5/dsg.size) * sqrt(position.distanceTo(obj.position)) * HYPERDRIVE_COST + HYPERDRIVE_START_COST + owner.HyperdriveStartCostMod) * owner.FTLCostFactor;
 }
 
 int hyperdriveCost(array<Object@>& objects, const vec3d& destination) {
@@ -113,7 +114,7 @@ int flingCost(Object& obj, vec3d position) {
 		Ship@ ship = cast<Ship>(obj);
 		auto@ dsg = ship.blueprint.design;
 		int scale = dsg.size;
-		double massFactor = dsg.total(HV_Mass) * 0.3/dsg.size;
+		double massFactor = getMassFor(ship) * 0.3/dsg.size;
 
 		double scaleFactor;
 		if(dsg.hasTag(ST_Station))
@@ -260,7 +261,7 @@ int jumpdriveCost(Object& obj, const vec3d& fromPos, const vec3d& position) {
 	double dist = position.distanceTo(fromPos);
 	dist = min(dist, jumpdriveRange(obj));
 
-	return ceil(log(dsg.size) * (dsg.total(HV_Mass)*0.5/dsg.size) * sqrt(dist) * JUMPDRIVE_COST + JUMPDRIVE_START_COST) * owner.FTLCostFactor;
+	return ceil(log(dsg.size) * (getMassFor(ship)*0.5/dsg.size) * sqrt(dist) * JUMPDRIVE_COST + JUMPDRIVE_START_COST) * owner.FTLCostFactor;
 }
 
 int jumpdriveCost(Object& obj, const vec3d& position) {
@@ -275,7 +276,7 @@ int jumpdriveCost(Object& obj, const vec3d& position) {
 	double dist = position.distanceTo(obj.position);
 	dist = min(dist, jumpdriveRange(obj));
 
-	return ceil(log(dsg.size) * (dsg.total(HV_Mass)*0.5/dsg.size) * sqrt(dist) * JUMPDRIVE_COST + JUMPDRIVE_START_COST) * owner.FTLCostFactor;
+	return ceil(log(dsg.size) * (getMassFor(ship)*0.5/dsg.size) * sqrt(dist) * JUMPDRIVE_COST + JUMPDRIVE_START_COST) * owner.FTLCostFactor;
 }
 
 int jumpdriveCost(array<Object@>& objects, const vec3d& destination) {

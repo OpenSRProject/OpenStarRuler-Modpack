@@ -3,6 +3,7 @@ import util.target_search;
 import regions.regions;
 import saving;
 import attributes;
+import ancient_buffs;
 from generic_effects import RegionChangeable, LeaderChangeable;
 from influence_global import giveRandomReward, DiplomacyEdictType;
 from designs import getDesignMesh;
@@ -482,7 +483,7 @@ tidy class ShipScript {
 			ship.MaxSupply = ship.blueprint.design.total(SV_SupplyCapacity) + supplyBonus;
 		else
 			ship.MaxSupply = ship.blueprint.design.total(SV_SupportSupplyCapacity) + supplyBonus;
-		mass = ship.blueprint.design.total(HV_Mass);
+		mass = getMassFor(ship);
 		/*ship.MaxEnergy = ship.blueprint.design.total(SV_EnergyCapacity);*/
 		ship.MaxEnergy = 0;
 
