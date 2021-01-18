@@ -27,6 +27,7 @@ enum CustomStatFormula {
 	CSF_None,
 	CSF_Mass,
 	CSF_Acceleration,
+	CSF_SupportCap,
 };
 
 class DesignStat {
@@ -153,14 +154,17 @@ namespace design_stats {
 
 	double getMass(const Design@ dsg, const Subsystem@ sys, vec2u hex, SysVariableType type, int aggregate = 0) {
 		double baseMass = 0;
+		double supportMass = 0;
 		if(type == SVT_HexVariable) {
 			if(hex != vec2u(uint(-1))) {
 				baseMass = dsg.variable(hex, HV_Mass);
+				supportMass = dsg.variable(hex, HV_SupportCapacityMass);
 			}
 			else if(sys !is null) {
 				switch(aggregate) {
 					case ::SA_Sum:
 						baseMass = sys.total(HV_Mass);
+						supportMass = sys.total(HV_SupportCapacityMass);
 					break;
 				}
 			}
@@ -168,6 +172,7 @@ namespace design_stats {
 				switch(aggregate) {
 					case ::SA_Sum:
 						baseMass = dsg.total(HV_Mass);
+						supportMass = dsg.total(HV_SupportCapacityMass);
 					break;
 				}
 			}
@@ -175,21 +180,26 @@ namespace design_stats {
 		else if(type == SVT_SubsystemVariable) {
 			if(sys !is null) {
 				baseMass = sys.total(HV_Mass);
+				supportMass = sys.total(HV_SupportCapacityMass);
 			}
 			else {
 				switch(aggregate) {
 					case ::SA_Sum:
 						baseMass = dsg.total(HV_Mass);
+						supportMass = dsg.total(HV_SupportCapacityMass);
 					break;
 				}
 			}
 		}
 		else if(type == SVT_ShipVariable) {
 			baseMass = dsg.total(HV_Mass);
+			supportMass = dsg.total(HV_SupportCapacityMass);
 		}
 
-		if(playerEmpire !is null)
+		if(playerEmpire !is null) {
+			baseMass += supportMass * max(playerEmpire.EmpireSupportCapacityMassFactor - 1.0, 0.0);
 			baseMass *= playerEmpire.EmpireMassFactor;
+		}
 		return baseMass;
 	}
 
@@ -221,6 +231,9 @@ DesignStats@ getDesignStats(const Design@ dsg) {
 					if(mass != 0.0)
 						val /= mass;
 				}
+			break;
+			case CSF_SupportCap:
+				val = getSupportCommandFor(dsg, playerEmpire);
 			break;
 			case CSF_None:
 			default:
@@ -420,6 +433,9 @@ void loadStats(const string& filename) {
 			}
 			else if(value.equals_nocase("Acceleration")) {
 				stat.customFormula = CSF_Acceleration;
+			}
+			else if(value.equals_nocase("SupportCap")) {
+				stat.customFormula = CSF_SupportCap;
 			}
 		}
 		else if(key == "Secondary") {

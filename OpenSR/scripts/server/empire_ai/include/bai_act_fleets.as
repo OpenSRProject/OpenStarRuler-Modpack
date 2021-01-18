@@ -1,6 +1,7 @@
 //Locates a system to explore
 import systems;
 import ftl;
+import ancient_buffs;
 from pings import sendPing;
 import design_settings;
 #include "include/resource_constants.as"
@@ -1157,7 +1158,7 @@ class BuildFleet : Action {
 						int buildID = buildAt.constructionID[0];
 						if(buildID != -1) {
 							//Pre-order supports
-							uint supports = dsg.total(SV_SupportCapacity);
+							uint supports = getSupportCommandFor(dsg, ai.empire);
 							if(ai.skillEconomy < DIFF_Hard)
 								supports /= 2;
 								
@@ -2654,7 +2655,7 @@ class MakeDesign : Action {
 				double supportSize = support is null ? 1.0 : double(support.size);
 				
 				if(dsg.hasTag(ST_SupportCap))
-					str += dsg.total(SV_SupportCapacity) / supportSize * supportStr;
+					str += getSupportCommandFor(dsg, ai.empire) / supportSize * supportStr;
 				
 				//Avoid wasting resources
 				double commandUsed = dsg.variable(ShV_REQUIRES_Command);

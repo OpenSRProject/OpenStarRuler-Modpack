@@ -73,7 +73,7 @@ GlobalStat: SupportCap
 	Icon: ActionBarIcons::2
 	Color: #00cffe
 
-	Variable: SupportCapacity
+	CustomFormula: SupportCap
 
 GlobalStat: Acceleration
 	 Name: #S_ACCEL

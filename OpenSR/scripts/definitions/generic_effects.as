@@ -16,6 +16,7 @@ import research;
 import empire_effects;
 import repeat_hooks;
 import planet_types;
+import ancient_buffs;
 #section server
 import object_creation;
 from components.ObjectManager import getDefenseDesign;
@@ -5003,6 +5004,11 @@ class AddBonusShield : GenericEffect {
 #section all
 };
 
+class SupportCapacityData {
+	double multiplier = 1;
+	any data;
+}
+
 class AddBonusSupportCapPct : GenericEffect {
 	Document doc("Add a percentage bonus support capacity to this fleet.");
 	Argument percentage(AT_Decimal, "0", doc="Percentage of maximum support cap to add.");
@@ -5010,7 +5016,11 @@ class AddBonusSupportCapPct : GenericEffect {
 #section server
 	void enable(Object& obj, any@ data) const override {
 		const Design@ dsg = null;
-		data.store(@dsg);
+		SupportCapacityData info;
+		info.data.store(@dsg);
+		if(obj.owner !is null)
+			info.multiplier = obj.owner.EmpireSupportCapacityFactor;
+		data.store(@info);
 	}
 
 	void tick(Object& obj, any@ data, double time) const override {
@@ -5018,22 +5028,39 @@ class AddBonusSupportCapPct : GenericEffect {
 		if(ship is null)
 			return;
 
+		SupportCapacityData@ info;
 		const Design@ newDesign = ship.blueprint.design;
 		const Design@ oldDesign;
-		data.retrieve(@oldDesign);
+		data.retrieve(@info);
+		info.data.retrieve(@oldDesign);
+
+		// Account for Developer changes.
+		int given = 0, newGiven = 0;
+		if(obj.owner !is null) {
+			if(info.multiplier != obj.owner.EmpireSupportCapacityFactor) {
+				const Design@ dsg = oldDesign !is null ? oldDesign : newDesign;
+				given = dsg.total(SV_SupportCapacity) * percentage.decimal * info.multiplier;
+				newGiven = getSupportCommandFor(dsg, obj.owner) * percentage.decimal;
+
+				if(given != newGiven)
+					ship.modSupplyCapacity(newGiven - given);
+			}
+			info.multiplier = obj.owner.EmpireSupportCapacityFactor;
+		}
 
 		if(oldDesign !is newDesign) {
 			int given = 0;
 			if(oldDesign !is null)
-				given = oldDesign.total(SV_SupportCapacity) * percentage.decimal;
+				given = getSupportCommandFor(oldDesign, obj.owner) * percentage.decimal;
 			int newGiven = 0;
 			if(newDesign !is null)
-				newGiven = newDesign.total(SV_SupportCapacity) * percentage.decimal;
+				newGiven = getSupportCommandFor(newDesign, obj.owner) * percentage.decimal;
 
 			if(given != newGiven)
 				ship.modSupplyCapacity(newGiven - given);
-			data.store(@newDesign);
+			info.data.store(@newDesign);
 		}
+		data.store(@info);
 	}
 
 	void disable(Object& obj, any@ data) const override {
@@ -5041,30 +5068,40 @@ class AddBonusSupportCapPct : GenericEffect {
 		if(ship is null)
 			return;
 
+		SupportCapacityData@ info;
 		const Design@ oldDesign;
-		data.retrieve(@oldDesign);
+		data.retrieve(@info);
+		info.data.retrieve(@oldDesign);
 
 		int given = 0;
 		if(oldDesign !is null)
-			given = oldDesign.total(SV_SupportCapacity) * percentage.decimal;
+			given = getSupportCommandFor(oldDesign, obj.owner) * percentage.decimal;
 		if(given != 0.0) {
 			ship.modSupplyCapacity(-given);
 
 			@oldDesign = null;
-			data.store(@oldDesign);
+			info.data.store(@oldDesign);
 		}
+		info.multiplier = 1;
+		data.store(@info);
 	}
 
 	void save(any@ data, SaveFile& file) const override {
+		SupportCapacityData@ info;
 		const Design@ dsg;
-		data.retrieve(@dsg);
+		data.retrieve(@info);
+		info.data.retrieve(@dsg);
 		file << dsg;
+		file << info.multiplier;
 	}
 
 	void load(any@ data, SaveFile& file) const override {
+		SupportCapacityData info;
 		const Design@ dsg;
 		file >> dsg;
-		data.store(@dsg);
+		info.data.store(@dsg);
+		file >> info.multiplier;
+		data.store(@info);
 	}
 #section all
 };

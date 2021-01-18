@@ -2,6 +2,7 @@ import util.random_designs;
 import ship_groups;
 import object_creation;
 from empire import Creeps;
+import ancient_buffs;
 
 export Creeps;
 export getRemnantDesign;
@@ -78,7 +79,7 @@ RemnantComposition@ composeRemnantFleet(double targetStrength, double margin = 0
 			continue;
 		}
 
-		int supCap = flag.total(SV_SupportCapacity);
+		int supCap = getSupportCommandFor(flag, emp);
 		int supAdded = 0;
 
 		compose.supports.length = 0;
@@ -229,7 +230,7 @@ Ship@ spawnRemnantFleet(const vec3d& position, int size, double occupation = 1.0
 	leader.sightRange = 0;
 	leader.setRotation(quaterniond_fromAxisAngle(vec3d_up(), randomd(-pi, pi)));
 
-	uint supports = dsg.total(SV_SupportCapacity) * occupation;
+	uint supports = getSupportCommandFor(dsg, emp) * occupation;
 	if(supports != 0) {
 		uint supportTypes = randomd(1, 4);
 		for(uint n = 0; n < supportTypes; ++n) {

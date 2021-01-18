@@ -2,6 +2,7 @@ import empire_ai.weasel.WeaselAI;
 
 import util.design_export;
 import util.random_designs;
+import ancient_buffs;
 
 interface RaceDesigns {
 	bool preCompose(DesignTarget@ target);
@@ -173,7 +174,7 @@ tidy final class DesignTarget {
 
 		//Value support capacity where appropriate
 		if(purpose == DP_Combat) {
-			double supCap = dsg.total(SV_SupportCapacity);
+			double supCap = getSupportCommandFor(dsg, ai.empire);
 			double avgHP = 0, avgDPS = 0, avgDrain = 0.0;
 			cast<Designs>(ai.designs).getSupportAverages(avgHP, avgDPS, avgDrain);
 
@@ -591,7 +592,7 @@ final class Designs : AIComponent {
 			return DP_Miner;
 		if(dsg.size == 16.0 && dsg.total(SV_DPS) < 2.0)
 			return DP_Scout;
-		if(dps > 0.1 * dsg.size || dsg.total(SV_SupportCapacity) > 0)
+		if(dps > 0.1 * dsg.size || getSupportCommandFor(dsg, ai.empire) > 0)
 			return DP_Combat;
 		return defaultPurpose;
 	}

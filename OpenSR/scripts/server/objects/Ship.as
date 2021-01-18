@@ -526,13 +526,25 @@ tidy class ShipScript {
 		}
 	}
 
+	void minorStatUpdate(Ship& ship) {
+		// Update mass to account for Atroan Compressors and similar effects.
+		mass = getMassFor(ship);
+
+		//Set the supply capacity of the ship
+		int supply = getSupportCommandFor(ship);
+		if(supply != prevSupply) {
+			ship.modSupplyCapacity(supply - prevSupply);
+			prevSupply = supply;
+		}
+	}
+
 	void updateStats(Ship& ship, bool init = false) {
 		const Design@ dsg = ship.blueprint.design;
 
 		//Set the mover's maximum acceleration based on thrust
 		curThrust = ship.blueprint.getEfficiencySum(SV_Thrust);
 		curTurnThrust = ship.blueprint.getEfficiencySum(SV_TurnThrust);
-
+		
 		if(curTurnThrust != 0)
 			ship.rotationSpeed = max(curTurnThrust / max(mass, 0.01f), 0.005f);
 
@@ -570,12 +582,8 @@ tidy class ShipScript {
 			shieldDelta = true;
 		}
 
-		//Set the supply capacity of the ship
-		int supply = ship.blueprint.getEfficiencySum(SV_SupportCapacity);
-		if(supply != prevSupply) {
-			ship.modSupplyCapacity(supply - prevSupply);
-			prevSupply = supply;
-		}
+		// Refresh Atroan enhancer effects and such.
+		minorStatUpdate(ship);
 
 		//Modify ship efficiency based on available command
 		float commandAvail = ship.blueprint.getEfficiencySum(SV_Command);
@@ -1089,6 +1097,9 @@ tidy class ShipScript {
 			float debtFactor = ship.owner.DebtFactor;
 			if(debtFactor > 1.f)
 				fleetEffectiveness *= pow(0.5f, debtFactor-1.f);
+				
+			// Refresh Atroan enhancer effects and such.
+			minorStatUpdate(ship);
 
 			fleetEffectiveness *= owner.FleetEfficiencyFactor;
 			ship.setFleetEffectiveness(fleetEffectiveness);

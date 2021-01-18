@@ -1339,7 +1339,7 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 			needExperience = ship.blueprint.design.size * config::EXPERIENCE_BASE_AMOUNT;
 
 			const Design@ dsg = ship.blueprint.design;
-			if(dsg !is null && !dsg.hasTag(ST_Weapon) && dsg.total(SV_SupportCapacity) > 0)
+			if(dsg !is null && !dsg.hasTag(ST_Weapon) && getSupportCommandFor(dsg, obj.owner) > 0)
 				engageType = ER_RaidingOnly;
 		}
 		else {
