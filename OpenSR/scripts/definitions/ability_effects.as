@@ -791,6 +791,8 @@ class IsToggleTarget : AbilityHook {
 };
 
 double getMassFor(Object& obj) {
+	if(obj is null)
+		return 0;
 #section server
 	switch(obj.type) {
 		case OT_Artifact:
@@ -920,6 +922,7 @@ class TriggerBeamEffect : AbilityHook {
 tidy final class TractorData {
 	bool hasOffset = false;
 	vec3d offset;
+	double mass = 0;
 	bool hasPath = false;
 	vec3d pathDest;
 	vec3d prevPosition;
@@ -949,22 +952,28 @@ class TractorObject : AbilityHook {
 		if(prev is next)
 			return;
 
+		TractorData@ td;
+		data.retrieve(@td);
+
 		if(prev !is null) {
 			if(prev.hasOrbit) {
 				prev.velocity = vec3d();
 				prev.acceleration = vec3d();
 				prev.remakeStandardOrbit();
 			}
-			if(abl.obj !is null && abl.obj.isShip)
-				cast<Ship>(abl.obj).modMass(-getMassFor(prev));
+			if(abl.obj !is null) {
+				if(abl.obj.isShip)
+					cast<Ship>(abl.obj).modMass(-td.mass);
+			}
 		}
+		td.mass = 0;
 		if(next !is null) {
-			if(abl.obj !is null && abl.obj.isShip)
-				cast<Ship>(abl.obj).modMass(getMassFor(next));
+			td.mass = getMassFor(next);
+			if(abl.obj !is null) {
+				if(abl.obj.isShip)
+					cast<Ship>(abl.obj).modMass(td.mass);
+			}
 		}
-
-		TractorData@ td;
-		data.retrieve(@td);
 
 		td.hasOffset = false;
 		td.hasPath = false;
@@ -984,6 +993,16 @@ class TractorObject : AbilityHook {
 
 		TractorData@ td;
 		data.retrieve(@td);
+
+		double targMass = getMassFor(target);
+		if(targMass != td.mass) {
+			double diff = targMass - td.mass;	
+			td.mass += diff;
+			if(abl.obj !is null) {
+				if(abl.obj.isShip)
+					cast<Ship>(abl.obj).modMass(diff);
+			}
+		}
 
 		bool wasPortal = false;
 		if(allow_portal.boolean) {
@@ -1063,6 +1082,8 @@ class TractorObject : AbilityHook {
 			double tracForce = 0.0;
 			if(abl.obj.hasMover)
 				tracForce = abl.obj.maxAcceleration * time;
+			else 
+				tracForce = getMassFor(abl.obj) * 0.1 * time;
 
 			vec3d force = dir.normalized(min(tracForce, dir.length));
 			target.impulse(force);
@@ -1079,6 +1100,7 @@ class TractorObject : AbilityHook {
 		file << td.hasPath;
 		file << td.pathDest;
 		file << td.prevPosition;
+		file << td.mass;
 	}
 
 	void load(Ability@ abl, any@ data, SaveFile& file) const override {
@@ -1094,6 +1116,7 @@ class TractorObject : AbilityHook {
 				file >> td.prevPosition;
 			else
 				td.prevPosition = vec3d(INFINITY, INFINITY, INFINITY);
+			file >> td.mass;
 		}
 	}
 #section all
