@@ -530,11 +530,13 @@ tidy class ShipScript {
 		// Update mass to account for Atroan Compressors and similar effects.
 		mass = getMassFor(ship);
 
-		//Set the supply capacity of the ship
-		int supply = getSupportCommandFor(ship);
-		if(supply != prevSupply) {
-			ship.modSupplyCapacity(supply - prevSupply);
-			prevSupply = supply;
+		if(ship.hasLeaderAI) {
+			//Set the supply capacity of the ship
+			int supply = getSupportCommandFor(ship);
+			if(supply != prevSupply) {
+				ship.modSupplyCapacity(supply - prevSupply);
+				prevSupply = supply;
+			}
 		}
 
 		//Store the amount of repair we have available
@@ -1045,6 +1047,9 @@ tidy class ShipScript {
 				}
 			}
 		}
+				
+		// Refresh Atroan enhancer effects and such.
+		minorStatUpdate(ship);
 
 		if(ship.hasSupportAI) {
 			ship.supportTick(time);
@@ -1097,9 +1102,6 @@ tidy class ShipScript {
 			float debtFactor = ship.owner.DebtFactor;
 			if(debtFactor > 1.f)
 				fleetEffectiveness *= pow(0.5f, debtFactor-1.f);
-				
-			// Refresh Atroan enhancer effects and such.
-			minorStatUpdate(ship);
 
 			fleetEffectiveness *= owner.FleetEfficiencyFactor;
 			ship.setFleetEffectiveness(fleetEffectiveness);

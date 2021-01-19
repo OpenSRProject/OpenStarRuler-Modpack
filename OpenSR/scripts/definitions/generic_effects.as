@@ -5037,10 +5037,9 @@ class AddBonusSupportCapPct : GenericEffect {
 		// Account for Developer changes.
 		int given = 0, newGiven = 0;
 		if(obj.owner !is null) {
-			if(info.multiplier != obj.owner.EmpireSupportCapacityFactor) {
-				const Design@ dsg = oldDesign !is null ? oldDesign : newDesign;
-				given = dsg.total(SV_SupportCapacity) * percentage.decimal * info.multiplier;
-				newGiven = getSupportCommandFor(dsg, obj.owner) * percentage.decimal;
+			if(info.multiplier != obj.owner.EmpireSupportCapacityFactor && oldDesign !is null) {
+				given = oldDesign.total(SV_SupportCapacity) * percentage.decimal * info.multiplier;
+				newGiven = getSupportCommandFor(oldDesign, obj.owner) * percentage.decimal;
 
 				if(given != newGiven)
 					ship.modSupplyCapacity(newGiven - given);
@@ -5049,10 +5048,10 @@ class AddBonusSupportCapPct : GenericEffect {
 		}
 
 		if(oldDesign !is newDesign) {
-			int given = 0;
+			given = 0;
 			if(oldDesign !is null)
 				given = getSupportCommandFor(oldDesign, obj.owner) * percentage.decimal;
-			int newGiven = 0;
+			newGiven = 0;
 			if(newDesign !is null)
 				newGiven = getSupportCommandFor(newDesign, obj.owner) * percentage.decimal;
 
