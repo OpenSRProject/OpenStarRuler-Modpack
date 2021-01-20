@@ -12,7 +12,7 @@ void ReactorOverload(Event& evt, double Damage) {
 
 	Ship@ ship = cast<Ship>(evt.target);
 	if(ship.MaxShield > 0)
-		Damage *= ship.Shield / ship.MaxShield;
+		Damage *= 1 - (ship.Shield / ship.MaxShield);
 
 	DamageEvent dmg;
 	dmg.damage = Damage * double(evt.efficiency) * double(evt.partiality);
@@ -79,7 +79,7 @@ DamageEventStatus NilingAbsorb(DamageEvent& evt, const vec2u& position, double D
 	double value = bp.decimal(sys, 0);
 	value += evt.damage;
 
-	if(value >= Damage) {
+	while(value >= Damage) {
 		playParticleSystem("NilingExplosion", evt.target.position, quaterniond(), Radius / 15.0, evt.target.visibleMask);
 		AoEDamage(evt.target, evt.target, vec3d(), Damage * 0.9, Radius, 10.0);
 
