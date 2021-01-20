@@ -25,6 +25,7 @@ Module: SenatorialPalace
 
 	ModEmpireAttribute(SenatorialPalaceConstructed, Add, 1)
 	RequireAttributeLT(SenatorialPalaceConstructed, 1)
+	IfInOwnedSpace(ModEmpireAttribute(SenatorialPalaceActive, Add, 1))
 
 	GloballyVisible()
 	GrantAllVision()
