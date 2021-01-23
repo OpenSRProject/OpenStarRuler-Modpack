@@ -255,6 +255,7 @@ class GalaxyTab : Tab {
 			file << pos;
 			bool isFloating = popups[i].objLinked;
 			file << isFloating;
+			file << obj.valid;
 		}
 
 		file << quickbar;
@@ -274,8 +275,10 @@ class GalaxyTab : Tab {
 
 			bool isFloating = false;
 			file >> isFloating;
+			bool valid = true;
+			file >> valid;
 
-			if(obj !is null) {
+			if(obj !is null && obj.valid && valid) {
 				Popup@ pop = pinObject(obj, isFloating);
 				pop.position = pos;
 			}
