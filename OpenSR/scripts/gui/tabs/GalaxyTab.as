@@ -278,6 +278,9 @@ class GalaxyTab : Tab {
 			bool valid = true;
 			file >> valid;
 
+			// objects that are invalid can be deserialised as valid, so check
+			// if the object was valid before saving AND is still considered valid
+			// now to cover all possible problems that would lead to a crash
 			if(obj !is null && obj.valid && valid) {
 				Popup@ pop = pinObject(obj, isFloating);
 				pop.position = pos;
