@@ -25,6 +25,9 @@ Subsystem: MothershipHull
 	SupportCapacity := 128
 	Hex.MaintainCost := 0
 
+	ShipMaxPopulation := 16
+
+	Hook: MP_if_hooks::IfFewerStatusStacks(MothershipPopulation, Sum.ShipMaxPopulation, TriggerPeriodic(AddStatus(MothershipPopulation), Interval = 50))
 	Hook: AddStatus(Mothership)
 	Hook: AddCargoStorage(100000)
 	Hook: ModSupplyConsumeFactor(-1.0)

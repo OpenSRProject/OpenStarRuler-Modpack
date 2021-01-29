@@ -37,6 +37,8 @@ Subsystem: FlagshipHull
 	FTLBuildCost := 0
 	AddPostModifier: AddFTLBuildCost(if(HasFTLCost, ShipSize*2.0, 0)))
 
+	Hook: MP_if_hooks::IfMoreStatusStacks(MothershipPopulation, Sum.ShipMaxPopulation, MP_generic_effects::RemoveStatusInstance(MothershipPopulation))
+
 	Modifier: IncreaseHexLimit(Hexes)
 		HexLimit := HexLimit + Hexes
 		FreeHexLimit := FreeHexLimit + Hexes

@@ -8,8 +8,6 @@ Status: Mothership
 	OnEnable(AddStatus(MothershipPopulation), 5)
 	OnDisable(RemoveStatus(MothershipPopulation))
 
-	TriggerPeriodic(AddStatus(MothershipPopulation, Max Stacks = 16), 50)
-
 	AllowConstruction(Ships = True, Orbitals = True, Asteroids = True, Terraforming = True)
 
 	AddLaborIncome(7)
