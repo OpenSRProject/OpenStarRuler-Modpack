@@ -25,7 +25,7 @@ Subsystem: MothershipHull
 	SupportCapacity := 128
 	Hex.MaintainCost := 0
 
-	Hook: AddPermanetStatus(Mothership)
+	Hook: AddStatus(Mothership)
 	Hook: AddCargoStorage(100000)
 	Hook: ModSupplyConsumeFactor(-1.0)
 
