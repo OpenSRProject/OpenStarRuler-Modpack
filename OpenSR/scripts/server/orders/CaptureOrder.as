@@ -66,8 +66,15 @@ tidy class CaptureOrder : Order {
 				return OS_COMPLETED;
 			}
 		}
+		// if we're not in range, do not allow the movement order to finish
+		else {
+			moveId = -1;
+		}
 
-		obj.moveTo(target.position + offset, moveId);
+		// move to the position the planet is going to be at after 3 seconds
+		// so we chase planets trying to flee
+		vec3d targetHeaded = target.position + offset + target.velocity * 3;
+		obj.moveTo(targetHeaded, moveId);
 		return OS_BLOCKING;
 	}
 };

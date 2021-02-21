@@ -759,6 +759,15 @@ class TargetAbility : MultiOption {
 	}
 };
 
+class Chase : SingleSelectionOption {
+	void call(Object@ obj) {
+		if(obj is null) {
+			return;
+		}
+		obj.addChaseOrder(clicked, shiftKey);
+	}
+}
+
 class ConstructionOption : Option {
 	const ConstructionType@ type;
 	Object@ from;
@@ -1088,6 +1097,21 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 						addOption(menu, selected, clicked, locale::ATTACK, Attack(), icons::Strength);
 				}
 			}
+			// Add attack option for all planets with acceleration and support capacity
+			if (selected.isPlanet) {
+				Planet@ planet = cast<Planet>(selected);
+				if (planet !is null && planet.supportCount > 0 && planet.maxAcceleration > 0) {
+					addOption(menu, selected, clicked, locale::ATTACK, Attack(), icons::Strength);
+				}
+			}
+			// Add attack option for all orbitals with acceleration and dps, ie
+			// Linked Mainframes.
+			if (selected.isOrbital) {
+				Orbital@ orbital = cast<Orbital>(selected);
+				if (orbital !is null && orbital.maxAcceleration > 0 && orbital.getFleetDPS() > 0) {
+					addOption(menu, selected, clicked, locale::ATTACK, Attack(), icons::Strength);
+				}
+			}
 		}
 
 		if(selected.isShip && selected.hasLeaderAI && clicked.isPlanet
@@ -1118,6 +1142,11 @@ bool openContextMenu(Object& clicked, Object@ selected = null) {
 			Object@ nameObj = clickedRegion is null ? @clicked : @clickedRegion;
 			addOption(menu, selected, clicked, format(locale::MOVE_TO_OBJ, formatObjectName(nameObj)), MoveTo(),
 					Sprite(spritesheet::ContextIcons, 0, Color(0xffcd00ff)));
+
+			// Chase order
+			if (clicked !is null && clicked.valid && clicked.hasMover && !clicked.hasSupportAI && !clicked.isStar && !clicked.isPlanet && clicked !is selected) {
+				addOption(menu, selected, clicked, format(locale::CHASE_ORDER, formatObjectName(nameObj)), Chase());
+			}
 		}
 	}
 
