@@ -759,7 +759,7 @@ class TargetAbility : MultiOption {
 	}
 };
 
-class Chase : SingleSelectionOption {
+class Chase : SelectionOption {
 	void call(Object@ obj) {
 		if(obj is null) {
 			return;
