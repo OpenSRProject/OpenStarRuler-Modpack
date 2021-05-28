@@ -19,6 +19,13 @@ enum AIFlags {
 const string DEFAULT_SHIPSET = "Volkur";
 const int STARTING_TRAIT_POINTS = 1;
 
+// This version id MUST be incremented whenever making save incompatible changes
+// to any of the game settings classes to prevent corrupted reads of the
+// settings when starting a new game.
+// Ported from Colonisation Expansion
+const string LOBBY_SETTINGS_FILEPATH = "lobby.modpack.txt";
+const string LOBBY_SETTINGS_VERSION = "OpenSR Modpack Lobby V1";
+
 class EmpireSettings : Serializable {
 	uint index = 0;
 	uint type;
@@ -170,6 +177,14 @@ class EmpireSettings : Serializable {
 		portrait = other.portrait;
 		traits = other.traits;
 		effectorSkin = other.effectorSkin;
+	}
+
+	void copyAISettingsFrom(const EmpireSettings& other) {
+		difficulty = other.difficulty;
+		aiFlags = other.aiFlags;
+		cheatWealth = other.cheatWealth;
+		cheatStrength = other.cheatStrength;
+		cheatAbundance = other.cheatAbundance;
 	}
 };
 

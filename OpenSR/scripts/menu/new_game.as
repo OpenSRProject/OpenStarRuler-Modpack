@@ -67,6 +67,7 @@ class NewGame : BaseGuiElement {
 	GuiButton@ backButton;
 	GuiButton@ inviteButton;
 	GuiButton@ playButton;
+	GuiButton@ usePreviousButton;
 
 	EmpirePortraitCreation portraits;
 
@@ -212,6 +213,12 @@ class NewGame : BaseGuiElement {
 		inviteButton.buttonIcon = Sprite(spritesheet::MenuIcons, 13);
 		inviteButton.visible = cloud::inLobby;
 
+		@usePreviousButton = GuiButton(this, Alignment(
+			Left+0.05f+416, Bottom-0.1f+6, Width=200, Height=46),
+			locale::PREVIOUS_LOBBY);
+		usePreviousButton.buttonIcon = Sprite(spritesheet::MenuIcons, 12);
+		usePreviousButton.visible = false;
+
 		updateAbsolutePosition();
 	}
 
@@ -278,6 +285,9 @@ class NewGame : BaseGuiElement {
 			playButton.text = locale::START_GAME;
 			playButton.color = colors::White;
 		}
+
+		Message msg = readFromConfigFile();
+		usePreviousButton.visible = !(fromMP || mpServer) && msg.size > 0;
 	}
 
 	void addChat(const string& str) {
@@ -491,6 +501,25 @@ class NewGame : BaseGuiElement {
 		}
 		emp.defaultName = emp.name.text;
 		addAIButton.position = vec2i((empirePanel.size.width - addAIButton.size.width)/2, y + EMPIRE_SETUP_HEIGHT + 4);
+		// Copy previous AI settings: Ported from Colonisation Expansion
+		if (!player && empires.length > 1) {
+			uint i = empires.length - 1;
+			EmpireSetup@ baseAISettingsOff;
+			// first player is always a human
+			while (i > 0) {
+				EmpireSetup@ previous = empires[i];
+				if (!previous.player) {
+					// found the previous AI
+					@baseAISettingsOff = previous;
+					break;
+				}
+				i -= 1;
+			}
+			if (baseAISettingsOff !is null) {
+				// copy AI settings from the previous entry
+				emp.settings.copyAISettingsFrom(baseAISettingsOff.settings);
+			}
+		}
 		emp.update();
 		empires.insertLast(emp);
 		empirePanel.updateAbsolutePosition();
@@ -688,7 +717,69 @@ class NewGame : BaseGuiElement {
 		Message msg;
 		settings.write(msg);
 
+		if (!(fromMP || mpServer)) {
+			Message _msg;
+			settings.write(_msg);
+			writeToConfigFile(_msg);
+		}
+
 		startNewGame(msg);
+	}
+
+	void writeToConfigFile(Message& msg) {
+		WriteFile file(path_join(modProfile, LOBBY_SETTINGS_FILEPATH));
+		file.writeLine(LOBBY_SETTINGS_VERSION);
+		// Message#size is in bytes, but we write/read bits since I can't find
+		// a method that is unambiguosuly for writing a byte.
+		uint size = msg.size * 8;
+		for (uint i = 0; i < size; ++i) {
+			if (msg.readBit()) {
+				file.writeLine("1");
+			} else {
+				file.writeLine("0");
+			}
+		}
+	}
+
+	Message readFromConfigFile() {
+		ReadFile file(path_join(modProfile, LOBBY_SETTINGS_FILEPATH), true);
+		Message msg;
+		bool readHeader = false;
+		while (file++) {
+			string bit = file.line;
+			if (!readHeader) {
+				if (bit == LOBBY_SETTINGS_VERSION) {
+					readHeader = true;
+					continue;
+				} else {
+					return msg;
+				}
+			}
+			if (bit == "1") {
+				msg.write1();
+			} else {
+				msg.write0();
+			}
+		}
+		return msg;
+	}
+
+	void loadPreviousLobby() {
+		if (!(fromMP || mpServer)) {
+			Message msg = readFromConfigFile();
+			GameSettings lobbyDefaultSettings;
+			if (msg.size != 0) {
+				print("| Applying settings from previous lobby");
+				print("| If everything breaks for you immediately after seeing this log, delete any lobby* files from your Star Ruler 2 profile");
+				print("| On Linux these are typically at ~/.starruler2/base/");
+				print("| On Windows these are typically at My Documents\\My Games\\Star Ruler 2\\base\\");
+				lobbyDefaultSettings.read(msg);
+				reset(lobbyDefaultSettings);
+				mapPanel.visible = false;
+				galaxyPanel.visible = true;
+				choosingMap = false;
+			}
+		}
 	}
 
 	void switchPage(uint page) {
@@ -772,6 +863,10 @@ class NewGame : BaseGuiElement {
 				}
 				else if(event.caller is inviteButton) {
 					cloud::inviteFriend();
+					return true;
+				}
+				else if(event.caller is usePreviousButton) {
+					loadPreviousLobby();
 					return true;
 				}
 				else if(event.caller is addAIButton) {
@@ -1291,7 +1386,7 @@ class RaceChooser : GuiOverlay {
 			if(flag == setup.settings.flag)
 				flags.selected = i;
 		}
-		
+
 		y += 110 + 12;
 		// DOF - Adjust shipset selection box size.
 		// Trying dynamic size based on number of shipsets.  Target 6 per row, max 4 rows (don't want to get too tall for lower resolutions).
@@ -1510,7 +1605,7 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 
 	EmpireSetup(NewGame@ menu, Alignment@ align, bool Player = false) {
 		super(menu.empirePanel, align);
-		
+
 		@portraitButton = GuiButton(this, Alignment(Left+8, Top+4, Left+EMPIRE_SETUP_HEIGHT, Bottom-4));
 		portraitButton.style = SS_NULL;
 		@portrait = GuiEmpire(portraitButton, Alignment().fill());
@@ -1630,7 +1725,7 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 
 		menu.updateAbsolutePosition();
 	}
-	
+
 	void forceAITraits(EmpireSettings& settings) {
 		for(uint i = 0, cnt = settings.traits.length; i < cnt; ++i) {
 			auto@ trait = settings.traits[i];
@@ -1680,6 +1775,7 @@ class EmpireSetup : BaseGuiElement, IGuiCallback {
 			if(defaultName == name.text)
 				resetName();
 		}
+		update();
 	}
 
 	void resetName() {
@@ -2229,7 +2325,7 @@ class ChoosePopup : GuiIconGrid {
 class ColorPicker : BaseGuiElement {
 	Color picked;
 	bool pressed = false;
-	
+
 	ColorPicker(IGuiElement@ parent, const recti& pos) {
 		super(parent, pos);
 		updateAbsolutePosition();
@@ -2257,7 +2353,7 @@ class ColorPicker : BaseGuiElement {
 		col.a = 1.f;
 		return Color(col);
 	}
-	
+
 	bool onMouseEvent(const MouseEvent& event, IGuiElement@ source) {
 		if(event.type == MET_Button_Down || (event.type == MET_Moved && pressed)) {
 			pressed = true;
@@ -2698,7 +2794,7 @@ class TraitsWindow : BaseGuiElement {
 		@portraitLabel = GuiText(profilePanel, Alignment(Left+12, Top+y, Left+200, Top+y+30), locale::PORTRAIT, FT_Bold);
 		@portrait = PortraitChooser(profilePanel, Alignment(Left+200, Top+y, Right-12, Top+y+h), vec2i(70, 70));
 		portrait.selectedColor = setup.settings.color;
-		
+
 		portrait.selected = randomi(0, getEmpirePortraitCount()-1);
 		portrait.horizAlign = 0.0;
 		for(uint i = 0, cnt = getEmpirePortraitCount(); i < cnt; ++i) {
@@ -2898,7 +2994,7 @@ class TraitsWindow : BaseGuiElement {
 				setup.submit();
 				return true;
 			}
-			
+
 			auto@ disp = cast<TraitDisplay>(evt.caller);
 			if(disp !is null) {
 				if(disp.trait.unique.length != 0)
@@ -3124,7 +3220,7 @@ void tick(double time) {
 				Color color;
 				string name = connectedPlayers[i].name;
 
-				string msg = format("[color=#aaa]* "+locale::MP_DISCONNECT_EVENT+"[/color]", 
+				string msg = format("[color=#aaa]* "+locale::MP_DISCONNECT_EVENT+"[/color]",
 					format("[b]$2[/b]", toString(color), bbescape(name)));
 				recvMenuLeave(ALL_PLAYERS, msg);
 				connectedPlayers.removeAt(i);
