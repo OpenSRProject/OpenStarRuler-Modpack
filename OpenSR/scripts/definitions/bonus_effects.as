@@ -1071,6 +1071,7 @@ class PricedAsteroid : BonusEffect {
 		}
 		for(uint i = 1, cnt = arguments.length; i < cnt; ++i)
 			roid.addAvailable(arguments[i].integer, arguments[0].decimal);
+		roid.initMesh();
 	}
 #section all
 };
@@ -1097,6 +1098,7 @@ class OwnedAsteroid : BonusEffect {
 		roid.setup(null, emp, arguments[0].integer);
 		for(uint i = 1, cnt = arguments.length; i < cnt; ++i)
 			roid.createResource(arguments[i].integer);
+		roid.initMesh();
 	}
 #section all
 };
