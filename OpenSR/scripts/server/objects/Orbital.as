@@ -833,8 +833,10 @@ tidy class OrbitalScript {
 		}
 		if(obj.hasLeaderAI)
 			obj.leaderChangeOwner(prevOwner, obj.owner);
-		if(obj.hasConstruction)
+		if(obj.hasConstruction) {
+			obj.constructionChangeOwner(prevOwner, obj.owner);
 			obj.clearRally();
+		}
 		if(obj.hasAbilities)
 			obj.abilityOwnerChange(prevOwner, obj.owner);
 		obj.changeStatusOwner(prevOwner, obj.owner);

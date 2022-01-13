@@ -65,6 +65,8 @@ server:
 	safe double get_baseLaborIncome() const;
 	safe double get_laborFactor() const;
 	void destroyConstruction();
+	// Ported owner change of in progress construction maintenance fix from Rising Stars
+	void constructionChangeOwner(Empire@ prevOwner, Empire@ newOwner);
 	void modLaborIncome(double mod);
 	void modLaborFactor(double mod);
 	void setDistributedLabor(double val);
