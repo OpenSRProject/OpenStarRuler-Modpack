@@ -28,7 +28,9 @@ This mod can be overridden and included as a resource by other mods, allowing th
 the changes made by the Modpack.
 The following line must be added to your `modinfo.txt`:
 
-> Derives From: OpenSR Modpack
+```
+    Derives From: OpenSR Modpack
+```
 
 The Modpack must not be enabled in the SR2 mod list when used in this way;
 the parent mod will enable it implicitly without user intervention.
