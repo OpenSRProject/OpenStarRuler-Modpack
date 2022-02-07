@@ -337,22 +337,24 @@ tidy class CivilianScript {
 				bool arrived = false;
 				if(!awaitingGateJump) {
 					obj.maxAcceleration = ACC_INTERSYSTEM;
-					if(prevRegion !is null && hasGateToNextRegion(prevRegion, obj.owner)) {
-						enterDest = nextRegion.position + random3d(nextRegion.radius/5);
-						awaitingGateJump = true; // we have a gate, move with normal speed and await jump
-						obj.maxAcceleration = ACC_SYSTEM;
-					} else {
-						enterDest = nextRegion.position;
-						enterDest += quaterniond_fromAxisAngle(vec3d_up(), pi * 0.01)
-							* (prevRegion.position - nextRegion.position).normalized(nextRegion.radius * 0.85);
-						enterDest +=  random3d(0, DEST_RANGE);
+					if(prevRegion !is null) {
+						if(hasGateToNextRegion(prevRegion, obj.owner)) {
+							enterDest = nextRegion.position + random3d(nextRegion.radius/5);
+							awaitingGateJump = true; // we have a gate, move with normal speed and await jump
+							obj.maxAcceleration = ACC_SYSTEM;
+						} else {
+							enterDest = nextRegion.position;
+							enterDest += quaterniond_fromAxisAngle(vec3d_up(), pi * 0.01)
+								* (prevRegion.position - nextRegion.position).normalized(nextRegion.radius * 0.85);
+							enterDest +=  random3d(0, DEST_RANGE);
+						}
+						enterDest.y = nextRegion.position.y;
 					}
-					enterDest.y = nextRegion.position.y;
 				} else if (curRegion is nextRegion)
 					arrived = true;
 
 				if(arrived || obj.moveTo(enterDest, moveId, enterOrbit=false)) {
-					if(cargoType == CT_Resource)
+					if(prevRegion !is null && cargoType == CT_Resource)
 						prevRegion.bumpTradeCounter(obj.owner);
 					moveId = -1;
 					leavingRegion = false;
