@@ -1327,6 +1327,9 @@ class RaceChooser : GuiOverlay {
 		backButton.font = FT_Medium;
 		backButton.buttonIcon = icons::Back;
 
+		if (!isInitial) {
+			chosenShipset = true;
+		}
 		selectRace(curSelection);
 		updateAbsolutePosition();
 		updateAbsolutePosition();
@@ -1344,7 +1347,7 @@ class RaceChooser : GuiOverlay {
 		GuiOverlay::close();
 	}
 
-	void selectRace(uint select) {
+	void selectRace(uint select, bool isManual = false) {
 		for(uint i = 0, cnt = presetButtons.length; i < cnt; ++i)
 			presetButtons[i].pressed = i == select;
 
@@ -1379,7 +1382,7 @@ class RaceChooser : GuiOverlay {
 		descScroll.updateAbsolutePosition();
 		@selectedRace = preset;
 
-		if(!chosenShipset) {
+		if(!chosenShipset || isManual) {
 			setup.settings.shipset = preset.shipset;
 			for(uint i = 0, cnt = shipsets.length; i < cnt; ++i) {
 				if(shipsets.items[i].ident == preset.shipset) {
@@ -1468,7 +1471,7 @@ class RaceChooser : GuiOverlay {
 				for(uint i = 0, cnt = presetButtons.length; i < cnt; ++i) {
 					if(evt.caller.isChildOf(presetButtons[i])) {
 						hasChosenRace = true;
-						selectRace(i);
+						selectRace(i, isManual=true);
 						return true;
 					}
 				}
