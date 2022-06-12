@@ -37,7 +37,16 @@ tidy class RetrofitConstructible : Constructible {
 		return format(locale::BUILD_RETROFIT, fleet.name);
 	}
 
+	bool cancelled = false;
+
 	void cancel(Object& obj) {
+		if (cancelled) {
+			// cancel may be called followed by remove, but sometimes we might
+			// only be called with remove. In both cases, we need to cancel
+			// exactly once.
+			return;
+		}
+		cancelled = true; // probably don't need to serialise this?
 		fleet.stopFleetRetrofit(obj);
 		Constructible::cancel(obj);
 	}
