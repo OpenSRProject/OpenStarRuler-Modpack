@@ -58,6 +58,10 @@ server:
 	bool writeMoverDelta(Message& msg) const;
 	void writeMover(Message& msg) const;
 
+	// CE: InterdictMovement overhaul
+	void addInterdictMovementEffect();
+	void removeInterdictMovementEffect();
+
 shadow:
 	void readMoverDelta(Message& msg);
 	void readMover(Message& msg);
