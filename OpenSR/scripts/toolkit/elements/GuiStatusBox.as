@@ -2,6 +2,7 @@
 import elements.BaseGuiElement;
 import elements.MarkupTooltip;
 import statuses;
+import util.formatting;
 
 export GuiStatusBox;
 export updateStatusBoxes;
@@ -9,15 +10,16 @@ export updateStatusBoxes;
 class GuiStatusBox : BaseGuiElement {
 	Status status;
 	Object@ fromObject;
+	MarkupTooltip@ lazyTooltip;
 
 	GuiStatusBox(IGuiElement@ parent) {
 		super(parent, recti());
-		addLazyMarkupTooltip(this, width=350);
+		@lazyTooltip = addLazyMarkupTooltip(this, width=350);
 	}
 
 	GuiStatusBox(IGuiElement@ parent, const recti& pos) {
 		super(parent, pos);
-		addLazyMarkupTooltip(this, width=350);
+		@lazyTooltip = addLazyMarkupTooltip(this, width=350);
 		updateAbsolutePosition();
 	}
 
@@ -26,6 +28,22 @@ class GuiStatusBox : BaseGuiElement {
 	}
 
 	string get_tooltip() {
+		if (status.type.showDuration) {
+			int index = fromObject.getStatusEffectOfType(status.type.id);
+			if (index != -1) {
+				double duration = fromObject.get_statusEffectDuration(index);
+				if (duration > 0) {
+					lazyTooltip.LazyUpdate = true;
+					return status.getTooltip(valueObject=fromObject) +
+						"\n" + locale::DURATION + ": " +
+						format(locale::TIME_S, toString(duration, 0));
+				}
+			}
+			lazyTooltip.LazyUpdate = false;
+			return status.getTooltip(valueObject=fromObject);
+		} else {
+			lazyTooltip.LazyUpdate = false;
+		}
 		return status.getTooltip(valueObject=fromObject);
 	}
 

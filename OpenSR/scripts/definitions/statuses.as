@@ -33,6 +33,7 @@ tidy final class StatusType {
 	bool unique = false;
 	bool collapses = false;
 	array<IStatusHook@> hooks;
+	bool showDuration = false;
 
 	string def_conditionType;
 	const PlanetType@ conditionType;
@@ -361,15 +362,15 @@ void parseLine(string& line, StatusType@ type, ReadFile@ file) {
 
 void loadStatus(const string& filename) {
 	ReadFile file(filename, true);
-	
+
 	string key, value;
 	StatusType@ status;
-	
+
 	uint index = 0;
 	while(file++) {
 		key = file.key;
 		value = file.value;
-		
+
 		if(file.fullLine) {
 			string line = file.line;
 			parseLine(line, status, file);
@@ -428,12 +429,15 @@ void loadStatus(const string& filename) {
 			else
 				file.error("Unknown status visibility: "+value);
 		}
+		else if(key.equals_nocase("Show Duration")) {
+			status.showDuration = toBool(value);
+		}
 		else {
 			string line = file.line;
 			parseLine(line, status, file);
 		}
 	}
-	
+
 	if(status !is null)
 		addStatus(status);
 }
