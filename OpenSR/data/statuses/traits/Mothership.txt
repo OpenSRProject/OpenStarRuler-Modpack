@@ -7,6 +7,8 @@ Status: Mothership
 
 	OnEnable(AddStatus(MothershipPopulation), 5)
 	OnDisable(RemoveStatus(MothershipPopulation))
+	
+	TriggerPeriodic(AddStatus(MothershipPopulation, Max Stacks = 16), 50)
 
 	AllowConstruction(Ships = True, Orbitals = True, Asteroids = True, Terraforming = True)
 
@@ -18,3 +20,5 @@ Status: Mothership
 
 	AddStatus(CanGiveCargo) #version>=132
 	AddStatus(CanTakeCargo) #version>=132
+
+	MP_if_hooks::RemoveIfMissingSubsystem(Mothership)

@@ -49,3 +49,23 @@ class IfMoreStatusStacks : IfHook {
 	}
 #section all
 };
+
+class RemoveIfMissingSubsystem : StatusHook {
+	Document doc("Removes the status if the ship doesn't have any of the required subsystems anymore.");
+	Argument tag(AT_Custom, doc="Subsystem tag identifying a required subsystem.");
+	Argument allow_disabled(AT_Boolean, "False", doc="Whether to count destroyed or otherwise disabled subsystems as present.");
+
+#section server
+	bool onTick(Object& obj, Status@ status, any@ data, double time) override {
+		if(!obj.isShip)
+			return true;
+		SubsystemTag sysTag = getSubsystemTag(tag.string);
+		if(sysTag == -1)
+			return true;
+		Ship@ ship = cast<Ship>(obj);
+		if(allow_disabled.boolean)
+			return ship.blueprint.design.hasTag(sysTag);
+		return ship.design.hasTagActive(sysTag);
+	}
+#section all
+}
