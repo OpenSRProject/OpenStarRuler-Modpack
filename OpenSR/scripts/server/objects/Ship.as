@@ -797,6 +797,8 @@ tidy class ShipScript {
 		}
 		if(ship.hasAbilities)
 			ship.abilityOwnerChange(prevOwner, ship.owner);
+		if(ship.hasConstruction)
+			ship.constructionChangeOwner(prevOwner, ship.owner);
 		if(ship.hasStatuses)
 			ship.changeStatusOwner(prevOwner, ship.owner);
 		regionOwnerChange(ship, prevOwner);
@@ -826,6 +828,10 @@ tidy class ShipScript {
 
 	void modSupplyConsumeFactor(float mod) {
 		supplyConsumeFactor += mod;
+	}
+
+	float getSupplyConsumeFactor() {
+		return supplyConsumeFactor;
 	}
 
 	void consumeSupply(Ship& ship, double amount) {

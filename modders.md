@@ -29,10 +29,10 @@
 4. Press `Save and Continue`.
 5. Add a disclaimer to your modinfo, stating that Steam users *must* subscribe to the OpenSR Modpack (and any other dependencies) in order to play your mod. It will be automatically installed, and they do not need to take any further action. (This step is optional, but recommended.)
 
-### SR2 Mod Manager
+### OpenSR Launchpad
 
-0. Follow the instructions in the [SR2MM Modder's Guide](https://github.com/DaloLorn/SR2ModManager#modders-guide). (This step is optional, but *strongly* recommended.)
-1. Push your mod to a publicly accessible Git repository. SR2MM cannot install mods without a public Git repository.
+0. Follow the instructions in the [OpenSR Modder's Guide](https://github.com/OpenSRProject/OpenStarRuler-Launchpad#modders-guide). (This step is optional, but *strongly* recommended.)
+1. Push your mod to a publicly accessible Git repository. The Launchpad (and the older SR2 Mod Manager) cannot install mods without a public Git repository.
 2. Add the file `metadata.json` to the root of your Git repository, with the following text. Be advised that if you are inheriting from a different mod, that mod - and all of its dependencies - must *all* be available in public Git repositories:
 ```json
 {
@@ -45,7 +45,7 @@
     ]
 }
 ```
-3. Add a disclaimer to your modinfo, stating that users of SR2MM versions before 1.1.0 must manually install the OpenSR Modpack (and any other dependencies) in order to play your mod. If your `metadata.json` is correctly configured, users of SR2MM versions 1.1.0 or newer will not need to do anything. (This step is optional, but recommended.)
+3. Add a disclaimer to your modinfo, stating that users of SR2MM versions before 1.1.0 must manually install the OpenSR Modpack (and any other dependencies) in order to play your mod. If your `metadata.json` is correctly configured, users of SR2MM versions 1.1.0 or the OpenSR Launchpad will not need to do anything. (This step is optional, but recommended.)
 4. Commit and push your changes.
 
 ## Adding to Master Mod List
