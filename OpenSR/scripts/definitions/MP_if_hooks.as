@@ -59,13 +59,13 @@ class RemoveIfMissingSubsystem : StatusHook {
 	bool onTick(Object& obj, Status@ status, any@ data, double time) override {
 		if(!obj.isShip)
 			return true;
-		SubsystemTag sysTag = getSubsystemTag(tag.string);
+		SubsystemTag sysTag = getSubsystemTag(tag.str);
 		if(sysTag == -1)
 			return true;
 		Ship@ ship = cast<Ship>(obj);
 		if(allow_disabled.boolean)
 			return ship.blueprint.design.hasTag(sysTag);
-		return ship.design.hasTagActive(sysTag);
+		return ship.blueprint.hasTagActive(sysTag);
 	}
 #section all
 }
