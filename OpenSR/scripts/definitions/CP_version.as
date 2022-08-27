@@ -3,14 +3,16 @@ import version;
 namespace CommunityPatch {
 	const array<string> VERSIONS = {
 		"v2.0.3",
+		"OpenSR v1.0.0",
 	};
 
 	const array<string> REVISIONS = {
-		"5101",
-		"5095",
+		"r5101",
+		"r5095",
+		"OSR r70",
 	};
 	const string MOD_NAME = "OpenSR Modpack v1.1.0";
-	const string MOD_REVISION = "257";
+	const string MOD_REVISION = "258";
 	const string MOD_VERSION = MOD_NAME + " (revision " + MOD_REVISION + ") for Star Ruler 2 " + VERSIONS[0] + " (revision " + REVISIONS[0]
 		+ ", currently using " + GAME_VERSION + " " + SCRIPT_VERSION + ")";
 
@@ -30,7 +32,7 @@ namespace CommunityPatch {
 		}
 		if(resultA) {
 			for(uint i = 0; i < REVISIONS.length; ++i) {
-				if(("r" + REVISIONS[i]).equals_nocase(SCRIPT_VERSION)) {
+				if((REVISIONS[i]).equals_nocase(SCRIPT_VERSION)) {
 					resultB = true;
 					break;
 				}
