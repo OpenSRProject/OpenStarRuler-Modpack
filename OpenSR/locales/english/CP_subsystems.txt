@@ -1,0 +1,9 @@
+S_HYPERLASER_DESC: <<
+	A brief laser with energy densities nearly high enough to spontaneously generate matter.
+
+	[img=Plus]Accurate and instant beam lock-on.[/img]
+	[img=Plus]Deals damage very quickly.[/img]
+	[img=Plus]Higher overall DPS.[/img]
+	[img=Minus]Higher power and supply costs.[/img]
+	[img=Minus]Very limited turret firing arc.[/img]
+>>
