@@ -4,6 +4,7 @@ Status: FlareRadiation
 
 	Icon: MissileLauncher::0 * #e45500
 	Color: #e45500
+	Show Duration: True
 
 	ApplyToPlanets()
 

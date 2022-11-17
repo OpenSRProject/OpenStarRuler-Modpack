@@ -1089,6 +1089,7 @@ class ResourceDisplay : DisplayBox {
 						icon.noClip = true;
 						@statusIcons[i] = icon;
 					}
+					@icon.fromObject = pl;
 					icon.update(statuses[i]);
 				}
 			}
