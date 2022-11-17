@@ -279,6 +279,7 @@ class PlanetPopup : Popup {
 					icon.noClip = true;
 					@statusIcons[i] = icon;
 				}
+				@icon.fromObject = pl;
 				icon.update(statuses[i]);
 			}
 		}
