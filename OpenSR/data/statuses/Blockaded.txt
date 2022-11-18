@@ -3,6 +3,7 @@ Status: Blockaded
 	Description: #STATUS_BLOCKADED_DESC
 	Icon: QuickbarIcons::7
 	Color: #ff9000
+	Show Duration: True
 
 	Collapses: True
 	ReduceProductionPerStack(1)

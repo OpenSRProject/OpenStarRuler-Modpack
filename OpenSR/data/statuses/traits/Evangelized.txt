@@ -5,6 +5,7 @@ Status: Evangelized
 
 	Icon: AttributeIcons::1 * #ffff00
 	Color: #ffff00
+	Show Duration: True
 
 	AddResource(Influence, 1)
 	OnOriginEmpire(AddInfluenceStake(1), Allow Same = False)
