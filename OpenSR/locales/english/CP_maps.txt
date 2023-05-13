@@ -1,0 +1,2 @@
+CONTRAIL_MAP: Contrail
+CONTRAIL_MAP_DESC: A long trail of stars following a runaway black hole
