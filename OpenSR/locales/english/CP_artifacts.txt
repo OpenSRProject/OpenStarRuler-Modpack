@@ -1,0 +1,6 @@
+
+ABL_GENERATE_WATER_DESC: <<|
+	Adds a water resource to the targeted planet.
+	
+	The water cannot be exported.
+>>
