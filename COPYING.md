@@ -38,13 +38,13 @@ DOF (Enabling Influence Peddling)` still counts as DOF code.
 ### `DOF`
 
 Code originated in mods made by dolynick - primarily Dolynick's Faction Addon. All 
-rights reserved; contact him via Discord or the Steam forums for any permissions you 
+rights reserved; contact him via Discord (@dolynick) or the Steam forums for any permissions you 
 may require.
 
 ### `SOI` (or `SoI`)
 
-Code originated in Shores of Infinity. All rights reserved; contact @sol-oriens for any 
-permissions you may require.
+Code originated in Shores of Infinity. All rights reserved; contact @sol-oriens (or @sol_oriens on Discord)
+for any permissions you may require.
 
 ## Art sources
 
