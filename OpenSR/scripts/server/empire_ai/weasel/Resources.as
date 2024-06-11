@@ -396,7 +396,7 @@ final class Resources : AIComponent {
 		uint nativeCount = checkResources.length;
 		for(uint i = 0; i < nativeCount; ++i) {
 			auto@ r = checkResources[i].type;
-			if(r !is null)
+			if(r !is null && r.exportable)
 				list.insertLast(availableResource(fromObject, r, checkResources[i].id));
 		}
 

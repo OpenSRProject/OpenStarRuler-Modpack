@@ -645,7 +645,7 @@ final class Colonization : AIComponent {
 		}
 		if(type.cls is foodClass || type.cls is waterClass)
 			weight *= 10.0;
-		if(type.cls is scalableClass)
+		if(type.cls is scalableClass || !type.exportable)
 			weight *= 0.0001;
 		if(type.totalPressure > 0)
 			weight *= double(type.totalPressure);
