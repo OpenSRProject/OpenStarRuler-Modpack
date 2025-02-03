@@ -88,6 +88,7 @@ void init() {
 		if(!CommunityPatch::checkSupported())
 			CPVersionCheck += " (UNSUPPORTED VERSION)";
 		print(CPVersionCheck);
+		print("OpenSR Language Level: " + toString(LANGUAGE_LEVEL));
 	}
 
 	//Create container

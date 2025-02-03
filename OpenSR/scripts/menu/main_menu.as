@@ -62,7 +62,7 @@ class MainMenu : MenuBox {
 		if(game_running && !mpClient)
 			items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 2), locale::SAVE_GAME, MA_SaveGame));
 		items.addItem(MenuAction(Sprite(spritesheet::ResourceIconsSmall, 46), locale::MODS_MENU, MA_Mods));
-		if(!game_running && !STEAM_EQUIV_BUILD)
+		if(!IS_OPENSR_BUILD && !game_running && !STEAM_EQUIV_BUILD)
 			items.addItem(MenuAction(icons::Refresh, locale::CHECK_FOR_UPDATES, MA_Update));
 		items.addItem(MenuAction(Sprite(spritesheet::MenuIcons, 4), locale::MULTIPLAYER, MA_Multiplayer));
 		items.addItem(MenuAction(Sprite(material::TabDesigns), locale::SANDBOX, MA_Sandbox));
