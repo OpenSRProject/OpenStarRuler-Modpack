@@ -3629,6 +3629,11 @@ class AddLocalDefense : GenericEffect {
 		if(disable_in_combat.boolean && obj.inCombat)
 			tickDefense = 0;
 
+		if (obj.hasLeaderAI && !obj.autoBuildSupports) {
+			// Don't build if user said not to
+			tickDefense = 0;
+		}
+
 		// Loop while have defense for this tick to build with
 		// Fixes vanilla issue blowing all labor on the first support
 		// even when labor would be leftover
@@ -3771,6 +3776,11 @@ class AddLocalDefenseAdjacentFlags : GenericEffect {
 		double tickDefense = secondDefense * time;
 		if(disable_in_combat.boolean && obj.inCombat)
 			tickDefense = 0;
+
+		if (obj.hasLeaderAI && !obj.autoBuildSupports) {
+			// Don't build if user said not to
+			tickDefense = 0;
+		}
 
 		if(dat.design is null) {
 			@dat.design = getDefenseDesign(obj.owner, secondDefense);
