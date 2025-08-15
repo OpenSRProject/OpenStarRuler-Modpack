@@ -148,6 +148,22 @@ class PlanetSurface : Serializable {
 	PlanetSurface() {
 	}
 
+	uint getTileIndex(int x, int y, vec2u gridSize = vec2u(UINT_MAX)) const {
+		if(gridSize.width == UINT_MAX)
+			gridSize = size;
+		return y * gridSize.width + x;
+	}
+
+	uint getTileIndex(uint x, uint y, vec2u gridSize = vec2u(UINT_MAX)) const {
+		if(gridSize.width == UINT_MAX)
+			gridSize = size;
+		return y * gridSize.width + x;
+	}
+
+	uint getTileIndex(vec2u pos, vec2u gridSize = vec2u(UINT_MAX)) const {
+		return getTileIndex(pos.x, pos.y, gridSize);
+	}
+
 	uint get_dataSize() {
 		return size.width * size.height;
 	}
@@ -309,7 +325,7 @@ class PlanetSurface : Serializable {
 			for(uint x = 0; x < bld.type.size.x; ++x) {
 				for(uint y = 0; y < bld.type.size.y; ++y) {
 					vec2u rpos = (pos - center) + vec2u(x, y);
-					uint index = rpos.y * size.width + rpos.x;
+					uint index = getTileIndex(rpos);
 					@tileBuildings[index] = bld;
 				}
 			}
@@ -354,61 +370,61 @@ class PlanetSurface : Serializable {
 		return surfaceDelta;
 	}
 
-	uint getIndex(int x, int y) {
-		return y * size.width + x;
+	uint getIndex(int x, int y) const {
+		return getTileIndex(x, y);
 	}
 
 	const Biome@ getBiome(int x, int y) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= biomes.length)
 			return null;
 		return ::getBiome(biomes[index]);
 	}
 
 	uint8 getFlags(int x, int y) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= flags.length)
 			return 0;
 		return flags[index];
 	}
 	
 	bool checkFlags(int x, int y, uint8 f) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= flags.length)
 			return false;
 		return (flags[index] & f) == f;
 	}
 
 	void setFlags(int x, int y, uint8 f) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= flags.length)
 			return;
 		flags[index] = f;
 	}
 
 	void addFlags(int x, int y, uint8 f) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= flags.length)
 			return;
 		flags[index] |= f;
 	}
 
 	void removeFlags(int x, int y, uint8 f) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= flags.length)
 			return;
 		flags[index] &= ~f;
 	}
 
 	SurfaceBuilding@ getBuilding(int x, int y) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= tileBuildings.length)
 			return null;
 		return tileBuildings[index];
 	}
 
 	float getBuildingBuildWeight(int x, int y) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= tileBuildings.length)
 			return 0;
 		SurfaceBuilding@ bld = tileBuildings[index];
@@ -418,7 +434,7 @@ class PlanetSurface : Serializable {
 	}
 
 	void setBuilding(int x, int y, SurfaceBuilding@ bld) {
-		uint index = y * size.width + x;
+		uint index = getIndex(x, y);
 		if(index >= tileBuildings.length)
 			return;
 		@tileBuildings[index] = bld;
