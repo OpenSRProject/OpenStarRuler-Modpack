@@ -1,4 +1,5 @@
 {
   "master": "This is the main development branch for the OpenSR Modpack. If you're reading this description, and you're not specifically planning on testing the new MP version, you probably want the \"WorkshopBuild\" branch.",
-  "WorkshopBuild": "This is the Workshop-tracking branch of the OpenSR Modpack. If it's on the Workshop, it's here - and vice versa."
+  "WorkshopBuild": "This is the Workshop-tracking branch of the OpenSR Modpack. If it's on the Workshop, it's here - and vice versa.",
+    "CombatCrashRepro": "This archival branch is used to reproduce Rising Stars issue #96. Normal users have no reason to care about it."
 }
