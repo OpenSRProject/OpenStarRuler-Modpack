@@ -11,10 +11,12 @@
 
 ## OpenSR Team
 
-* sol-oriens
+(Italics indicate users who have historically been considered a part of the OpenSR team, but are no longer believed to be participating in the SR2 community based on Discord, Steam forum, and modding activity.)
+
+* *sol-oriens*
 * DaloLorn
 * Skeletonxf
-* scitor
+* *scitor*
 * kb1000
 
 ## External Contributors
@@ -26,3 +28,4 @@
 * devnexen
 * l29ah
 * kalvindukes
+* EngineOfDarkness

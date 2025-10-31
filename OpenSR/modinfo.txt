@@ -4,12 +4,12 @@
 
 		The Modpack can be used either as a standalone mod, or as a dependency for other mods to inherit from. See the OpenSR Modder's Guide for details.
 
-		[b][h1]Current version: v1.1.0[/h1][/b]
+		[b][h1]Current version: v1.2.0[/h1][/b]
 
-		[b][h1]Notable changes include:[/b][/h1][list]
+		[b][h1]Notable changes include:[/h1][/b][list]
 		[*]AI improvements by dolynick, sol-oriens, and Skeletonxf
-		[*]Assorted bugfixes
-		[*]Assorted minor improvements
+		[*]Assorted bugfixes, including several gamebreaking bugs and exploits
+		[*]A variety of miscellaneous improvements, 
 		[*]Bromma and Farum shipsets by Jon Micheelsen, previously limited to open-source versions of the game
 		[/list]
 

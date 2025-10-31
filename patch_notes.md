@@ -1,3 +1,65 @@
+# OpenSR Modpack v1.2.0 (r300) - October 31, 2025
+
+## Major Highlights
+
+- *Finally* released a new Modpack update to the Steam Workshop after nearly five years in limbo!
+- Worked around a vanilla issue where Ancient Developers, Reinforcers, and Compressors would generate a new design instance every time they were turned on or off, resulting in a save-persistent memory leak.
+  - As a side effect, the effects of these buildings are now applied instantly without returning to friendly space.
+  - Reinforcer behavior could not be translated to the new system and the building had to be overhauled.
+    - Previously increased HP and mass of all turrets, subsystem cores, and Control Core hexes by 25%.
+    - Now increases all repair rates by 7%, but increases the mass of all subsystems with a repair stat (like Control Cores) by 25%.
+- Fixed a vanilla exploit where one could drag a Senatorial Palace into the intergalactic void and still use it for a diplomatic victory.
+- Fixed a vanilla issue where pinning and then destroying a unit would irreparably corrupt any savefiles made from that point onward. See #8 for details.
+- Fixed a vanilla exploit where Motherships would retain their Labor income and population when retrofitted into a non-Mothership, with the potential to provide an endless supply of money and Labor.
+
+## Enhancements
+
+- Autoimport now prefers resources in trade range if any are available.
+- Multiplayer loading screens now have a little text animation to signify the game hasn't frozen.
+- Certain statuses with durations now display their duration on the UI.
+- Planets can now be ordered to attack a specific target.
+- Ported various attack order enhancements from Colonization Expansion. (#15's notes are fuzzy on the specifics, and it's a big PR so I lack the mental bandwidth to dissect it right now.)
+- Ported the Contrail map from Colonization Expansion.
+- The AI now assigns a greatly reduced weight to unexportable resources such as Ancient Cities when choosing planets to colonize. (This was already being done for scalables.)
+- Added supporting code in advance of the eventual completion of OpenSRProject/OpenStarRuler#10. This does nothing with the commercial client or older builds of OpenSR.
+    - New OpenSR builds will no longer erroneously display the Check for Updates button on the main menu.
+    - Added extra logging for OpenSR language level, to assist in mod debugging.
+
+## Bug Fixes
+
+- Tractor beams should no longer misbehave if their target's mass changes.
+- Disruptors now correctly react to damaged shields.
+- Niling fiber can now detonate multiple times per damage event, if it has enough damage stored up for multiple detonations.
+- `TriggerPeriodic()` should now work more consistently at high game speeds.
+- Floating pins now correctly persist their floating status to savefiles. See #7 for an explanation of what those actually are.
+- Spawned-in asteroids now always call their mesh initializer.
+- Trait conflicts are now checked in both directions, properly preventing randomizers from generating conflicting trait sets.
+- Ships undergoing a retrofit will no longer become unretrofittable if the retrofitting shipyard is destroyed during the retrofit.
+- Raiders will now correctly account for their flagship's supply consumption multiplier when deciding if they can afford to resupply for a raid.
+- Taking control of an in-progress construction project will now correctly transfer maintenance costs to the new owner.
+- Fixed an oversight where refunding a ship with an Influence cost would grant Influence equal to the ship's *Energy* cost.
+- Fixed an issue where trying to customize your race would reset its shipset to the default for that race.
+- Fixed an issue where cancelling a retrofit could refund it twice.
+- Fixed the description for flagship veterancy to include its +30% shield capacity bonus. This is only a text change.
+- Ion cannons should no longer misbehave if their target's acceleration changes.
+- Fixed an issue where the choice icons on the Datacenter anomaly were mapped backwards.
+- The description for hyperdense lasers now correctly states it deals higher damage than a laser but requires more supplies and power. This is only a text change.
+- Fixed an issue where disabling the `ModEfficiencyDistanceToOrbital()` hook while it was applying negative efficiency would not undo its effects.
+- Fixed an issue where time-based constructions would still deplete stored Labor.
+- Fixed an issue where the Seed Ship spawner logic would forget any surplus Energy left over after spawning a new Seed Ship.
+- The ability description for Comets no longer mentions the deleted water binding mechanic from Early Access.
+- Fixed an issue where queued research wouldn't respect research cost modifiers.
+- `TiedSubsystemUnlock()` now properly tracks owner changes.
+- Civilian buildings with hooks will no longer break the planet on an upgrade/downgrade if they don't have exactly the same amount of hooks. (Original issue: Rising Stars Tech Centers had more hooks than Universities and crashed the surface component.)
+- Horizontal extensions to the planet's surface (such as Moonbases) will no longer offset future vertical extensions (such as Floating Continents) or vice versa. (Original issue: Building Moonbases after building subsurface habitats in RS would offset any extensions to the subsurface habitat, causing discontinuities that reduced the extended habitat's usability.)
+- Fixed a formatting error in the modinfo that incorrectly bolded most of the Workshop description.
+
+## Development & Modding
+
+- Switched the branch layout to be more consistent with Rising Stars, because Dalo is a blind, forgetful idiot. (Dalo is also writing these patch notes, and the original commit message, and feels a little silly for referring to himself in the third person just now!)
+- Refactored `PlanetSurface`/`SurfaceGrid` tile indexing for readability and consistency.
+- `SurfaceGrid.addSurfaceArea()` now exits early if either of the dimensions of `addedSize` are negative. Despite being defined as a `vec2i`, this was never a legal behavior, and the original method signature is only retained for backwards compatibility with any mods using the function.
+
 ### r171 - January 1, 2021
 
 - Bromma and Farum shipsets should no longer have issues loading starter designs. Thanks to Skeletonxf for noticing the issue!
