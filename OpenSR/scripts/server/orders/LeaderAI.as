@@ -96,6 +96,10 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 	bool rememberGhosts = true;
 	//Whether fleets can autofill from this
 	bool AllowFillFrom = false;
+	// Whether to automatically build new supports with local defense generation
+	// until full
+	// TODO: Default to false for sandbox
+	bool autoBuild = true;
 
 	AutoState autoState = AS_None;
 	vec3d initialPosition;
@@ -277,6 +281,8 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 			msg >> FreeRaiding;
 			msg >> RaidRange;
 		}
+
+		msg >> autoBuild;
 	}
 
 	double get_GhostHP() const {
@@ -343,6 +349,8 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 
 		msg << FreeRaiding;
 		msg << RaidRange;
+
+		msg << autoBuild;
 	}
 
 	float getFleetEffectiveness() const {
@@ -1019,6 +1027,15 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 
 	void set_autoBuySupports(bool value) {
 		autoBuy = value;
+		orderDelta = true;
+	}
+
+	bool get_autoBuildSupports() {
+		return autoBuild;
+	}
+
+	void set_autoBuildSupports(bool value) {
+		autoBuild = value;
 		orderDelta = true;
 	}
 
@@ -2572,6 +2589,7 @@ tidy class LeaderAI : Component_LeaderAI, Savable {
 		msg.writeSmall(uint(engageType));
 		msg.writeSmall(uint(engageBehave));
 		msg << autoFill << autoBuy << AllowFillFrom;
+		msg << autoBuild;
 	}
 
 	void writeLeaderData(Message& msg) {
